@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- DOCTYPE很重要，不能省略 -->
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="silence.dao.TeachersMapper">
+	<insert id="reg" parameterType="Students">
+		<!-- insert into 表名（列名列表） values（值列表）
+		1.列名列表与值列表必须一一对应
+		2.如果表字段全填充，则可省略，此时值列表必须与数据库字段列表一一对应
+		3.#{属性名}是OGNL表达式，它自动匹配实体对象的属性 -->
+		insert into students(stuNo,stuName,stuPwd,classId,integral,stuGender) values(#{stuNo},#{stuName},#{stuPwd},#{classId},#{integral},,#{stuGender})
+	</insert>
+</mapper>
