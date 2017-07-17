@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DOCTYPE很重要，不能省略 -->
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="silence.dao.StudentMapper">
+	<select id="studentLogin" resultType="Students">
+		select * from students
+		where stuNo=#{stuNumber} and stuPwd=#{stuPwd}
+	</select>
+</mapper>
