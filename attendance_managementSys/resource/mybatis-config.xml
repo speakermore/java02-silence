@@ -16,7 +16,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	<!-- 将mapper文件加入到配置文件中 -->
 	<mappers>
 		<!-- 此处1分，可能有两条 -->
-		<mapper resource="silence.dao/TeachersMapper.xml" />
-		<mapper resource="silence.dao/StudentMapper.xml" />
+		<mapper resource="silence/dao/TeachersMapper.xml" />
+		<mapper resource="silence/dao/StudentMapper.xml" />
 	</mappers>
 </configuration>

@@ -31,7 +31,7 @@
 					<h3 class="panel-title">请填写一下信息完成用户的注册</h3>
 				</div>
 				<div class="panel-body">
-					<form action="" role="form" class="form-horizontal">
+					<form action="tecAttendance/reg" role="form" class="form-horizontal">
 				<!--把标签和控件放在一个带有 class .form-group 的 <div> 中。这是获取最佳间距所必需的。-->
 						<div class="form-group">
 							<!--control-label是控制label标签内容的显示以及加粗，col-xs-xx是控制label占多少个单元，居右显示-->

@@ -15,8 +15,12 @@
         <bean id="stringToDateConverter" class="org.springframework.context.support.ConversionServiceFactoryBean">
         	<property name="converters">
         		<list>
-        			<bean class="ynjh.common.convertor.StringToDateConvertor">
-        				<constructor-arg type="java.lang.String" value="yyyy-MM-dd"></constructor-arg>
+        			<bean class="silence.common.convertor.StringToDateConvertor">
+        				<constructor-arg>
+        					<list>
+        						<value>yyyy-MM-dd</value>
+        					</list>
+        				</constructor-arg>
         			</bean>
         		</list>
         	</property>
