@@ -28,11 +28,11 @@
     </bean>
     <!-- Dao -->    
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-    		<property name="basePackage" value="dao"></property>
+    		<property name="basePackage" value="silence.dao"></property>
     </bean>
     <!-- Service -->
     <!-- 扫描注解定义 -->
-    <context:component-scan base-package="service" use-default-filters="false">
+    <context:component-scan base-package="silence.service" use-default-filters="false">
     		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
     </context:component-scan>
     <!-- 声明式事务 -->

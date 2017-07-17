@@ -11,11 +11,12 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	</settings>
 	<!--类型别名-->
 	<typeAliases>
-	 	<package name="entity"/>
+	 	<package name="silence.entity"/>
 	</typeAliases>
 	<!-- 将mapper文件加入到配置文件中 -->
 	<mappers>
 		<!-- 此处1分，可能有两条 -->
-		<mapper resource="dao/XxxMapper.xml" />
+		<mapper resource="silence.dao/TeachersMapper.xml" />
+		<mapper resource="silence.dao/StudentMapper.xml" />
 	</mappers>
 </configuration>
