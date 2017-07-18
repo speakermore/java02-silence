@@ -72,7 +72,7 @@
 	            </list>
 	        </property>
 		</bean>
-        <context:component-scan base-package="controller" use-default-filters="false">
+        <context:component-scan base-package="silence.controller" use-default-filters="false">
         		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
         </context:component-scan>        
         <!-- 如果要把相关静态资源也放到WEB-INF下，则使用mvc:resources来完成

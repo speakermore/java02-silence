@@ -51,6 +51,6 @@
     </tx:advice>
     <!-- 配置切面  -->
     <aop:config>
-    		<aop:advisor pointcut="execution(* service.impl.*.*(..))" advice-ref="txAdvice" />
+    		<aop:advisor pointcut="execution(* silence.service.impl.*.*(..))" advice-ref="txAdvice" />
     </aop:config>
 </beans>
