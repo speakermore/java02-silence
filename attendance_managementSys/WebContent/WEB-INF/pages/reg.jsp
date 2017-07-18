@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
    <!-- 获得在地址栏访问时的项目的绝对路径，具体的访问时要拼上提交的表单的action属性的值， -->
 <base href="${pageContext.request.scheme }://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/" />
 <!DOCTYPE html >
@@ -21,6 +22,10 @@
     <style type="text/css">
     	body{
     		margin: 50px;
+    	}
+    	
+    	#remind{
+    	margin-left:500px;
     	}
     </style>
   </head>
@@ -70,7 +75,7 @@
 						<div class="form-group">
 							<label for="integrals" class=" control-label col-xs-4">积分：</label>
 							<div class="col-xs-4">
-								<input type="password" id="integrals" class="form-control" />
+								<input type="text" id="integrals" class="form-control" value="100" disabled="disabled" />
 							</div>
 						</div>
 						<div class="form-group">
@@ -78,6 +83,7 @@
 								<input type="submit" class="btn btn-primary col-xs-5" style="margin-left:35px;" value="提交" />
 							</div>
 						</div>
+						<div id="remind">${success.success }</div>
 					</form>
 				</div>
 			</div>

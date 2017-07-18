@@ -23,8 +23,10 @@ public class TeachersController {
 	public ModelAndView reg(Students stu){
 		int result = teacherService.reg(stu);
 		ModelAndView mv = new ModelAndView("reg");
-		String success = "注册成功！";
-		mv.addObject("success",success);
+		if(result>0){
+			String success = "注册成功！";
+			mv.addObject("success",success);
+		}
 		return mv;
 	}
 	@RequestMapping(value="/reg",method=RequestMethod.GET)
