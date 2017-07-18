@@ -15,7 +15,7 @@ import silence.service.TeachersService;
 * @date 创建时间：2017年6月19日 上午11:44:39
 */
 @Controller
-@RequestMapping("/tecAttendance") //在此控制器中的所有请求映射均要添加message前缀
+@RequestMapping("/tecAttendance") //在此控制器中的所有请求映射均要添加tecAttendance前缀
 public class TeachersController {
 	@Resource
 	TeachersService teacherService;
@@ -26,5 +26,9 @@ public class TeachersController {
 		String success = "注册成功！";
 		mv.addObject("success",success);
 		return mv;
+	}
+	@RequestMapping(value="/reg",method=RequestMethod.GET)
+	public String reg(){
+		return "reg";
 	}
 }
