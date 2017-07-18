@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!-- 获得在地址栏访问时的项目的绝对路径，具体的访问时要拼上提交的表单的action属性的值， -->
 <base
 	href="${pageContext.request.scheme }://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/" />
@@ -39,21 +40,23 @@ body {
 		</div>
 		<div class="row">
 			<!--form-horizontal是调节该表单是行内元素还是块元素，有form-horizontal和form-inline-->
-			<form action="stuAttendance/studentLogin" role="form"
-				class="form-horizontal">
+			<form method="post" action="stuAttendance/studentLogin" role="form" class="form-horizontal">
 				<!--把标签和控件放在一个带有 class .form-group 的 <div> 中。这是获取最佳间距所必需的。-->
 				<div class="form-group">
 					<!--control-label是控制label标签内容的显示以及加粗，col-xs-xx是控制label占多少个单元，居右显示-->
 					<label for="uName" class="control-label col-xs-4">学号：</label>
 					<div class="col-xs-4">
 						<!--form-control是对控制文本框圆角、宽度和高度-->
-						<input type="text" id="uName" class="form-control" />
+						<input type="text" id="stuNo" name="stuNo" class="form-control" value="" />
+					</div>
+					<div class="col-xs-4">
+						${info}
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="uPwd" class=" control-label col-xs-4">密码：</label>
 					<div class="col-xs-4">
-						<input type="password" id="uPwd" class="form-control" />
+						<input type="password" id="uPwd" name="stuPwd" class="form-control" value="" />
 					</div>
 				</div>
 				<div class="form-group">
