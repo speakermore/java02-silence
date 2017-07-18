@@ -43,4 +43,13 @@ public class StudentController {
 		  mv.addObject("info",info);
 		  return mv;
 	  }
+	  
+	  /*get请求的方法：地址栏访问页面的时候都是get请求访问，
+	           而上面定义的业务是通过POST方式请求访问的，
+	           所以需要定义一个GET请求访问的逻辑路径才能访问到页面*/
+	  @RequestMapping(value="/studentLogin",method=RequestMethod.GET)
+	  public String login(){
+		  return "studentLogin";
+	  }
+	  
 }

@@ -38,7 +38,7 @@
 	  			<!--把标签和控件放在一个带有 class .form-group 的 <div> 中。这是获取最佳间距所必需的。-->
 					<div class="form-group">
 						<!--control-label是控制label标签内容的显示以及加粗，col-xs-xx是控制label占多少个单元，居右显示-->
-						<label for="uName" class="control-label col-xs-4">学号：</label>
+						<label for="uName" class="control-label col-xs-4">姓名：</label>
 						<div class="col-xs-4">
 							<!--form-control是对控制文本框圆角、宽度和高度-->
 							<input type="text" id="uName" class="form-control" />
@@ -60,14 +60,6 @@
 							<img src="" title="看不清，换一张" alt="看不清，换一张" />&nbsp;&nbsp;<a>换一张</a>
 						</div>
 					</div>
-					<div class="form-group">
-						<label class="radio-inline col-xs-offset-5">
-		    			<input type="radio" name="optionsRadiosinline" id="optionsRadios1" value="option1" checked>学生
-		 			 	</label>
-		 				<label class="radio-inline" style="margin-left: 30px;">
-		    			<input type="radio" name="optionsRadiosinline" id="optionsRadios2" value="option2">老师
-		  			</label>
-	  			</div>
 	  			<div class="form-group">
 	  				<div class="col-xs-offset-4">
 	  					<input type="submit" class="btn btn-primary col-xs-5" style="margin-left:35px;" value="登录" />
@@ -81,17 +73,5 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
-    <script>
-    	$(function(){
-    		var $radio = $("input[type='radio']:first");
-    		var focusShow;
-    		if($radio.attr("checked")=="checked"){
-    			$("label[for='uName']").html("学号：");
-    			focusShow = "必须是纯数字";
-    		}else{
-    			$("label[for='uName']").html("姓名：");
-    		}
-    	});
-    </script>
   </body>
 </html>
