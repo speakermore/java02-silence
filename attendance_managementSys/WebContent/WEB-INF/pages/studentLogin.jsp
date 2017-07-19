@@ -62,7 +62,7 @@ body {
 				<div class="form-group">
 					<label for="captcha" class="control-label col-xs-4">验证码：</label>
 					<div class="col-xs-2" style="display: inline;">
-						<input type="text" id="captcha" class="form-control" />
+						<input type="text" id="captcha" name="captcha" class="form-control" />
 					</div>
 					<div style="display: inline;">
 						<label class="left"></label> <img src="" title="看不清，换一张"
@@ -71,7 +71,7 @@ body {
 				</div>
 				<div class="form-group">
 					<div class="col-xs-offset-4">
-						<input type="submit" class="btn btn-primary col-xs-5"
+						<input type="submit" name="submit" class="btn btn-primary col-xs-5"
 							style="margin-left: 35px;" value="登录" />
 					</div>
 				</div>

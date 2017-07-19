@@ -9,6 +9,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		1.列名列表与值列表必须一一对应
 		2.如果表字段全填充，则可省略，此时值列表必须与数据库字段列表一一对应
 		3.#{属性名}是OGNL表达式，它自动匹配实体对象的属性 -->
-		insert into students(stuNo,stuName,stuPwd,classId,integral,stuGender) values(#{stuNo},#{stuName},#{stuPwd},#{classId},#{integral},,#{stuGender})
+		insert into students(stuNo,stuName,stuPwd,classId,stuIntegrals,stuGender) values(#{stuNo},#{stuName},#{stuPwd},#{classId},#{integrals},#{stuGender})
 	</insert>
 </mapper>

@@ -26,6 +26,7 @@
     	
     	#remind{
     	margin-left:500px;
+    	color: green;
     	}
     </style>
   </head>
@@ -43,7 +44,7 @@
 							<label for="studentNo" class="control-label col-xs-4">学号：</label>
 							<div class="col-xs-4">
 								<!--form-control是对控制文本框圆角、宽度和高度-->
-								<input type="text" id="studentNo" class="form-control" />
+								<input type="text" id="stuNo" name="stuNo" class="form-control" />
 							</div>
 						</div>
 						<div class="form-group">
@@ -51,39 +52,49 @@
 							<label for="stuName" class="control-label col-xs-4">姓名：</label>
 							<div class="col-xs-4">
 								<!--form-control是对控制文本框圆角、宽度和高度-->
-								<input type="text" id="stuName" class="form-control" />
+								<input type="text" id="stuName" name="stuName" class="form-control" />
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="classes" class="control-label col-xs-4">班级：</label>
 							<div class="col-xs-4">
-								<select id="classes" class="form-control" >
-									<option value="">--请选择--</option>
-									<option value="">1</option>
-									<option value="">2</option>
-									<option value="">3</option>
-									<option value="">4</option>
+								<select id="classes" name="classId" class="form-control" >
+									<option value="0">--请选择--</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="classes" class="control-label col-xs-4">性别：</label>
+							<div class="col-xs-4">
+								<select id="classes" name="stuGender" class="form-control" >
+									<option value="0">--请选择--</option>
+									<option value="1">男</option>
+									<option value="2">女</option>
 								</select>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="pwd" class=" control-label col-xs-4">密码：</label>
 							<div class="col-xs-4">
-								<input type="password" id="pwd" class="form-control" />
+								<input type="password" id="pwd" name="stuPwd" class="form-control" />
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="integrals" class=" control-label col-xs-4">积分：</label>
 							<div class="col-xs-4">
-								<input type="text" id="integrals" class="form-control" value="100" disabled="disabled" />
+								<input type="text" id="integrals" name="integrals" class="form-control" value="100" readonly="readonly" />
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="col-xs-offset-4">
-								<input type="submit" class="btn btn-primary col-xs-5" style="margin-left:35px;" value="提交" />
+								<input type="submit" name="submit" class="btn btn-primary col-xs-5" style="margin-left:35px;" value="提交" />
 							</div>
 						</div>
-						<div id="remind">${success.success }</div>
+						<div id="remind">${reg }</div>
 					</form>
 				</div>
 			</div>

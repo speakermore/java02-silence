@@ -1,7 +1,5 @@
 package silence.service;
 
-import org.apache.ibatis.annotations.Param;
-
 import silence.entity.Students;
 
 /**
@@ -10,5 +8,5 @@ import silence.entity.Students;
 * 用户业务接口：学生接口
 */
 public interface StudentService {
-	public Students studentLogin(@Param("stuNumber")String stuNumber,@Param("stuPwd")String stuPwd);
+	public Students studentLogin(String stuNumber,String stuPwd);
 }

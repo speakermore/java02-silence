@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import silence.entity.Students;
+import silence.service.StudentService;
 import silence.service.TeachersService;
 
 /** 
@@ -19,14 +20,26 @@ import silence.service.TeachersService;
 public class TeachersController {
 	@Resource
 	TeachersService teacherService;
-	@RequestMapping(value = "/reg", method = RequestMethod.POST)
+	@Resource
+	StudentService studentService;
+	@RequestMapping(value="/reg", method = RequestMethod.POST)
 	public ModelAndView reg(Students stu){
-		int result = teacherService.reg(stu);
+		String reg= "";
+		Students students = studentService.studentLogin(stu.getStuNo(), stu.getStuPwd());
+		//创建一个模型和试图用于设置返回页面及向页面返回数据
 		ModelAndView mv = new ModelAndView("reg");
-		if(result>0){
-			String success = "注册成功！";
-			mv.addObject("success",success);
+		if(students == null){
+			int result = teacherService.reg(stu);
+			if(result > 0){
+				reg = "注册成功！";
+			}else {
+				reg = "注册失败！";
+			}
+		}else {
+			reg = "该用户已存在，请重新注册！";
 		}
+		// 向页面返回数据
+		mv.addObject("reg",reg);
 		return mv;
 	}
 	@RequestMapping(value="/reg",method=RequestMethod.GET)

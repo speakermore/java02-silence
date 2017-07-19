@@ -22,11 +22,10 @@ public class StudentController {
 	//@Resource为自动注入的注解，表明此类要通过Spring容器完成注入
 	@Resource
 	StudentService studentService;
-	
-	 /**
-	   * @author 连慧
-	   * @param stuNo 学号， stuPwd 密码
-	   * @return
+	/*
+	   @author 连慧
+	   @param stuNo 学号， stuPwd 密码
+	   @return
 	   */
 	  @RequestMapping(value="/studentLogin",method=RequestMethod.POST)
 	  public ModelAndView studentLogin(String stuNo,String stuPwd){
@@ -57,5 +56,4 @@ public class StudentController {
 	  public String login(){
 		  return "studentLogin";
 	  }
-	  
 }

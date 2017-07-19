@@ -12,7 +12,6 @@ import silence.entity.Students;
 public interface StudentMapper {
 	/**
 	 * 查询所有学生，用于JSP页面上进行学生信息的显示，进行页面学生信息的验证
-	 * 
 	 * @return 包含所有学生实体类对象的集合（返回值的意义）
 	 */
 	public Students studentLogin(@Param("stuNumber")String stuNumber,@Param("stuPwd")String stuPwd);
