@@ -19,9 +19,14 @@ import silence.service.TeachersService;
 @RequestMapping("/tecAttendance") //在此控制器中的所有请求映射均要添加tecAttendance前缀
 public class TeachersController {
 	@Resource
-	TeachersService teacherService;
+	TeachersService teacherService; 
 	@Resource
 	StudentService studentService;
+	/**
+	 * 袁云：老师添加学生用户，添加内容为学号，学生所在班级，学生姓名，密码，学生初始积分，学生性别
+	 * @param stu 封装了学生信息的实体对象
+	 * @return 大于0表示添加成功，否则失败
+	 */
 	@RequestMapping(value="/reg", method = RequestMethod.POST)
 	public ModelAndView reg(Students stu){
 		String reg= "";
