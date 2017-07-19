@@ -18,11 +18,17 @@ import silence.service.StudentService;
 @Service
 public class StudentServiceImpl implements StudentService{
 	//@Resource为自动注入的注解，表明此类要通过Spring容器完成注入
-		@Resource
-		private StudentMapper usersMapper;
+	@Resource
+	private StudentMapper usersMapper;
+
 	@Override
-	public Students studentLogin(String stuNumber, String stuPwd) {
-		return usersMapper.studentLogin(stuNumber, stuPwd);
+	public Students getStudentByStuNo(String stuNumber) {
+		return usersMapper.getStudentByStuNo(stuNumber);
+	}
+
+	@Override
+	public Students getStudentByStuPwd(String stuPwd) {
+		return usersMapper.getStudentByStuPwd(stuPwd);
 	}
 
 }
