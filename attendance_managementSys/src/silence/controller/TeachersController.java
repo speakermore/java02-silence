@@ -30,7 +30,7 @@ public class TeachersController {
 	@RequestMapping(value="/reg", method = RequestMethod.POST)
 	public ModelAndView reg(Students stu){
 		String reg= "";
-		Students students = studentService.studentLogin(stu.getStuNo(), stu.getStuPwd());
+		Students students = studentService.getStudentByStuNo(stu.getStuNo());
 		//创建一个模型和试图用于设置返回页面及向页面返回数据
 		ModelAndView mv = new ModelAndView("reg");
 		if(students == null){
