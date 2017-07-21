@@ -1,5 +1,7 @@
 package silence.service;
 
+import java.sql.Timestamp;
+
 import org.apache.ibatis.annotations.Param;
 
 import silence.entity.Students;
@@ -10,6 +12,12 @@ import silence.entity.Students;
 * 用户业务接口：学生接口
 */
 public interface StudentService {
+	//通过学号获得学生对象
 	public Students getStudentByStuNo(String stuNumber);
-	public Students getStudentByStuPwd(String stuPwd);
+	//通过学生编号查询学生密码
+	public String getStudentPwd(Integer id);
+	//修改学生密码
+	public Integer updateStuPwd(String stuPwd,Integer id);
+	//插入学生到校时间
+	public Integer insertComeTime(Integer stuId,Timestamp comeTime);
 }

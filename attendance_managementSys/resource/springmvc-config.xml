@@ -33,6 +33,7 @@
         				<property name="supportedMediaTypes" >
         					<list>
         						<value>application/json;charset=UTF-8</value>
+        						<value>text/html;charset=UTF-8</value>
         					</list>
         				</property>
         			</bean>
@@ -41,7 +42,7 @@
         				<property name="supportedMediaTypes">
         					<list>
         						<value>text/html;charset=UTF-8</value>
-        						<value>application/json</value>
+        						<value>application/json;charset=UTF-8</value>
         					</list>
         				</property>
         				<property name="features">

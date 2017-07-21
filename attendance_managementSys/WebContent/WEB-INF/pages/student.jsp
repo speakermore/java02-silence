@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!-- base获得在地址栏访问时项目的绝对路径（这里获得的路径是需要加上表单里action提交的地址的，目的是：这样就可以锁定到控制器相应的方法上，然后就可以做相应的处理） -->
 <base href="${pageContext.request.scheme }://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/" />   
 <!DOCTYPE html >
@@ -60,7 +61,7 @@
 			<div id="topRight" class="col-sm-5">
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="">查看考勤记录</a></li>
-					<li><a href="">修改密码</a></li>
+					<li><a href="stuAttendance/updateStuPwd">修改密码</a></li>
 				</ul>
 			</div>
 			<!--头部右边导航结束-->
@@ -73,7 +74,7 @@
 		<!--考勤按钮开始-->
 		<div id="btn2" class="row">
 			<div id="come" class="col-sm-3">
-				<button type="button" class="btn btn-success">签到</button>
+				<button type="button" class="btn btn-success" onclick="window.location.href='stuAttendance/...'">签到</button>
 			</div>
 			<div id="back" class="col-sm-3">
 				<button type="button" class="btn btn-success">签退</button>
