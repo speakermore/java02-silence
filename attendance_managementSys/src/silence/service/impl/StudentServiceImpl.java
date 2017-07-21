@@ -27,8 +27,8 @@ public class StudentServiceImpl implements StudentService{
 	}
 
 	@Override
-	public Students getStudentByStuPwd(String stuPwd) {
-		return usersMapper.getStudentByStuPwd(stuPwd);
+	public Integer updateStuPwd(String stuPwd,String stuNo) {
+		return usersMapper.updateStuPwd(stuPwd,stuNo);
 	}
 
 }

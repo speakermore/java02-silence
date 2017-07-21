@@ -9,8 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select * from students
 		where stuNo=#{stuNumber}
 	</select>
-	<select id="getStudentByStuPwd" resultType="Students">
-		select * from students
-		where stuPwd=#{stuPwd}
-	</select>
+	<update id="updateStuPwd" parameterType="String">
+		update students set stuPwd=#{stuPwd} where stuNo=#{stuNo}
+	</update>
 </mapper>

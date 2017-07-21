@@ -1,6 +1,7 @@
 package silence.controller;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,19 +26,18 @@ public class StudentController {
 	/*
 	 * @author 连慧
 	 * @param 页面传过来的：stuNo 学号， stuPwd 密码
-	 * @return
+	 * @return ModelAndView对象，用来设置跳转页面和向页面传递参数（把参数放到了request对象）
 	 */
 	@RequestMapping(value = "/studentLogin", method = RequestMethod.POST)
-	public ModelAndView studentLogin(String stuNo, String stuPwd) {
+	public ModelAndView studentLogin(String stuNo, String stuPwd,HttpSession session) {
 		String info = "";
 		ModelAndView mv = new ModelAndView(); // 这里的路径是真实的JSP页面路径;
-		Students student = null;
-		student=studentService.getStudentByStuNo(stuNo);
+		Students student =studentService.getStudentByStuNo(stuNo);
 		if (student != null) {
-			 student = studentService.getStudentByStuPwd(stuPwd);
-			if (student != null) {
+			if (student.getStuPwd().equals(stuPwd)) {
 				// 创建一个模型和视图
 				mv.setViewName("student");
+				session.setAttribute("student", student);
 			}else {
 				info = "用户名或者密码不存在！";
 				mv.setViewName("studentLogin");
@@ -60,4 +60,35 @@ public class StudentController {
 	public String login() {
 		return "studentLogin";
 	}
+	
+	/*
+	 * @author 连慧
+	 * @param 页面传过来的：stuNo修改密码的学生学号，stuOldPwd旧密码，stuNewPwd新密码，stuRePwd重复密码
+	 * @return ModelAndView对象，用来设置跳转页面和向页面传递参数（把参数放到了request对象）
+	 */
+	@RequestMapping(value="/updateStuPwd",method=RequestMethod.POST)
+	public ModelAndView updateStuPwd(String stuNo,String stuNewPwd,String stuRePwd){
+		String info="";
+		ModelAndView mv=new ModelAndView();
+		if(stuNewPwd.equals(stuRePwd)){
+			int result=studentService.updateStuPwd(stuNewPwd, stuNo);
+			if(result>0){
+				info="修改密码成功！";
+				mv.setViewName("studentUpdatePwd");
+			}else{
+				info="修改密码失败！";
+				mv.setViewName("studentUpdatePwd");
+			}
+		}else{
+			info="两次输入密码不一致！";
+			mv.setViewName("studentUpdatePwd");
+		}
+		mv.addObject("message",info);
+		return mv;
+	}
+	@RequestMapping(value = "/updateStuPwd", method = RequestMethod.GET)
+	public String updateStuPwd() {
+		return "studentUpdatePwd";
+	}
+	
 }

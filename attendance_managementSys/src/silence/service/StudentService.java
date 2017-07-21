@@ -10,6 +10,8 @@ import silence.entity.Students;
 * 用户业务接口：学生接口
 */
 public interface StudentService {
+	//通过学号获得学生对象
 	public Students getStudentByStuNo(String stuNumber);
-	public Students getStudentByStuPwd(String stuPwd);
+	//修改学生密码
+	public Integer updateStuPwd(String stuPwd,String stuNo);
 }
