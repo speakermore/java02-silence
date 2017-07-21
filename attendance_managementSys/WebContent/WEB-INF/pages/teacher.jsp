@@ -28,15 +28,24 @@
 <body>
 	<div class="container-fluid">
 		<div class="row">
+		<div id="tecLogin" class="col-sm-3">${tecLogin }</div>
 		<button type="button" class="btn btn-info col-sm-3">给学生注册</button>
 		<button type="button" class="btn btn-info col-sm-3">查看学生考勤记录</button>
 		<button type="button" class="btn btn-info col-sm-3">查看学生工作日志</button>
 		<button type="button" class="btn btn-info col-sm-3">修改密码</button>
 		</div>
 	</div>
+	<div id="tecUpdatePwd" class="col-sm-3">${update}</div>
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		$(function () {
+			$("button:eq(3)").click(function () {
+				window.location.href="tecAttendance/jumpUpdatePage";
+			})
+		})
+	</script>
 </body>
 </html>

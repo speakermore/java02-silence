@@ -31,40 +31,35 @@
 					<h3 class="panel-title">修改登录密码</h3>
 				</div>
 				<div class="panel-body">
-					<form action="" role="form" class="form-horizontal">
+					<form action="tecAttendance/tecUpdatePwd" role="form" class="form-horizontal" method="post">
 				<!--把标签和控件放在一个带有 class .form-group 的 <div> 中。这是获取最佳间距所必需的。-->
-						<div class="form-group">
-							<!--control-label是控制label标签内容的显示以及加粗，col-xs-xx是控制label占多少个单元，居右显示-->
-							<label for="name" class="control-label col-xs-4">姓名：</label>
-							<div class="col-xs-4">
-								<!--form-control是对控制文本框圆角、宽度和高度-->
-								<input type="text" id="name" class="form-control" />
-							</div>
-						</div>
+						<input type="hidden" id="id" name="id" value="${teacher.id }"/>
 						<div class="form-group">
 							<!--control-label是控制label标签内容的显示以及加粗，col-xs-xx是控制label占多少个单元，居右显示-->
 							<label for="oldPwd" class="control-label col-xs-4">旧密码：</label>
 							<div class="col-xs-4">
 								<!--form-control是对控制文本框圆角、宽度和高度-->
-								<input type="password" id="oldPwd" class="form-control" />
+								<input type="password" id="oldPwd" name="oldPwd" class="form-control" value="" />
 							</div>
+							<div id="verifyPwd" class="col-xs-4"></div>
 						</div>
 						<div class="form-group">
 							<label for="newPwd" class=" control-label col-xs-4">新密码：</label>
 							<div class="col-xs-4">
-								<input type="password" id="newPwd" class="form-control" />
+								<input type="password" id="newPwd" name="newPwd" class="form-control" />
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="confirmPwd" class=" control-label col-xs-4">确认密码：</label>
 							<div class="col-xs-4">
-								<input type="password" id="confirmPwd" class="form-control" />
+								<input type="password" id="confirmPwd" name="confirmPwd" class="form-control" />
 							</div>
+							<div id="tecUpdatePwd" class="col-xs-4">${update }</div>
 						</div>
 						<div class="form-group">
 							<label for="captcha" class="control-label col-xs-4">验证码：</label>
 							<div class="col-xs-2" style="display: inline;">
-								<input type="text" id="captcha" class="form-control" />
+								<input type="text" id="captcha" name="captcha" class="form-control" />
 							</div>
 							<div style="display: inline;">
 								<label class="left"></label>
@@ -73,7 +68,7 @@
 						</div>
 						<div class="form-group">
 							<div class="col-xs-offset-4">
-								<input type="submit" class="btn btn-primary col-xs-5" style="margin-left:35px;" value="提交" />
+								<input type="submit" id="submit" class="btn btn-primary col-xs-5" name="submit" style="margin-left:35px;" value="提交" />
 							</div>
 						</div>
 					</form>
@@ -84,5 +79,25 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+    	$(function () {
+			$("#oldPwd").blur(function () {
+				$.ajax({
+					url:"tecAttendance/verifyPwd",
+					type:"post",
+					dataType:"html",
+					data:{"id":${teacher.id },"oldPwd":$(this).val()},
+					success:function(data){
+						$("#verifyPwd").html(data);
+						if(data=='"密码输入错误！"'){
+							$("#submit").attr("disabled","true");
+						}else{
+							$("#submit").removeAttr("disabled");
+						}
+					}
+				});
+			});
+		})
+    </script>
   </body>
 </html>

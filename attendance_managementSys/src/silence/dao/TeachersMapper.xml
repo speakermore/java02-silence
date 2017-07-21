@@ -11,4 +11,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		3.#{属性名}是OGNL表达式，它自动匹配实体对象的属性 -->
 		insert into students(stuNo,stuName,stuPwd,classId,stuIntegrals,stuGender) values(#{stuNo},#{stuName},#{stuPwd},#{classId},#{integrals},#{stuGender})
 	</insert>
+	
+	<select id="getTeacherByName" resultType="Teacher">
+		select * from teachers
+		where tecName=#{tecName}
+	</select>
+	
+	<select id="getTecById" resultType="Teacher">
+		select * from teachers
+		where id=#{id}
+	</select>
+	
+	<insert id="tecUpdatePwd">
+		update teachers set tecPwd=#{newPwd} where id=#{id}
+	</insert>
 </mapper>

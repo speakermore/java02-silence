@@ -1,6 +1,7 @@
 package silence.service;
 
 import silence.entity.Students;
+import silence.entity.Teacher;
 
 /** 
 * @author  作者:袁云 
@@ -9,10 +10,12 @@ import silence.entity.Students;
 */
 
 public interface TeachersService {
-	/**
-	 * 袁云：老师添加学生用户，添加内容为学号，学生所在班级，学生姓名，密码，学生初始积分，学生性别
-	 * @param stu 封装了学生信息的实体对象
-	 * @return 大于0表示添加成功，否则失败
-	 */
 	public Integer reg(Students stu);
+	
+	public Teacher getTeacherByName(String tecName);
+	
+	public Teacher getTecById(Integer id);
+
+	public Integer tecUpdatePwd(Integer id,String newPwd); 
+	
 }

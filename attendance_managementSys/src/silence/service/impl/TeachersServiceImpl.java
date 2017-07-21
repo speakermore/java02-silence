@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import silence.dao.TeachersMapper;
 import silence.entity.Students;
+import silence.entity.Teacher;
 import silence.service.TeachersService;
 
 /** 
@@ -23,6 +24,24 @@ public class TeachersServiceImpl implements TeachersService {
 	public Integer reg(Students stu) {
 		// TODO Auto-generated method stub
 		return teachersMapper.reg(stu) ;
+	}
+
+	@Override
+	public Teacher getTeacherByName(String tecName) {
+		// TODO Auto-generated method stub
+		return teachersMapper.getTeacherByName(tecName);
+	}
+
+	@Override
+	public Teacher getTecById(Integer id) {
+		// TODO Auto-generated method stub
+		return teachersMapper.getTecById(id);
+	}
+	
+	@Override
+	public Integer tecUpdatePwd(Integer id,String newPwd) {
+		// TODO Auto-generated method stub
+		return teachersMapper.tecUpdatePwd(id,newPwd);
 	}
 
 }

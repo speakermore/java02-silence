@@ -1,13 +1,16 @@
 package silence.controller;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import silence.entity.Students;
+import silence.entity.Teacher;
 import silence.service.StudentService;
 import silence.service.TeachersService;
 
@@ -50,5 +53,100 @@ public class TeachersController {
 	@RequestMapping(value="/reg",method=RequestMethod.GET)
 	public String reg(){
 		return "reg";
+	}
+	
+	/**
+	 * 袁云：老师登录功能
+	 * @param stu 页面传过来的老师姓名和老师密码
+	 * @return 老师对象
+	 */
+	@RequestMapping(value="/teacherLogin", method = RequestMethod.POST)
+	public ModelAndView teacherLogin(String tecName,String tecPwd,HttpSession session){
+		String tecLogin= "";
+		Teacher teacher = teacherService.getTeacherByName(tecName);
+		//创建一个模型和试图用于设置返回页面及向页面返回数据
+		ModelAndView mv = new ModelAndView();
+		if(teacher != null){
+			if(tecPwd.equals(teacher.getTecPwd())){
+				tecLogin = "登录成功!";
+				session.setAttribute("teacher", teacher);
+				mv.setViewName("teacher");
+			}else {
+				tecLogin = "姓名或密码错误，请重新输入！";
+				mv.setViewName("teacherLogin");
+			}
+		}else {
+			tecLogin = "姓名或密码错误，请重新输入！";
+			// 设置跳转的页面
+			mv.setViewName("teacherLogin");
+		}
+		// 向页面返回数据
+		mv.addObject("tecLogin",tecLogin);
+		return mv;
+	}
+	@RequestMapping(value="/teacherLogin",method=RequestMethod.GET)
+	public String teacherLogin(){
+		return "teacherLogin";
+	}
+	
+	/**
+	 * 袁云：用于点击修改密码按钮时跳转到修改密码页面
+	 */
+	@RequestMapping(value="/jumpUpdatePage",method=RequestMethod.GET)
+	public String jumpUpdatePage(){
+		return "teacherUpdatePwd";
+	}
+	
+	/**
+	 * 袁云：老师验证密码的功能
+	 * @param  页面传过来的id和姓名
+	 * @return 老师对象
+	 */
+	@RequestMapping(value="/verifyPwd",method=RequestMethod.POST)
+	@ResponseBody //ajax注解，把verifyPwd当做字符串返回给页面
+	public String verifyPwd(Integer id,String oldPwd){
+		String verifyPwd = "";
+		Teacher teacher = teacherService.getTecById(id);
+		if(oldPwd.equals(teacher.getTecPwd())){
+			verifyPwd = "验证密码成功！";
+		}else{
+			verifyPwd = "密码输入错误！";
+		}
+		return verifyPwd;
+	}
+	
+	/**
+	 * 袁云：老师修改密码功能
+	 * @param  页面传过来的新密码和确认密码
+	 * @return 老师对象
+	 */
+	@RequestMapping(value="/tecUpdatePwd",method=RequestMethod.POST)
+	public ModelAndView tecUpdatePwd(Integer id,String oldPwd,String newPwd,String confirmPwd){
+		String update = "";
+		ModelAndView mv = new ModelAndView();
+		if(verifyPwd(id, oldPwd).equals("验证密码成功！")){
+			if(newPwd.equals(confirmPwd)){
+				int result = teacherService.tecUpdatePwd(id,newPwd);
+				if(result > 0){
+					update = "修改密码成功！";
+					// 设置跳转的页面
+					mv.setViewName("teacher");
+				}else{
+					update = "修改密码失败";
+					mv.setViewName("teacherUpdatePwd");
+				}
+			}else{
+				update = "两次输入的密码不一致，请重新输入！";
+				// 设置跳转的页面
+				mv.setViewName("teacherUpdatePwd");
+			}
+		}else{
+			update = "密码输入错误,请重新输入！";
+			// 设置跳转的页面
+			mv.setViewName("teacherUpdatePwd");
+		}
+		// 向页面返回数据
+		mv.addObject("update",update);
+		return mv;
 	}
 }

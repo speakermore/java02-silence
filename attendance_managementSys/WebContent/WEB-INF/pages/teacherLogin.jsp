@@ -24,6 +24,9 @@
     		margin: 50px;
     		background: rgb(247, 248, 250);
     	}
+    	#teacherLogin{
+    	color: green;
+    	}
     </style>
   </head>
 	<body>
@@ -34,26 +37,27 @@
   		</div>
   		<div class="row">
   			<!--form-horizontal是调节该表单是行内元素还是块元素，有form-horizontal和form-inline-->
-	  		<form action="" role="form" class="form-horizontal">
+	  		<form action="tecAttendance/teacherLogin" role="form" class="form-horizontal" method="post">
 	  			<!--把标签和控件放在一个带有 class .form-group 的 <div> 中。这是获取最佳间距所必需的。-->
 					<div class="form-group">
 						<!--control-label是控制label标签内容的显示以及加粗，col-xs-xx是控制label占多少个单元，居右显示-->
 						<label for="uName" class="control-label col-xs-4">姓名：</label>
 						<div class="col-xs-4">
 							<!--form-control是对控制文本框圆角、宽度和高度-->
-							<input type="text" id="uName" class="form-control" />
+							<input type="text" id="uName" name="tecName" class="form-control" />
 						</div>
+						<div id="teacherLogin" class="col-xs-4">${tecLogin}</div>
 					</div>
 					<div class="form-group">
 						<label for="uPwd" class=" control-label col-xs-4">密码：</label>
 						<div class="col-xs-4">
-							<input type="password" id="uPwd" class="form-control"  />
+							<input type="password" id="uPwd" name="tecPwd" class="form-control"  />
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="captcha" class="control-label col-xs-4">验证码：</label>
 						<div class="col-xs-2" style="display: inline;">
-							<input type="text" id="captcha" class="form-control" />
+							<input type="text" id="captcha" name="captcha" class="form-control" />
 						</div>
 						<div style="display: inline;">
 							<label class="left"></label>
@@ -62,7 +66,7 @@
 					</div>
 	  			<div class="form-group">
 	  				<div class="col-xs-offset-4">
-	  					<input type="submit" class="btn btn-primary col-xs-5" style="margin-left:35px;" value="登录" />
+	  					<input type="submit" class="btn btn-primary col-xs-5" name="submit" style="margin-left:35px;" value="登录" />
 	  				</div>
 	  			</div>
 	  		</form>
