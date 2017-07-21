@@ -74,10 +74,11 @@
 		<!--考勤按钮开始-->
 		<div id="btn2" class="row">
 			<div id="come" class="col-sm-3">
-				<button type="button" class="btn btn-success" onclick="window.location.href='stuAttendance/...'">签到</button>
+				<button type="button" id="come" class="btn btn-success">签到</button>
+				<div id="comeInfo"></div>
 			</div>
 			<div id="back" class="col-sm-3">
-				<button type="button" class="btn btn-success">签退</button>
+				<button type="button" id="back" class="btn btn-success">签退</button>
 			</div>
 		</div>
 		<!--考勤按钮结束-->
@@ -99,5 +100,25 @@
 	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("#come").click(function() {
+				$.ajax({
+					url:"stuAttendance/insertComeTime",
+					type:"post",
+					data:{"stuId":${student.id}},
+					dataType:"html",
+					success:function(data){
+						$("#comeInfo").html(data);
+						if(data=="签到成功！"){
+							$("#come").attr("disabled","true");
+						}else{
+							$("#come").removeAttr("disabled");
+						}
+					}
+				});
+			});
+		});
+	</script>
 </body>
 </html>

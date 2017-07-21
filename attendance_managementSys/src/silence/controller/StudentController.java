@@ -1,6 +1,8 @@
 package silence.controller;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.sun.glass.ui.SystemClipboard;
 
 import silence.entity.Students;
 import silence.service.StudentService;
@@ -117,11 +121,19 @@ public class StudentController {
 	
 	/*
 	 * @author 连慧
-	 * @param 页面传过来的：stuId插入到校时间的学生编号，stuOldPwd旧密码，stuNewPwd新密码，stuRePwd重复密码
-	 * @return ModelAndView对象，用来设置跳转页面和向页面传递参数（把参数放到了request对象）
+	 * @param 页面传过来的：stuId插入到校时间的学生编号
+	 * @return 把签到是否成功的信息返回给页面
 	 */
-	@RequestMapping(value = "/updateStuPwd", method = RequestMethod.GET)
-	public String insertComeTime(Integer stuId,Timestamp comeTime) {
-		return "签到成功!";
+	@RequestMapping(value = "/insertComeTime", method = RequestMethod.POST)
+	@ResponseBody
+	public String insertComeTime(Integer stuId) {
+		String info="";
+		int result=studentService.insertComeTime(stuId,new Timestamp(System.currentTimeMillis()));
+		if(result>0){
+			info="签到成功！";
+		}else{
+			info="签到失败！";
+		}
+		return info;
 	}
 }
