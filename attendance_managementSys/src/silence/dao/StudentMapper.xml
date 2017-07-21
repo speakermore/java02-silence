@@ -9,7 +9,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select * from students
 		where stuNo=#{stuNumber}
 	</select>
-	<update id="updateStuPwd" parameterType="String">
-		update students set stuPwd=#{stuPwd} where stuNo=#{stuNo}
+	<select id="getStudentPwd" resultType="String">
+		select stuPwd from students
+		where id=#{id}
+	</select>
+	<update id="updateStuPwd">
+		update students set stuPwd=#{stuPwd} where id=#{id}
 	</update>
+	<insert id="insertComeTime">
+		insert into attendance_record (stuId,attendanceComeTime) values (#{stuId},#{comeTime})
+	</insert>
 </mapper>

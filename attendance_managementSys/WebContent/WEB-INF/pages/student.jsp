@@ -74,7 +74,7 @@
 		<!--考勤按钮开始-->
 		<div id="btn2" class="row">
 			<div id="come" class="col-sm-3">
-				<button type="button" class="btn btn-success">签到</button>
+				<button type="button" class="btn btn-success" onclick="window.location.href='stuAttendance/...'">签到</button>
 			</div>
 			<div id="back" class="col-sm-3">
 				<button type="button" class="btn btn-success">签退</button>

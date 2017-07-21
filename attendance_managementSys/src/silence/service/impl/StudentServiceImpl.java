@@ -1,5 +1,7 @@
 package silence.service.impl;
 
+import java.sql.Timestamp;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -19,16 +21,26 @@ import silence.service.StudentService;
 public class StudentServiceImpl implements StudentService{
 	//@Resource为自动注入的注解，表明此类要通过Spring容器完成注入
 	@Resource
-	private StudentMapper usersMapper;
+	private StudentMapper studentMapper;
 
 	@Override
 	public Students getStudentByStuNo(String stuNumber) {
-		return usersMapper.getStudentByStuNo(stuNumber);
+		return studentMapper.getStudentByStuNo(stuNumber);
 	}
 
 	@Override
-	public Integer updateStuPwd(String stuPwd,String stuNo) {
-		return usersMapper.updateStuPwd(stuPwd,stuNo);
+	public Integer updateStuPwd(String stuPwd,Integer id) {
+		return studentMapper.updateStuPwd(stuPwd,id);
+	}
+
+	@Override
+	public String getStudentPwd(Integer id) {
+		return studentMapper.getStudentPwd(id);
+	}
+
+	@Override
+	public Integer insertComeTime(Integer stuId, Timestamp comeTime) {
+		return studentMapper.insertComeTime(stuId, comeTime);
 	}
 
 }
