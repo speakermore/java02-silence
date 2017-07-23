@@ -16,16 +16,26 @@ public class attendanceRecord implements Serializable {
 	private static final long serialVersionUID = 8243505218871454088L;
 	private Integer id;    //考勤记录Id
 	private Integer stuId;   //学生Id
+	private String stuNo;
+	private String stuName;
+	private String className;
 	private Timestamp attendanceComeTime;   //到校时间
 	private Timestamp attendanceBackTime;   //离校时间
 	
 	public attendanceRecord() {
 	}
-	public attendanceRecord(Integer stuId, Timestamp attendanceComeTime, Timestamp attendanceBackTime) {
+	
+	public attendanceRecord(Integer stuId, String stuNo, String stuName, String className, Timestamp attendanceComeTime,
+			Timestamp attendanceBackTime) {
+		super();
 		this.stuId = stuId;
+		this.stuNo = stuNo;
+		this.stuName = stuName;
+		this.className = className;
 		this.attendanceComeTime = attendanceComeTime;
 		this.attendanceBackTime = attendanceBackTime;
 	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -50,10 +60,31 @@ public class attendanceRecord implements Serializable {
 	public void setAttendanceBackTime(Timestamp attendanceBackTime) {
 		this.attendanceBackTime = attendanceBackTime;
 	}
+	
+	public String getStuNo() {
+		return stuNo;
+	}
+	public void setStuNo(String stuNo) {
+		this.stuNo = stuNo;
+	}
+	public String getStuName() {
+		return stuName;
+	}
+	public void setStuName(String stuName) {
+		this.stuName = stuName;
+	}
+	public String getClassName() {
+		return className;
+	}
+	public void setClassName(String className) {
+		this.className = className;
+	}
+
 	@Override
 	public String toString() {
-		return "attendanceRecord [id=" + id + ", stuId=" + stuId + ", attendanceComeTime=" + attendanceComeTime
-				+ ", attendanceBackTime=" + attendanceBackTime + "]";
+		return "attendanceRecord [id=" + id + ", stuId=" + stuId + ", stuNo=" + stuNo + ", stuName=" + stuName
+				+ ", className=" + className + ", attendanceComeTime=" + attendanceComeTime + ", attendanceBackTime="
+				+ attendanceBackTime + "]";
 	}
 	
 	

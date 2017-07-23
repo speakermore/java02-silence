@@ -24,6 +24,9 @@
 			}
 			#attendance_foot{margin-top: 200px;}
 			#main-attend,#head-main{margin-top: 50px;}
+			#verifyStuExistInfo{
+			margin-left: 700px
+			}
 		</style>
 </head>
 <body>
@@ -42,36 +45,30 @@
 				<!--显示内容头部开始-->
 				<form id="head-main" class="form-inline ">
 					<div class="form-group">
-						<label for="exampleInputName2">考勤时间：</label>
-						<select class="form-control">
-							<option>--请选择查看考勤的时间--</option>
-							<option>本周</option>
-							<option>上一周</option>
-							<option>本月</option>
-							<option>上个月</option>
-							<option>全年</option>
+						<label for="attendanceTime">考勤时间：</label>
+						<input id="attendanceTime1" name="attendanceTime1" class="date_test form-control" />&nbsp;-&nbsp;<input id="attendanceTime2" name="attendanceTime2" class="date_test form-control" />
+					</div>
+					<div class="form-group">
+						<label for="stuClass">班级：</label>
+						<select id="stuClass" name="stuClass" class="form-control">
+							<option value="0">--请选择查看的班级--</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
 						</select>
 					</div>
 					<div class="form-group">
-						<label for="exampleInputName2">班级：</label>
-						<select class="form-control">
-							<option>--请选择查看的班级--</option>
-							<option>文秘</option>
-							<option>计算机</option>
-							<option>财会</option>
-							<option>市场营销</option>
-						</select>
+						<label for="stuNo">学号：</label>
+						<input id="stuNo" name="stuNo" class="form-control" type="text" value="" placeholder="请输入要查看的学生学号"/>
 					</div>
 					<div class="form-group">
-						<label for="exampleInputName2">学号：</label>
-						<input class="form-control" type="text" value="请输入要查看的学生学号"/>
+						<label for="stuName">姓名：</label>
+						<input id="stuName" name="stuName" class="form-control" type="text" value="" placeholder="请输入要查看的学生姓名"/>
 					</div>
-					<div class="form-group">
-						<label for="exampleInputName2">姓名：</label>
-						<input class="form-control" type="text" value="请输入要查看的学生姓名"/>
-					</div>
-					<button type="submit" class="btn btn-default">GO</button>
+					<button id="btn1" name="btn1" type="button" class="btn btn-default">GO</button>
 				</form>
+				<div id="verifyStuExistInfo"></div>
 				<!--显示内容头部结束-->
 
 				<!--显示内容主体开始-->
@@ -80,29 +77,36 @@
 						<li>
 							<a href="">
 								<span class="col-sm-2">学号</span>
-								<span class="col-sm-2">姓名</span>
-								<span class="col-sm-3">班级姓名</span>
-								<span class="col-sm-5">考勤时间</span>
+								<span class="col-sm-1">姓名</span>
+								<span class="col-sm-3">班级名称</span>
+								<span class="col-sm-3">到校时间</span>
+								<span class="col-sm-3">离校时间</span>
 							</a>
 						</li>
-						<li>
-							<a href=""><span class="col-sm-2">201232322</span>
-								<span class="col-sm-2">张三</span>
-								<span class="col-sm-3">计算机班</span>
-								<span class="col-sm-5">2016-8-12:08:29:23</span></a>
-						</li>
-						<li>
-							<a href=""><span class="col-sm-2">201232322</span>
-								<span class="col-sm-2">张三</span>
-								<span class="col-sm-3">计算机班</span>
-								<span class="col-sm-5">2016-8-12:08:29:23</span></a>
-						</li>
-						<li>
-							<a href=""><span class="col-sm-2">201232322</span>
-								<span class="col-sm-2">张三</span>
-								<span class="col-sm-3">计算机班</span>
-								<span class="col-sm-5">2016-8-12:08:29:23</span></a>
-						</li>
+						<div id="main-attendContent">
+							<li>
+								<a href=""><span class="col-sm-2">201232322</span>
+									<span class="col-sm-1">张三</span>
+									<span class="col-sm-3">计算机班</span>
+									<span class="col-sm-3">2016-8-12:08:29:23</span>
+									<span class="col-sm-3">2016-8-12:08:29:23</span>
+								</a>
+							</li>
+							<li>
+								<a href=""><span class="col-sm-2">201232322</span>
+									<span class="col-sm-1">张三</span>
+									<span class="col-sm-3">计算机班</span>
+									<span class="col-sm-3">2016-8-12:08:29:23</span>
+									<span class="col-sm-3">2016-8-12:08:29:23</span></a>
+							</li>
+							<li>
+								<a href=""><span class="col-sm-2">201232322</span>
+									<span class="col-sm-1">张三</span>
+									<span class="col-sm-3">计算机班</span>
+									<span class="col-sm-3">2016-8-12:08:29:23</span>
+									<span class="col-sm-3">2016-8-12:08:29:23</span></a>
+							</li>
+						</div>
 					</ul>
 
 				</div>
@@ -131,7 +135,7 @@
 						<div class="form-group">
 							<input type="text" class="form-control" placeholder="页码">
 						</div>
-						<button type="submit" class="btn btn-default">GO</button>
+						<button id="btn2" name="btn2" type="submit" class="btn btn-default">GO</button>
 					</form>
 				</div>
 				<!--显示内容尾部结束-->
@@ -143,5 +147,91 @@
 		<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
 		<script src="js/bootstrap.min.js"></script>
+		<script src="thirdpart/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+	    <script src="thirdpart/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+	    <script>
+	    		$(function (){
+	    			$(".date_test").datetimepicker({
+	    				language:"zh-CN",
+	    				autoclose:"true",
+	    				todayBtn:true,
+	    				startView:2,
+	    				minView:"year",
+	    				format:"yyyy-mm-dd" //选中之后显示到的时间级别
+	    			});
+	    			
+	    			$("#stuClass").blur(function () {
+	    				if($("#stuClass").val()!="0" && $("#stuNo").val()!=null && $("#stuNo").val()!=""){
+		    				$.ajax({
+	    						url:"tecAttendance/verifyStuExist",
+	    						type:"post",
+	    						dataType:"json",
+	    						data:{"id":$("#stuClass").val(),"stuNo":$("#stuNo").val()},
+	    						success:function(data){
+	    							if(!data.succeed){
+	    								$("#stuName").attr("disabled","true");
+	    								$("#btn1").attr("disabled","true");
+	        							$("#verifyStuExistInfo").html(data.message);
+	    							}else{
+	    								$("#stuName").removeAttr("disabled");
+	    								$("#btn1").removeAttr("disabled");
+	        							$("#verifyStuExistInfo").html("");
+	    							}
+	    						}
+		    				});	
+	    				}else{
+	    					$("#verifyStuExistInfo").html("");
+							$("#stuName").removeAttr("disabled");
+	    					$("#btn1").removeAttr("disabled");
+	    				}
+	    			});
+	    			
+	    			$("#stuNo").blur(function () {
+	    				if($("#stuClass").val()!="0" && $("#stuNo").val()!=null && $("#stuNo").val()!=""){
+		    				$.ajax({
+	    						url:"tecAttendance/verifyStuExist",
+	    						type:"post",
+	    						dataType:"json",
+	    						data:{"id":$("#stuClass").val(),"stuNo":$("#stuNo").val()},
+	    						success:function(data){
+	    							if(!data.succeed){
+	    								$("#stuName").attr("disabled","true");
+	    								$("#btn1").attr("disabled","true");
+	        							$("#verifyStuExistInfo").html(data.message);
+	    							}else{
+	    								$("#stuName").removeAttr("disabled");
+	    								$("#btn1").removeAttr("disabled");
+	        							$("#verifyStuExistInfo").html("");
+	    							}
+	    						}
+		    				});	
+	    				}else{
+	    					$("#verifyStuExistInfo").html("");
+							$("#stuName").removeAttr("disabled");
+	    					$("#btn1").removeAttr("disabled");
+	    				}
+	    			});
+	    			$("#btn1").click(function () {
+	    				$.ajax({
+	    					url:"tecAttendance/lookAttendanceRecord",
+	    					type:"post",
+	    					data:{"attendanceTime1":$("#attendanceTime1").val(),"attendanceTime2":$("#attendanceTime2").val(),"id":$("#stuClass").val(),"stuNo":$("#stuNo").val(),"stuName":$("#stuName").val()},
+	    					dataType:"json",
+	    					success:function(data){
+	    						var content = $("#main-attendContent");
+	    						content.empty();
+	    						for(var i = 0 ;i < data.length;i++){
+	    							$("<li><span class='col-sm-2'>"+data[i].stuNo+
+	    									"</span><span class='col-sm-1'>"+data[i].stuName+
+	    									"</span><span class='col-sm-3'>"+data[i].className+
+	    									"</span><span class='col-sm-3'>"+data[i].attendanceComeTime+
+	    									"</span><span class='col-sm-3'>"+data[i].attendanceBackTime+
+	    									"</span></li>").appendTo(content);
+	    						}
+	    					}
+	    				});
+					}); 
+	    		});
+	    </script>
 </body>
 </html>

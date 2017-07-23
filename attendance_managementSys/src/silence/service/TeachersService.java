@@ -1,7 +1,11 @@
 package silence.service;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 import silence.entity.Students;
 import silence.entity.Teacher;
+import silence.entity.attendanceRecord;
 
 /** 
 * @author  作者:袁云 
@@ -17,5 +21,9 @@ public interface TeachersService {
 	public Teacher getTecById(Integer id);
 
 	public Integer tecUpdatePwd(Integer id,String newPwd); 
+	
+	public Students verifyStuExist(Integer id,String stuNo);
+	
+	public List<attendanceRecord> lookAttendanceRecord(Timestamp attendanceTime1,Timestamp attendanceTime2,Integer id,String stuNo,String stuName);
 	
 }

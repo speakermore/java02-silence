@@ -25,4 +25,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="tecUpdatePwd">
 		update teachers set tecPwd=#{newPwd} where id=#{id}
 	</insert>
+	
+	<select id="verifyStuExist" resultType="Students">
+		select * from students
+		where classId=#{id} and stuNo=#{stuNo}
+	</select>
+	
+	<select id="lookAttendanceRecord" resultType="attendanceRecord">
+		select s.stuNo,s.stuName,c.className,ar.attendanceComeTime,ar.attendanceBackTime 
+		from attendance_record ar join students s on ar.stuId=s.id 
+        join classes c on s.classId=c.id 
+        <where>
+	        <if test="attendanceTime1!=null and attendanceTime2!=null">
+	        	and ar.attendanceComeTime between #{attendanceTime1} and #{attendanceTime2}
+	        </if>
+	        <if test="id!=0">
+	        	and c.id=#{id}
+	        </if>
+	        <if test="stuNo!=null and stuNo!=''">
+	        	and s.stuNo=#{stuNo}
+	        </if>
+	        <if test="stuName!=null and stuName!=''">
+	        	and s.stuName like CONCAT(CONCAT('%', #{stuName}),'%')
+	        </if>
+        </where>
+		order by s.stuNo asc 
+	</select>
 </mapper>

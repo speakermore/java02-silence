@@ -89,7 +89,7 @@
 					data:{"id":${teacher.id },"oldPwd":$(this).val()},
 					success:function(data){
 						$("#verifyPwd").html(data);
-						if(data=='"密码输入错误！"'){
+						if(data=="密码输入错误！"){
 							$("#submit").attr("disabled","true");
 						}else{
 							$("#submit").removeAttr("disabled");

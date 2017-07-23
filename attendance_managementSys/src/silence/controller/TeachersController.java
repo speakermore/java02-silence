@@ -1,5 +1,11 @@
 package silence.controller;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
@@ -11,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import silence.entity.Students;
 import silence.entity.Teacher;
+import silence.entity.attendanceRecord;
 import silence.service.StudentService;
 import silence.service.TeachersService;
 
@@ -99,20 +106,20 @@ public class TeachersController {
 	
 	/**
 	 * 袁云：老师验证密码的功能
-	 * @param  页面传过来的id和姓名
+	 * @param  页面传过来的老师id和老师密码
 	 * @return 老师对象
 	 */
 	@RequestMapping(value="/verifyPwd",method=RequestMethod.POST)
 	@ResponseBody //ajax注解，把verifyPwd当做字符串返回给页面
 	public String verifyPwd(Integer id,String oldPwd){
-		String verifyPwd = "";
+		String verifyPwdInfo = "";
 		Teacher teacher = teacherService.getTecById(id);
 		if(oldPwd.equals(teacher.getTecPwd())){
-			verifyPwd = "验证密码成功！";
+			verifyPwdInfo = "验证密码成功！";
 		}else{
-			verifyPwd = "密码输入错误！";
+			verifyPwdInfo = "密码输入错误！";
 		}
-		return verifyPwd;
+		return verifyPwdInfo;
 	}
 	
 	/**
@@ -148,5 +155,47 @@ public class TeachersController {
 		// 向页面返回数据
 		mv.addObject("update",update);
 		return mv;
+	}
+	
+	/**
+	 * 袁云：用于点击查看学生考勤记录按钮时跳转到查看学生考勤记录页面
+	 */
+	@RequestMapping(value="/jumpLookAttendanceRecord",method=RequestMethod.GET)
+	public String jumpLookAttendanceRecord(){
+		return "teacherlookattendancerecord";
+	}
+	
+	/**
+	 * 袁云：验证该班级室友偶该学号的学生的功能
+	 * @param  页面传过来的班级id和学生学号
+	 * @return 老师对象
+	 */
+	@RequestMapping(value="/verifyStuExist",method=RequestMethod.POST)
+	@ResponseBody //ajax注解，把verifyStuExist当做字符串返回给页面
+	public Map<String,Object> verifyStuExist(Integer id,String stuNo){
+		//String verifyStuExistInfo = "";
+		Map<String, Object> verifyStuExistInfo = new HashMap<String,Object>();
+		Students students = teacherService.verifyStuExist(id,stuNo);
+		if(students!=null){
+			verifyStuExistInfo.put("succeed",true);
+			verifyStuExistInfo.put("message", "该班存在该学号的学生！");
+		}else{
+			verifyStuExistInfo.put("succeed",false);
+			verifyStuExistInfo.put("message", "该班不存在该学号的学生！");
+		}
+		return verifyStuExistInfo;
+	}
+	
+	/**
+	 * 袁云：老师查看考勤记录
+	 * @param  页面传过来的考勤时间、班级、姓名和学号，可以为空
+	 * @return 考勤记录集合
+	 */
+	@RequestMapping(value="/lookAttendanceRecord",method=RequestMethod.POST)
+	@ResponseBody
+	public List<attendanceRecord> lookAttendanceRecord(Timestamp attendanceTime1,Timestamp attendanceTime2,Integer id,String stuNo,String stuName){
+		List<attendanceRecord> attendanceRecord = new ArrayList<attendanceRecord>();
+		attendanceRecord = teacherService.lookAttendanceRecord(attendanceTime1, attendanceTime2, id, stuNo, stuName);
+		return attendanceRecord;
 	}
 }

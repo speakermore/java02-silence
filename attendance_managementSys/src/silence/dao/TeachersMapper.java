@@ -1,9 +1,13 @@
 package silence.dao;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import silence.entity.Students;
 import silence.entity.Teacher;
+import silence.entity.attendanceRecord;
 
 /** 
 * @author  作者:袁云 
@@ -38,6 +42,20 @@ public interface TeachersMapper {
 	 * @return 大于0表示添加成功，否则失败
 	 */
 	public Integer tecUpdatePwd(@Param("id")Integer id,@Param("newPwd")String newPwd);
+	
+	/**
+	 * @author 袁云
+	 * 根据页面传过来的班级id和学号验证该班级是否存在该学生
+	 * @return 学生对象（返回值的意义）
+	 */
+	public Students verifyStuExist(@Param("id")Integer id,@Param("stuNo")String stuNo);
+	
+	/**
+	 * @author 袁云
+	 * 老师查看考勤记录
+	 * @return 考勤记录集合
+	 */
+	public List<attendanceRecord> lookAttendanceRecord(@Param("attendanceTime1")Timestamp attendanceTime1,@Param("attendanceTime2")Timestamp attendanceTime2,@Param("id")Integer id,@Param("stuNo")String stuNo,@Param("stuName")String stuName);
 	
 	
 	

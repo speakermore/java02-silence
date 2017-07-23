@@ -41,7 +41,7 @@
 				<!--把标签和控件放在一个带有 class .form-group 的 <div> 中。这是获取最佳间距所必需的。-->
 						<div class="form-group">
 							<!--control-label是控制label标签内容的显示以及加粗，col-xs-xx是控制label占多少个单元，居右显示-->
-							<label for="studentNo" class="control-label col-xs-4">学号：</label>
+							<label for="stuNo" class="control-label col-xs-4">学号：</label>
 							<div class="col-xs-4">
 								<!--form-control是对控制文本框圆角、宽度和高度-->
 								<input type="text" id="stuNo" name="stuNo" class="form-control" />
@@ -91,7 +91,7 @@
 						</div>
 						<div class="form-group">
 							<div class="col-xs-offset-4">
-								<input type="submit" name="submit" class="btn btn-primary col-xs-5" style="margin-left:35px;" value="提交" />
+								<input id="submit" type="submit" name="submit" class="btn btn-primary col-xs-5" style="margin-left:35px;" value="提交" />
 							</div>
 						</div>
 						<div id="remind">${reg }</div>
@@ -103,5 +103,12 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+    	$(function () {
+    		$("body").ready(function () {
+				$("#stuNo").focus();
+			});
+		});
+    </script>
   </body>
 </html>
