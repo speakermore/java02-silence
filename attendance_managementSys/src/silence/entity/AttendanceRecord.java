@@ -8,24 +8,23 @@ import java.sql.Timestamp;
 * @date 创作时间：2017年7月13日 下午11:03:00
 * 实体类：考勤记录类
 */
-public class attendanceRecord implements Serializable {
-
+public class AttendanceRecord implements Serializable {
 	/**
 	 *生成序列化id 
 	 */
 	private static final long serialVersionUID = 8243505218871454088L;
 	private Integer id;    //考勤记录Id
 	private Integer stuId;   //学生Id
-	private String stuNo;
-	private String stuName;
-	private String className;
+	private String stuNo;    //学号
+	private String stuName;   //学生姓名
+	private String className;  //班级名称
 	private Timestamp attendanceComeTime;   //到校时间
 	private Timestamp attendanceBackTime;   //离校时间
 	
-	public attendanceRecord() {
+	public AttendanceRecord() {
 	}
 	
-	public attendanceRecord(Integer stuId, String stuNo, String stuName, String className, Timestamp attendanceComeTime,
+	public AttendanceRecord(Integer stuId, String stuNo, String stuName, String className, Timestamp attendanceComeTime,
 			Timestamp attendanceBackTime) {
 		super();
 		this.stuId = stuId;

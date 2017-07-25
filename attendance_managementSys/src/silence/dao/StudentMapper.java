@@ -1,9 +1,11 @@
 package silence.dao;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import silence.entity.AttendanceRecord;
 import silence.entity.Students;
 
 /**
@@ -39,4 +41,27 @@ public interface StudentMapper {
 	 * @return >0表示插入到校时间成功，否则失败
 	 */
 	public Integer insertComeTime(@Param("stuId")Integer stuId,@Param("comeTime")Timestamp comeTime);
+	
+	/**
+	 * @author 连慧
+	 * 查询学生考勤记录
+	 * @param id学生编号，classId为班级编号,pageIndex为页码下标
+	 * @return 符合该学生条件的所有考勤记录
+	 */
+	public List<AttendanceRecord> selectStuAttendanceReocrd(@Param("id")Integer id,@Param("classId")Integer classId,@Param("pageIndex")Integer pageIndex);
+	/**
+	 * @author 连慧
+	 * 查询学生考勤记录的总记录数
+	 * @param id学生编号，classId为班级编号
+	 * @return 符合该学生条件的所有考勤记录
+	 */
+	public Integer getMaxStuAttendanceReocrd(@Param("id")Integer id,@Param("classId")Integer classId);
+	/**
+	 * @author 连慧
+	 * 通过时间查询学生考勤记录
+	 * @param id学生编号，classId为班级编号,choice是option选择的值,pageIndex页码下标
+	 * @return 符合该时间段的学生所有考勤记录
+	 */
+	public List<AttendanceRecord> selectStuAttendanceRecordByTime(@Param("id")Integer id,@Param("classId")Integer classId,@Param("choice")Integer choice,@Param("pageIndex")Integer pageIndex);
+	public Integer getMaxAttendanceRecordByTime(@Param("id")Integer id,@Param("classId")Integer classId,@Param("choice")Integer choice);
 }
