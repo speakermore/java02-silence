@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import silence.entity.AttendanceRecord;
 import silence.entity.Students;
 import silence.entity.Teacher;
-import silence.entity.AttendanceRecord;
 
 /** 
 * @author  作者:袁云 
@@ -52,11 +52,20 @@ public interface TeachersMapper {
 	
 	/**
 	 * @author 袁云
-	 * 老师查看考勤记录
+	 * 老师根据查询条件查看考勤记录
 	 * @return 考勤记录集合
 	 */
 	public List<AttendanceRecord> lookAttendanceRecord(@Param("attendanceTime1")Timestamp attendanceTime1,@Param("attendanceTime2")Timestamp attendanceTime2,@Param("id")Integer id,@Param("stuNo")String stuNo,@Param("stuName")String stuName);
-	
-	
-	
+	/**
+	 * @author 袁云
+	 * 获得考勤的最大记录数
+	 * @return 考勤最大记录数
+	 */
+	public Integer getMaxRecord();
+	/**
+	 * @author 袁云
+	 * 老师查看考勤记录
+	 * @return 考勤记录集合
+	 */
+	public List<AttendanceRecord> findAll(@Param("pageIndex") Integer pageIndex);
 }

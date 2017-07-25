@@ -46,7 +46,7 @@
 				window.location.href="tecAttendance/jumpUpdatePage";
 			});
 			$("button:eq(1)").click(function () {
-				window.location.href="tecAttendance/jumpLookAttendanceRecord";
+				window.location.href="tecAttendance/jumpLookAttendanceRecord?curPage=1";
 			});
 		});
 	</script>

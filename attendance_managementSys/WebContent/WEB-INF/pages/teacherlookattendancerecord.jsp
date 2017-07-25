@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!-- base获得在地址栏访问时项目的绝对路径（这里获得的路径是需要加上表单里action提交的地址的，目的是：这样就可以锁定到控制器相应的方法上，然后就可以做相应的处理） -->
 <base href="${pageContext.request.scheme }://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/" />
 <!DOCTYPE html>
@@ -43,10 +44,11 @@
 
 				<!--显示内容开始-->
 				<!--显示内容头部开始-->
-				<form id="head-main" class="form-inline ">
+				<form id="head-main" class="form-inline" action="tecAttendance/lookAttendanceRecord?curPage=1" method="post">
 					<div class="form-group">
 						<label for="attendanceTime">考勤时间：</label>
-						<input id="attendanceTime1" name="attendanceTime1" class="date_test form-control" />&nbsp;-&nbsp;<input id="attendanceTime2" name="attendanceTime2" class="date_test form-control" />
+						<input id="attendanceTime1" name="attendanceTime1" class="date_test form-control" />&nbsp;-&nbsp;
+						<input id="attendanceTime2" name="attendanceTime2" class="date_test form-control" />
 					</div>
 					<div class="form-group">
 						<label for="stuClass">班级：</label>
@@ -66,7 +68,7 @@
 						<label for="stuName">姓名：</label>
 						<input id="stuName" name="stuName" class="form-control" type="text" value="" placeholder="请输入要查看的学生姓名"/>
 					</div>
-					<button id="btn1" name="btn1" type="button" class="btn btn-default">GO</button>
+					<button id="btn1" name="btn1" type="submit" class="btn btn-default">GO</button>
 				</form>
 				<div id="verifyStuExistInfo"></div>
 				<!--显示内容头部结束-->
@@ -83,30 +85,20 @@
 								<span class="col-sm-3">离校时间</span>
 							</a>
 						</li>
+						
 						<div id="main-attendContent">
+						<c:forEach items="${attendanceRecords }" var="a">
 							<li>
-								<a href=""><span class="col-sm-2">201232322</span>
-									<span class="col-sm-1">张三</span>
-									<span class="col-sm-3">计算机班</span>
-									<span class="col-sm-3">2016-8-12:08:29:23</span>
-									<span class="col-sm-3">2016-8-12:08:29:23</span>
+								<a href=""><span class="col-sm-2">${a.stuNo }</span>
+									<span class="col-sm-1">${a.stuName }</span>
+									<span class="col-sm-3">${a.className }</span>
+									<span class="col-sm-3">${a.attendanceComeTime }</span>
+									<span class="col-sm-3">${a.attendanceBackTime }</span>
 								</a>
 							</li>
-							<li>
-								<a href=""><span class="col-sm-2">201232322</span>
-									<span class="col-sm-1">张三</span>
-									<span class="col-sm-3">计算机班</span>
-									<span class="col-sm-3">2016-8-12:08:29:23</span>
-									<span class="col-sm-3">2016-8-12:08:29:23</span></a>
-							</li>
-							<li>
-								<a href=""><span class="col-sm-2">201232322</span>
-									<span class="col-sm-1">张三</span>
-									<span class="col-sm-3">计算机班</span>
-									<span class="col-sm-3">2016-8-12:08:29:23</span>
-									<span class="col-sm-3">2016-8-12:08:29:23</span></a>
-							</li>
+							</c:forEach>
 						</div>
+						
 					</ul>
 
 				</div>
@@ -115,25 +107,25 @@
 				<div id="attendance_foot" class="row">
 					<div class="col-sm-4">
 						<ul class="pagination">
-							<li><span>共12条记录&nbsp;1/5页</span></li>
+							<li><span>共${maxRecord}条记录&nbsp;${curPage}/${maxPage}页</span></li>
 							<li>
-								<a href="#"><span>首页</span></a>
+								<a href="tecAttendance/jumpLookAttendanceRecord?curPage=1"><span>首页</span></a>
 							</li>
 							<li>
-								<a href="#"><span>上一页</span></a>
+								<a href="tecAttendance/jumpLookAttendanceRecord?curPage=${curPage-1}"><span>上一页</span></a>
 							</li>
 							<li>
-								<a href="#"><span>下一页</span></a>
+								<a href="tecAttendance/jumpLookAttendanceRecord?curPage=${curPage+1}"><span>下一页</span></a>
 							</li>
 							<li>
-								<a href="#"><span>尾页</span></a>
+								<a href="tecAttendance/jumpLookAttendanceRecord?curPage=${maxPage}"><span>尾页</span></a>
 							</li>
 						</ul>
 					</div>
-					<form class="navbar-form navbar-left" role="search">
+					<form class="navbar-form navbar-left" role="search" action="tecAttendance/jumpLookAttendanceRecord" method="get">
 						<span>跳转至：</span>
 						<div class="form-group">
-							<input type="text" class="form-control" placeholder="页码">
+							<input type="text" name="curPage" class="form-control" placeholder="页码">
 						</div>
 						<button id="btn2" name="btn2" type="submit" class="btn btn-default">GO</button>
 					</form>
@@ -211,9 +203,13 @@
 	    					$("#btn1").removeAttr("disabled");
 	    				}
 	    			});
-	    			$("#btn1").click(function () {
+	    			/* $("#btn1").click(function (){
+	    				window.location.href="tecAttendance/lookAttendanceRecord?curPage=1";
+	    			}); */
+	    			
+	    			/* $("#btn1").click(function () {
 	    				$.ajax({
-	    					url:"tecAttendance/lookAttendanceRecord",
+	    					url:"tecAttendance/lookAttendanceRecord?curPage=1",
 	    					type:"post",
 	    					data:{"attendanceTime1":$("#attendanceTime1").val(),"attendanceTime2":$("#attendanceTime2").val(),"id":$("#stuClass").val(),"stuNo":$("#stuNo").val(),"stuName":$("#stuName").val()},
 	    					dataType:"json",
@@ -226,11 +222,11 @@
 	    									"</span><span class='col-sm-3'>"+data[i].className+
 	    									"</span><span class='col-sm-3'>"+data[i].attendanceComeTime+
 	    									"</span><span class='col-sm-3'>"+data[i].attendanceBackTime+
-	    									"</span></li>").appendTo(content);
-	    						}
+	    									"</span></li>").appendTo(content); 
+    							} 
 	    					}
 	    				});
-					}); 
+					});  */
 	    		});
 	    </script>
 </body>

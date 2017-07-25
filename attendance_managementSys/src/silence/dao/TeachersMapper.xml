@@ -51,4 +51,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
 		order by s.stuNo asc 
 	</select>
+	
+	<select id="getMaxRecord" resultType="Integer">
+		select count(*) from attendance_record
+	</select>
+	
+	<select id="findAll" resultType="attendanceRecord">
+		<!-- 起始的下标，每页显示数量，limit一定是放在select的最后 -->
+		select s.stuNo,s.stuName,c.className,ar.attendanceComeTime,ar.attendanceBackTime 
+		from attendance_record ar,students s,classes c 
+		WHERE ar.stuId=s.id AND s.classId=c.id
+		<!-- 动态sql --> 
+		<if test="pageIndex != null">
+		limit #{pageIndex},5
+		</if>
+	</select>
 </mapper>

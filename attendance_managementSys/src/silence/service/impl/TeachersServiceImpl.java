@@ -8,9 +8,9 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import silence.dao.TeachersMapper;
+import silence.entity.AttendanceRecord;
 import silence.entity.Students;
 import silence.entity.Teacher;
-import silence.entity.AttendanceRecord;
 import silence.service.TeachersService;
 
 /** 
@@ -59,6 +59,18 @@ public class TeachersServiceImpl implements TeachersService {
 			String stuNo, String stuName) {
 		// TODO Auto-generated method stub
 		return teachersMapper.lookAttendanceRecord(attendanceTime1, attendanceTime2, id, stuNo, stuName);
+	}
+
+	@Override
+	public Integer getMaxRecord() {
+		// TODO Auto-generated method stub
+		return teachersMapper.getMaxRecord();
+	}
+
+	@Override
+	public List<AttendanceRecord> findAll(Integer pageIndex) {
+		// TODO Auto-generated method stub
+		return teachersMapper.findAll(pageIndex);
 	}
 
 }
