@@ -3,6 +3,7 @@ package silence.controller;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -15,8 +16,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.sun.glass.ui.SystemClipboard;
 
+import silence.entity.AttendanceRecord;
 import silence.entity.Students;
 import silence.service.StudentService;
+import silence.util.PageSupport;
 
 /**
  * @author 作者：连慧
@@ -135,5 +138,69 @@ public class StudentController {
 			info="签到失败！";
 		}
 		return info;
+	}
+	
+	/*
+	 * @author 连慧
+	 * @param 页面传过来的stuId学生编号,classId班级编号，curPage当前页码。
+	 * @return 学生编号对应的学生考勤记录
+	 */
+	@RequestMapping(value="/selectStuAttendanceRecord",method=RequestMethod.GET)
+	public ModelAndView selectStuAttendanceRecord(Integer stuId,Integer classId,Integer curPage){
+		if(curPage<1){
+			curPage=1;     //下限判断，当小于第一页时，纠正为第一页
+		}
+		int maxRecord=studentService.getMaxStuAttendanceReocrd(stuId, classId);
+		int maxPage=(maxRecord+4)/5;   //每页显示五条信息，总共有几页
+		if(curPage>maxPage){
+			curPage=maxPage;     //上限判断，当大于最后一页时，纠正为最后一页
+		}
+		int pageIndex=(curPage-1)*5;
+		List<AttendanceRecord> record=studentService.selectStuAttendanceReocrd(stuId, classId, pageIndex);
+		//创建一个模型和视图
+		ModelAndView mv=new ModelAndView("studentlookattendancerecord");
+		//向页面返回数据
+		mv.addObject("attendanceRecord", record);
+		mv.addObject("curPage", curPage);
+		mv.addObject("maxPage", maxPage);
+		mv.addObject("maxRecord", maxRecord);
+		return mv;
+	}
+	/*
+	 * @author 连慧
+	 * @param 页面传过来的stuId学生编号,classId班级编号，choice当前选择按什么查询。
+	 * @return 学生编号对应的学生考勤记录
+	 */
+	@RequestMapping(value="/selectStuAttendanceRecordByTime",method=RequestMethod.POST)
+	public ModelAndView selectStuAttendanceRecordByTime(Integer stuId,Integer classId,Integer choice,Integer curPage){
+		
+		if(curPage<1){
+			curPage=1;     //下限判断，当小于第一页时，纠正为第一页
+		}
+		int maxRecord=studentService.getMaxAttendanceRecordByTime(stuId, classId, choice);
+		int maxPage=(maxRecord+4)/5;   //每页显示五条信息，总共有几页
+		if(curPage>maxPage){
+			curPage=maxPage;     //上限判断，当大于最后一页时，纠正为最后一页
+		}
+		int pageIndex=(curPage-1)*5;
+		List<AttendanceRecord> record=studentService.selectStuAttendanceRecordByTime(stuId, classId, choice,pageIndex);
+		//创建一个模型和视图
+		ModelAndView mv=new ModelAndView();
+		if(choice!=1||choice!=2||choice!=3||choice!=4){
+			mv.setViewName("studentlookattendancerecord");
+		}
+		//设置跳转页面
+		mv.setViewName("studentlookattendancerecord");
+		//向页面返回数据
+		mv.addObject("attendanceRecord", record);
+		mv.addObject("curPage", curPage);
+		mv.addObject("maxPage", maxPage);
+		mv.addObject("maxRecord", maxRecord);
+		mv.addObject("choice", choice);
+		return mv;
+	}
+	@RequestMapping(value="/selectStuAttendanceRecordByTime",method=RequestMethod.GET)
+	public String selectStuAttendanceRecordByTime(){
+		return "studentlookattendancerecord";
 	}
 }

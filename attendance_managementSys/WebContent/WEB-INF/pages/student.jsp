@@ -58,9 +58,10 @@
 			</div>
 			<!--头部左边导航结束-->
 			<!--头部右边导航开始-->
+			<div>${student.id}</div><span>${student.classId}</span>
 			<div id="topRight" class="col-sm-5">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="">查看考勤记录</a></li>
+					<li><a href="stuAttendance/selectStuAttendanceRecord?stuId=${student.id}&classId=${student.classId}&curPage=1">查看考勤记录</a></li>
 					<li><a href="stuAttendance/updateStuPwd">修改密码</a></li>
 				</ul>
 			</div>

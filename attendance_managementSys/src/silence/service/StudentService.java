@@ -1,9 +1,11 @@
 package silence.service;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import silence.entity.AttendanceRecord;
 import silence.entity.Students;
 
 /**
@@ -20,4 +22,10 @@ public interface StudentService {
 	public Integer updateStuPwd(String stuPwd,Integer id);
 	//插入学生到校时间
 	public Integer insertComeTime(Integer stuId,Timestamp comeTime);
+	//查询学生考勤记录
+	public Integer getMaxStuAttendanceReocrd(Integer id,Integer classId);
+	public List<AttendanceRecord> selectStuAttendanceReocrd(Integer id,Integer classId,Integer pageIndex);
+	//根据时间查询学生考勤记录
+	public List<AttendanceRecord> selectStuAttendanceRecordByTime(Integer id,Integer classId,Integer choice,Integer pageIndex);
+	public Integer getMaxAttendanceRecordByTime(Integer id,Integer classId,Integer choice);
 }

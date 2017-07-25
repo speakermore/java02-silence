@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import silence.entity.AttendanceRecord;
 import silence.entity.Students;
 import silence.entity.Teacher;
-import silence.entity.attendanceRecord;
 import silence.service.StudentService;
 import silence.service.TeachersService;
 
@@ -159,14 +159,31 @@ public class TeachersController {
 	
 	/**
 	 * 袁云：用于点击查看学生考勤记录按钮时跳转到查看学生考勤记录页面
+	 * @param  页面传过来的当前页
+	 * @return 考勤记录对象
 	 */
 	@RequestMapping(value="/jumpLookAttendanceRecord",method=RequestMethod.GET)
-	public String jumpLookAttendanceRecord(){
-		return "teacherlookattendancerecord";
+	public ModelAndView jumpLookAttendanceRecord(Integer curPage ){
+		if(curPage < 1){
+			curPage=1;//下限判断，当小于第一页是，纠正为第一页
+		}
+		Integer maxRecord = teacherService.getMaxRecord();
+		Integer maxPage = (maxRecord+4)/5;
+		if(curPage > maxPage){
+			curPage = maxPage; // 上限判断，当大于最后一页时，纠正为最后一页
+		}
+		Integer pageIndex = (curPage-1)*5; 
+		List<AttendanceRecord> attendanceRecords = teacherService.findAll(pageIndex);
+		ModelAndView mv = new ModelAndView("teacherlookattendancerecord");
+		mv.addObject("attendanceRecords",attendanceRecords);
+		mv.addObject("curPage",curPage);
+		mv.addObject("maxPage",maxPage);
+		mv.addObject("maxRecord",maxRecord);
+		return mv;
 	}
 	
 	/**
-	 * 袁云：验证该班级室友偶该学号的学生的功能
+	 * 袁云：验证该班级是否有该学号的学生的功能
 	 * @param  页面传过来的班级id和学生学号
 	 * @return 老师对象
 	 */
@@ -193,9 +210,24 @@ public class TeachersController {
 	 */
 	@RequestMapping(value="/lookAttendanceRecord",method=RequestMethod.POST)
 	@ResponseBody
-	public List<attendanceRecord> lookAttendanceRecord(Timestamp attendanceTime1,Timestamp attendanceTime2,Integer id,String stuNo,String stuName){
-		List<attendanceRecord> attendanceRecord = new ArrayList<attendanceRecord>();
-		attendanceRecord = teacherService.lookAttendanceRecord(attendanceTime1, attendanceTime2, id, stuNo, stuName);
-		return attendanceRecord;
+	public ModelAndView lookAttendanceRecord(Timestamp attendanceTime1,Timestamp attendanceTime2,Integer stuClass,String stuNo,String stuName,Integer curPage){
+		List<AttendanceRecord> attendanceRecords = new ArrayList<AttendanceRecord>();
+		attendanceRecords = teacherService.lookAttendanceRecord(attendanceTime1, attendanceTime2, stuClass, stuNo, stuName);
+		if(curPage < 1){
+			curPage=1;//下限判断，当小于第一页是，纠正为第一页
+		}
+		Integer maxRecord = attendanceRecords.size();
+		Integer maxPage = (maxRecord+4)/5;
+		if(curPage > maxPage){
+			curPage = maxPage; // 上限判断，当大于最后一页时，纠正为最后一页
+		}
+		Integer pageIndex = (curPage-1)*5; 
+		attendanceRecords = teacherService.findAll(pageIndex);
+		ModelAndView mv = new ModelAndView("teacherlookattendancerecord");
+		mv.addObject("attendanceRecords",attendanceRecords);
+		mv.addObject("curPage",curPage);
+		mv.addObject("maxPage",maxPage);
+		mv.addObject("maxRecord",maxRecord);
+		return mv;
 	}
 }

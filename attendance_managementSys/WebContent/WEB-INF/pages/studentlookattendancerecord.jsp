@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!-- base获得在地址栏访问时项目的绝对路径（这里获得的路径是需要加上表单里action提交的地址的，目的是：这样就可以锁定到控制器相应的方法上，然后就可以做相应的处理） -->
 <base href="${pageContext.request.scheme }://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/" />
 <!DOCTYPE html>
@@ -33,51 +35,49 @@
 				<!--头部信息开始-->
 				<div class="row">
 					<div id="stu_info" class="col-sm-6">
-						<h3><strong>XXX</strong>的考勤记录</h3></div>
+						<h3><strong>${student.stuName}</strong>的考勤记录</h3></div>
 					<div id="attendance_rate" class="col-sm-6"><button type="submit" class="btn btn-default btn-lg">查看出勤率</button></div>
 				</div>
 				<!--头部信息结束-->
 
 				<!--显示内容开始-->
 				<!--显示内容头部开始-->
-				<form id="head-main" class="form-inline ">
+				<form id="head-main" class="form-inline " action="stuAttendance/selectStuAttendanceRecordByTime" method="post">
 					<div class="form-group">
 						<label for="exampleInputName2">考勤时间：</label>
-						<input class="date_test" id="date_test" name="" />
+						<select class="form-control" name="choice">
+							<option>--请选择查看考勤的时间--</option>
+							<option value="1">本周</option>
+							<option value="2">上周</option>
+							<option value="3">本月</option>
+							<option value="4">上月</option>
+						</select>
 					</div>
 					<button type="submit" class="btn btn-default">GO</button>
+					<input type="hidden" name="stuId" value="${student.id}"/>
+					<input type="hidden" name="classId" value="${student.classId}"/>
+					<input type="hidden" name="curPage" value="1"/>
 				</form>
 				<!--显示内容头部结束-->
 
 				<!--显示内容主体开始-->
+				<div>${stuId}</div><span>${classId}</span>
 				<div id="main-attend">
 					<ul class="list-unstyled">
 						<li>
-							<a href="">
 								<span class="col-sm-2">学号</span>
 								<span class="col-sm-2">姓名</span>
 								<span class="col-sm-3">班级姓名</span>
 								<span class="col-sm-5">考勤时间</span>
-							</a>
 						</li>
+						<c:forEach items="${attendanceRecord}" var="a">
 						<li>
-							<a href=""><span class="col-sm-2">201232322</span>
-								<span class="col-sm-2">张三</span>
-								<span class="col-sm-3">计算机班</span>
-								<span class="col-sm-5">2016-8-12:08:29:23</span></a>
+						 	<span class="col-sm-2">${a.stuNo}</span>
+							<span class="col-sm-2">${a.stuName}</span>
+							<span class="col-sm-3">${a.className}</span>
+							<span class="col-sm-5"><fmt:formatDate value="${a.attendanceComeTime}" pattern="yyyy年MM月dd日 HH:mm:ss" /></span>
 						</li>
-						<li>
-							<a href=""><span class="col-sm-2">201232322</span>
-								<span class="col-sm-2">张三</span>
-								<span class="col-sm-3">计算机班</span>
-								<span class="col-sm-5">2016-8-12:08:29:23</span></a>
-						</li>
-						<li>
-							<a href=""><span class="col-sm-2">201232322</span>
-								<span class="col-sm-2">张三</span>
-								<span class="col-sm-3">计算机班</span>
-								<span class="col-sm-5">2016-8-12:08:29:23</span></a>
-						</li>
+					  </c:forEach>
 					</ul>
 
 				</div>
@@ -86,27 +86,49 @@
 				<div id="attendance_foot" class="row">
 					<div class="col-sm-4">
 						<ul class="pagination">
-							<li><span>共12条记录&nbsp;1/5页</span></li>
+							<li><span>共${maxRecord}条记录&nbsp;${curPage}/${maxPage}页</span></li>
 							<li>
-								<a href="#"><span>首页</span></a>
+								<c:if test="${choice==null}">
+								<a href="stuAttendance/selectStuAttendanceRecord?stuId=${student.id}&classId=${student.classId}&curPage=1"><span>首页</span></a>
+								</c:if>
+								<c:if test="${choice!=null}">
+								<a href="stuAttendance/selectStuAttendanceRecordByTime?stuId=${student.id}&classId=${student.classId}&choice=${choice}&curPage=1"><span>首页</span></a>
+								</c:if>
 							</li>
 							<li>
-								<a href="#"><span>上一页</span></a>
+								<c:if test="${choice==null}">
+								<a href="stuAttendance/selectStuAttendanceRecord?stuId=${student.id}&classId=${student.classId}&curPage=${curPage-1}"><span>上一页</span></a>
+								</c:if>
+								<c:if test="${choice!=null}">
+								<a href="stuAttendance/selectStuAttendanceRecordByTime?stuId=${student.id}&classId=${student.classId}&choice=${choice}&curPage=${curPage-1}"><span>上一页</span></a>
+								</c:if>
 							</li>
 							<li>
-								<a href="#"><span>下一页</span></a>
+								<c:if test="${choice==null}">
+								<a href="stuAttendance/selectStuAttendanceRecord?stuId=${student.id}&classId=${student.classId}&curPage=${curPage+1}"><span>下一页</span></a>
+								</c:if>
+								<c:if test="${choice!=null}">
+								<a href="stuAttendance/selectStuAttendanceRecordByTime?stuId=${student.id}&classId=${student.classId}&choice=${choice}&curPage=${curPage+1}"><span>下一页</span></a>
+								</c:if>
 							</li>
 							<li>
-								<a href="#"><span>尾页</span></a>
+								<c:if test="${choice==null}">
+								<a href="stuAttendance/selectStuAttendanceRecord?stuId=${student.id}&classId=${student.classId}&curPage=${maxPage}"><span>尾页</span></a>
+								</c:if>
+								<c:if test="${choice!=null}">
+								<a href="stuAttendance/selectStuAttendanceRecordByTime?stuId=${student.id}&classId=${student.classId}&choice=${choice}&curPage=${maxPage}"><span>尾页</span></a>
+								</c:if>
 							</li>
 						</ul>
 					</div>
-					<form class="navbar-form navbar-left" role="search">
+					<form class="navbar-form navbar-left" role="search" action="stuAttendance/selectStuAttendanceRecord" method="get">
 						<span>跳转至：</span>
 						<div class="form-group">
-							<input type="text" class="form-control" placeholder="页码">
+							<input type="text" name="curPage" class="form-control" placeholder="页码">
+							<input type="hidden" name="stuId" value="${student.id}"/>
+							<input type="hidden" name="classId" value="${student.classId}"/>
 						</div>
-						<button type="submit" class="btn btn-default">GO</button>
+							<button type="submit" class="btn btn-default">GO</button>
 					</form>
 				</div>
 				<!--显示内容尾部结束-->

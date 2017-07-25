@@ -1,12 +1,14 @@
 package silence.service.impl;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
 import silence.dao.StudentMapper;
+import silence.entity.AttendanceRecord;
 import silence.entity.Students;
 import silence.service.StudentService;
 
@@ -41,6 +43,26 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	public Integer insertComeTime(Integer stuId, Timestamp comeTime) {
 		return studentMapper.insertComeTime(stuId, comeTime);
+	}
+
+	@Override
+	public List<AttendanceRecord> selectStuAttendanceReocrd(Integer id, Integer classId,Integer pageIndex) {
+		return studentMapper.selectStuAttendanceReocrd(id, classId,pageIndex);
+	}
+
+	@Override
+	public Integer getMaxStuAttendanceReocrd(Integer id, Integer classId) {
+		return studentMapper.getMaxStuAttendanceReocrd(id, classId);
+	}
+
+	@Override
+	public List<AttendanceRecord> selectStuAttendanceRecordByTime(Integer id, Integer classId, Integer choice,Integer pageIndex) {
+		return studentMapper.selectStuAttendanceRecordByTime(id, classId, choice,pageIndex);
+	}
+
+	@Override
+	public Integer getMaxAttendanceRecordByTime(Integer id, Integer classId, Integer choice) {
+		return studentMapper.getMaxAttendanceRecordByTime(id, classId, choice);
 	}
 
 }

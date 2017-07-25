@@ -19,4 +19,53 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="insertComeTime">
 		insert into attendance_record (stuId,attendanceComeTime) values (#{stuId},#{comeTime})
 	</insert>
+	
+	<select id="selectStuAttendanceReocrd" resultType="AttendanceRecord">
+		select s.stuNo,s.stuName,c.className,a.attendanceComeTime 
+		from students s,classes c,attendance_record a 
+		where c.id=#{classId} and a.stuId=#{id} and s.id=#{id}
+		<if test="pageIndex!=null">
+			limit #{pageIndex},5;
+		</if>
+	</select>
+	<select id="getMaxStuAttendanceReocrd" resultType="Integer">
+		select count(*) from students s,classes c,attendance_record a 
+		where c.id=#{classId} and a.stuId=#{id} and s.id=#{id}
+	</select>
+	<select id="selectStuAttendanceRecordByTime" resultType="AttendanceRecord">
+		select s.stuNo,s.stuName,c.className,a.attendanceComeTime 
+		from students s,classes c,attendance_record a 
+		where c.id=#{classId} and a.stuId=#{id} and s.id=#{id}
+		<if test="choice==1">
+			and YEARWEEK(date_format(a.attendanceComeTime,'%Y-%m-%d')) = YEARWEEK(now())
+		</if>
+		<if test="choice==2">
+			and YEARWEEK(date_format(a.attendanceComeTime,'%Y-%m-%d')) = YEARWEEK(now())-1
+		</if>
+		<if test="choice==3">
+			and date_format(a.attendanceComeTime,'%Y-%m')=date_format(now(),'%Y-%m')
+		</if>
+		<if test="choice==4">
+			and date_format(a.attendanceComeTime,'%Y-%m')=date_format(date_sub(curdate(), interval 1 month),'%Y-%m') 
+		</if>
+		<if test="pageIndex!=null">
+			limit #{pageIndex},5
+		</if>
+	</select>
+	<select id="getMaxAttendanceRecordByTime" resultType="Integer">
+		select count(*) from students s,classes c,attendance_record a 
+		where c.id=#{classId} and a.stuId=#{id} and s.id=#{id}
+		<if test="choice==1">
+			and YEARWEEK(date_format(a.attendanceComeTime,'%Y-%m-%d')) = YEARWEEK(now()); 
+		</if>
+		<if test="choice==2">
+			and YEARWEEK(date_format(a.attendanceComeTime,'%Y-%m-%d')) = YEARWEEK(now())-1;
+		</if>
+		<if test="choice==3">
+			and date_format(a.attendanceComeTime,'%Y-%m')=date_format(now(),'%Y-%m');
+		</if>
+		<if test="choice==4">
+			and date_format(a.attendanceComeTime,'%Y-%m')=date_format(date_sub(curdate(), interval 1 month),'%Y-%m'); 
+		</if>
+	</select>
 </mapper>
