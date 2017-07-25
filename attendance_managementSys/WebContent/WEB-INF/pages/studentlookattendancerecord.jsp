@@ -43,14 +43,7 @@
 				<form id="head-main" class="form-inline ">
 					<div class="form-group">
 						<label for="exampleInputName2">考勤时间：</label>
-						<select class="form-control">
-							<option>--请选择查看考勤的时间--</option>
-							<option>本周</option>
-							<option>上一周</option>
-							<option>本月</option>
-							<option>上个月</option>
-							<option>全年</option>
-						</select>
+						<input class="date_test" id="date_test" name="" />
 					</div>
 					<button type="submit" class="btn btn-default">GO</button>
 				</form>
@@ -125,5 +118,19 @@
 		<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
 		<script src="js/bootstrap.min.js"></script>
+		<script src="thirdpart/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+    <script src="thirdpart/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+		<script>
+    		$(function (){
+    			$(".date_test").datetimepicker({
+    				language:"zh-CN",
+    				autoclose:"true",
+    				todayBtn:true,
+    				startView:3,
+    				minView:"year",
+    				format:"yyyy-mm-dd hh:ii" //选中之后显示到的时间级别
+    			});
+    		});
+   		 </script>
 </body>
 </html>
