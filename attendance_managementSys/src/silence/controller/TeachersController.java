@@ -17,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import silence.entity.Students;
 import silence.entity.Teacher;
-import silence.entity.attendanceRecord;
+import silence.entity.AttendanceRecord;
 import silence.service.StudentService;
 import silence.service.TeachersService;
 
@@ -193,8 +193,8 @@ public class TeachersController {
 	 */
 	@RequestMapping(value="/lookAttendanceRecord",method=RequestMethod.POST)
 	@ResponseBody
-	public List<attendanceRecord> lookAttendanceRecord(Timestamp attendanceTime1,Timestamp attendanceTime2,Integer id,String stuNo,String stuName){
-		List<attendanceRecord> attendanceRecord = new ArrayList<attendanceRecord>();
+	public List<AttendanceRecord> lookAttendanceRecord(Timestamp attendanceTime1,Timestamp attendanceTime2,Integer id,String stuNo,String stuName){
+		List<AttendanceRecord> attendanceRecord = new ArrayList<AttendanceRecord>();
 		attendanceRecord = teacherService.lookAttendanceRecord(attendanceTime1, attendanceTime2, id, stuNo, stuName);
 		return attendanceRecord;
 	}

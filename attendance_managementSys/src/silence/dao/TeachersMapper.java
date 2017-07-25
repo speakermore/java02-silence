@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import silence.entity.Students;
 import silence.entity.Teacher;
-import silence.entity.attendanceRecord;
+import silence.entity.AttendanceRecord;
 
 /** 
 * @author  作者:袁云 
@@ -55,7 +55,7 @@ public interface TeachersMapper {
 	 * 老师查看考勤记录
 	 * @return 考勤记录集合
 	 */
-	public List<attendanceRecord> lookAttendanceRecord(@Param("attendanceTime1")Timestamp attendanceTime1,@Param("attendanceTime2")Timestamp attendanceTime2,@Param("id")Integer id,@Param("stuNo")String stuNo,@Param("stuName")String stuName);
+	public List<AttendanceRecord> lookAttendanceRecord(@Param("attendanceTime1")Timestamp attendanceTime1,@Param("attendanceTime2")Timestamp attendanceTime2,@Param("id")Integer id,@Param("stuNo")String stuNo,@Param("stuName")String stuName);
 	
 	
 	

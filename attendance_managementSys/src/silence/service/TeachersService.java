@@ -5,7 +5,7 @@ import java.util.List;
 
 import silence.entity.Students;
 import silence.entity.Teacher;
-import silence.entity.attendanceRecord;
+import silence.entity.AttendanceRecord;
 
 /** 
 * @author  作者:袁云 
@@ -24,6 +24,6 @@ public interface TeachersService {
 	
 	public Students verifyStuExist(Integer id,String stuNo);
 	
-	public List<attendanceRecord> lookAttendanceRecord(Timestamp attendanceTime1,Timestamp attendanceTime2,Integer id,String stuNo,String stuName);
+	public List<AttendanceRecord> lookAttendanceRecord(Timestamp attendanceTime1,Timestamp attendanceTime2,Integer id,String stuNo,String stuName);
 	
 }
