@@ -11,7 +11,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-		<title>学生查看考勤记录页面</title>
+		<title>学生查看出勤率</title>
 		<!-- Bootstrap -->
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -33,17 +33,17 @@
 		<div id="man_atten" class="container-fluid">
 			<div class="row">
 				<!--头部信息开始-->
-				<h3><strong>${student.stuName}</strong>的考勤记录</h3></div>
+				<h3><strong>${student.stuName}</strong>的出勤率</h3></div>
 				<!--头部信息结束-->
 
 				<!--显示内容开始-->
 				<!--显示内容头部开始-->
 				<form id="head-main" class="form-inline " action="stuAttendance/selectStuAttendanceRecordByTime" method="post">
 					<div class="form-group">
-						<label for="exampleInputName2">考勤时间：</label>
+						<label for="exampleInputName2">出勤率时间：</label>
 						<select class="form-control" id="time" name="choice">
 							<c:if test="${choice==null}">
-								<option value="0">--请选择查看考勤的时间--</option>
+								<option value="0">--请选择查看出勤率的时间--</option>
 								<option value="1">本周</option>
 								<option value="2">上周</option>
 								<option value="3">本月</option>
@@ -60,7 +60,6 @@
 								<c:forEach items="${choiceTime}" var="c">
 								<option value="${c.id}">${c.times}</option>
 								</c:forEach>
-								<option value="0">--请选择查看考勤的时间--</option>
 							</c:if>	
 						</select>
 					</div>
@@ -78,8 +77,7 @@
 								<span class="col-sm-2">学号</span>
 								<span class="col-sm-1">姓名</span>
 								<span class="col-sm-3">班级姓名</span>
-								<span class="col-sm-3">到校时间</span>
-								<span class="col-sm-3">离校时间</span>
+								<span class="col-sm-3">出勤率</span>
 						</li>
 						<c:forEach items="${attendanceRecord}" var="a">
 						<li>
@@ -87,7 +85,6 @@
 							<span class="col-sm-1">${a.stuName}</span>
 							<span class="col-sm-3">${a.className}</span>
 							<span class="col-sm-3"><fmt:formatDate value="${a.attendanceComeTime}" pattern="yyyy年MM月dd日 HH:mm:ss" /></span>
-							<span class="col-sm-3"><fmt:formatDate value="${a.attendanceBackTime}" pattern="yyyy年MM月dd日 HH:mm:ss" /></span>
 						</li>
 					  </c:forEach>
 					</ul>

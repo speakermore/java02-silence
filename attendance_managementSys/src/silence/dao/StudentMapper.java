@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import silence.entity.AttendanceRecord;
+import silence.entity.ChoiceTime;
 import silence.entity.Students;
 
 /**
@@ -64,4 +65,11 @@ public interface StudentMapper {
 	 */
 	public List<AttendanceRecord> selectStuAttendanceRecordByTime(@Param("id")Integer id,@Param("classId")Integer classId,@Param("choice")Integer choice,@Param("pageIndex")Integer pageIndex);
 	public Integer getMaxAttendanceRecordByTime(@Param("id")Integer id,@Param("classId")Integer classId,@Param("choice")Integer choice);
+	
+	/**
+	 * @author 连慧
+	 * 查询学生查看考勤记录的时候根据时间选择查询的条件
+	 * @return 符合条件的所有时间对象
+	 */
+	public List<ChoiceTime> selectChoiceTime(@Param("id")Integer id);
 }
