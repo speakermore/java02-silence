@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import silence.entity.AttendanceRecord;
-import silence.entity.ChoiceTime;
 import silence.entity.Students;
 
 /**
@@ -29,6 +28,4 @@ public interface StudentService {
 	//根据时间查询学生考勤记录
 	public List<AttendanceRecord> selectStuAttendanceRecordByTime(Integer id,Integer classId,Integer choice,Integer pageIndex);
 	public Integer getMaxAttendanceRecordByTime(Integer id,Integer classId,Integer choice);
-	//查询学生查看考勤记录时候根据时间查询的时间
-	public List<ChoiceTime> selectChoiceTime(Integer id);
 }

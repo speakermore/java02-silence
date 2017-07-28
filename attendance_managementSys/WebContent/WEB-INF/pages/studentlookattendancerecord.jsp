@@ -42,26 +42,11 @@
 					<div class="form-group">
 						<label for="exampleInputName2">考勤时间：</label>
 						<select class="form-control" id="time" name="choice">
-							<c:if test="${choice==null}">
-								<option value="0">--请选择查看考勤的时间--</option>
-								<option value="1">本周</option>
-								<option value="2">上周</option>
-								<option value="3">本月</option>
-								<option value="4">上月</option>
-							</c:if>
-						<%-- 	<c:if test="${choice==0&&choice!=null}">
-								<option value="0">--请选择查看考勤的时间--</option>
-								<option value="1">本周</option>
-								<option value="2">上周</option>
-								<option value="3">本月</option>
-								<option value="4">上月</option>
-							</c:if> --%>
-							<c:if test="${choice!=null}">
-								<c:forEach items="${choiceTime}" var="c">
-								<option value="${c.id}">${c.times}</option>
-								</c:forEach>
-								<option value="0">--请选择查看考勤的时间--</option>
-							</c:if>	
+								<option value="0" <c:if test="${choice=='0'}">selected</c:if>>--请选择查看考勤的时间--</option>
+								<option value="1" <c:if test="${choice=='1'}">selected</c:if>>本周</option>
+								<option value="2" <c:if test="${choice=='2'}">selected</c:if>>上周</option>
+								<option value="3" <c:if test="${choice=='3'}">selected</c:if>>本月 </option>
+								<option value="4" <c:if test="${choice=='4'}">selected</c:if>>上月</option>
 						</select>
 					</div>
 					<button id="btn" type="submit" class="btn btn-default">GO</button>
@@ -133,15 +118,31 @@
 							</li>
 						</ul>
 					</div>
-					<form class="navbar-form navbar-left" role="search" action="stuAttendance/selectStuAttendanceRecord" method="get">
-						<span>跳转至：</span>
-						<div class="form-group">
-							<input type="text" name="curPage" class="form-control" placeholder="页码" value="">
-							<input type="hidden" name="stuId" value="${student.id}"/>
-							<input type="hidden" name="classId" value="${student.classId}"/>
-						</div>
-							<button type="submit" class="btn btn-default">GO</button>
-					</form>
+					<c:if test="${choice==null}">
+						<form class="navbar-form navbar-left" role="search" action="stuAttendance/selectStuAttendanceRecord" method="get">
+							<span>跳转至：</span>
+							<div class="form-group">
+								<input type="text" id="page"  name="curPage" class="form-control" placeholder="页码" value="">
+								<input type="hidden" name="stuId" value="${student.id}"/>
+								<input type="hidden" name="classId" value="${student.classId}"/>
+							</div>
+								<button type="submit" name="bottomGo" class="btn btn-default">GO</button>
+								<span id="goInfo"></span>
+						</form>
+					</c:if>
+					<c:if test="${choice!=null}">
+						<form class="navbar-form navbar-left" role="search" action="stuAttendance/selectStuAttendanceRecordByTime" method="post">
+							<span>跳转至：</span>
+							<div class="form-group">
+								<input type="text" id="page" name="curPage" class="form-control" placeholder="页码" value="">
+								<input type="hidden" name="stuId" value="${student.id}"/>
+								<input type="hidden" name="classId" value="${student.classId}"/>
+								<input type="hidden" name="choice" value="${choice}"/>
+							</div>
+								<button type="submit" name="bottomGo" class="btn btn-default">GO</button>
+								<span id="goInfo"></span>
+						</form>
+					</c:if>
 				</div>
 				<!--显示内容尾部结束-->
 				<!--显示内容结束-->
@@ -151,21 +152,20 @@
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 		<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
-		<!-- <script type="text/javascript">
-		 $(function() {
-			$("#btn").click(function() {
-				var choice=$("#time").val();
-				$.ajax({
-					url:"stuAttendance/selectStuAttendanceRecordByTime",
-					type:"post",
-					data:{"stuId":${student.id},"classId":${student.classId},"choice":choice,"curPage":1},
-					dataType:"json",
-					success:function(data){
-						$("#time").attr("value",data.choice);
+		<script type="text/javascript">
+			$(function () {
+				$("#page").bind('input propertychange',function() {
+					var page=$("#page").val();
+					var ex = /^\d+$/;
+					if(!(ex.test(page))){//如果不是整数
+						$("[name='bottomGo']").attr("disabled","true");
+						$("#goInfo").html("请输入一个正整数！");
 					}
-				})
+					if(ex.test(page)){  //如果是整数
+						$("[name='bottomGo']").removeAttr("disabled");
+					}
+				}); 
 			});
-		}); 
-		</script> -->
+		</script>
 </body>
 </html>

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import silence.dao.StudentMapper;
 import silence.entity.AttendanceRecord;
-import silence.entity.ChoiceTime;
 import silence.entity.Students;
 import silence.service.StudentService;
 
@@ -65,10 +64,4 @@ public class StudentServiceImpl implements StudentService{
 	public Integer getMaxAttendanceRecordByTime(Integer id, Integer classId, Integer choice) {
 		return studentMapper.getMaxAttendanceRecordByTime(id, classId, choice);
 	}
-
-	@Override
-	public List<ChoiceTime> selectChoiceTime(Integer id) {
-		return studentMapper.selectChoiceTime(id);
-	}
-
 }

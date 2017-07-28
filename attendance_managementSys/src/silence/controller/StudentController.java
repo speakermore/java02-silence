@@ -18,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.sun.glass.ui.SystemClipboard;
 
 import silence.entity.AttendanceRecord;
-import silence.entity.ChoiceTime;
 import silence.entity.Students;
 import silence.service.StudentService;
 import silence.util.PageSupport;
@@ -150,7 +149,7 @@ public class StudentController {
 	@RequestMapping(value="/selectStuAttendanceRecord",method=RequestMethod.GET)
 	public ModelAndView selectStuAttendanceRecord(Integer stuId,Integer classId,Integer curPage){
 		if(curPage==null){
-			curPage=1;     //下限判断，当小于第一页时，纠正为第一页
+			curPage=1;     //当页面传过来的参数为null时，纠正为第一页，避免出错
 		}
 		if(curPage<1){
 			curPage=1;     //下限判断，当小于第一页时，纠正为第一页
@@ -178,7 +177,9 @@ public class StudentController {
 	 */
 	@RequestMapping(value="/selectStuAttendanceRecordByTime",method=RequestMethod.POST)
 	public ModelAndView selectStuAttendanceRecordByTime(Integer stuId,Integer classId,Integer choice,Integer curPage){
-		
+		if(curPage==null){
+			curPage=1;     //当页面传过来的参数为null时，纠正为第一页，避免出错
+		}
 		if(curPage<1){
 			curPage=1;     //下限判断，当小于第一页时，纠正为第一页
 		}
@@ -189,15 +190,12 @@ public class StudentController {
 		}
 		int pageIndex=(curPage-1)*5;
 		List<AttendanceRecord> record=studentService.selectStuAttendanceRecordByTime(stuId, classId, choice,pageIndex);
-		//根据choice查询学生选择的查询时间
-		List<ChoiceTime> choiceTime=studentService.selectChoiceTime(choice); 
 		//创建一个模型和视图
 		ModelAndView mv=new ModelAndView();
 		//设置跳转页面
 		mv.setViewName("studentlookattendancerecord");
 		//向页面返回数据
 		mv.addObject("attendanceRecord", record);
-		mv.addObject("choiceTime", choiceTime);
 		mv.addObject("curPage", curPage);
 		mv.addObject("maxPage", maxPage);
 		mv.addObject("maxRecord", maxRecord);
