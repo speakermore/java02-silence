@@ -2,6 +2,7 @@ package silence.entity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
 * @author 作者：连慧
@@ -20,21 +21,40 @@ public class AttendanceRecord implements Serializable {
 	private String className;  //班级名称
 	private Timestamp attendanceComeTime;   //到校时间
 	private Timestamp attendanceBackTime;   //离校时间
+	private Date attendanceDate;   //签到时间
+	private String attendanceStatus;   //签到状态
 	
+
 	public AttendanceRecord() {
 	}
 	
 	public AttendanceRecord(Integer stuId, String stuNo, String stuName, String className, Timestamp attendanceComeTime,
-			Timestamp attendanceBackTime) {
-		super();
+			Timestamp attendanceBackTime,Date attendanceDate,String attendanceStatus) {
 		this.stuId = stuId;
 		this.stuNo = stuNo;
 		this.stuName = stuName;
 		this.className = className;
 		this.attendanceComeTime = attendanceComeTime;
 		this.attendanceBackTime = attendanceBackTime;
+		this.attendanceDate = attendanceDate;
+		this.attendanceStatus = attendanceStatus;
 	}
 
+	public Date getAttendanceDate() {
+		return attendanceDate;
+	}
+	
+	public void setAttendanceDate(Date attendanceDate) {
+		this.attendanceDate = attendanceDate;
+	}
+	
+	public String getAttendanceStatus() {
+		return attendanceStatus;
+	}
+	
+	public void setAttendanceStatus(String attendanceStatus) {
+		this.attendanceStatus = attendanceStatus;
+	}
 	public Integer getId() {
 		return id;
 	}
@@ -81,10 +101,11 @@ public class AttendanceRecord implements Serializable {
 
 	@Override
 	public String toString() {
-		return "attendanceRecord [id=" + id + ", stuId=" + stuId + ", stuNo=" + stuNo + ", stuName=" + stuName
+		return "AttendanceRecord [id=" + id + ", stuId=" + stuId + ", stuNo=" + stuNo + ", stuName=" + stuName
 				+ ", className=" + className + ", attendanceComeTime=" + attendanceComeTime + ", attendanceBackTime="
-				+ attendanceBackTime + "]";
+				+ attendanceBackTime + ", attendanceDate=" + attendanceDate + ", attendanceStatus=" + attendanceStatus
+				+ "]";
 	}
-	
+
 	
 }
