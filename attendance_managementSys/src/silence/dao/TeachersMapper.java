@@ -1,6 +1,7 @@
 package silence.dao;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -52,10 +53,17 @@ public interface TeachersMapper {
 	
 	/**
 	 * @author 袁云
+	 * 根据页面传过来的时间验证改时间段是否存在考勤记录
+	 * @return 考勤记录对象（返回值的意义）
+	 */
+	public ArrayList<AttendanceRecord> verifyStuExist2(@Param("attendanceTime1")Timestamp attendanceTime1,@Param("attendanceTime2")Timestamp attendanceTime2);
+	
+	/**
+	 * @author 袁云
 	 * 老师根据查询条件查看考勤记录
 	 * @return 考勤记录集合
 	 */
-	public List<AttendanceRecord> lookAttendanceRecord(@Param("attendanceTime1")Timestamp attendanceTime1,@Param("attendanceTime2")Timestamp attendanceTime2,@Param("id")Integer id,@Param("stuNo")String stuNo,@Param("stuName")String stuName);
+	public List<AttendanceRecord> lookAttendanceRecord(@Param("attendanceTime1")Timestamp attendanceTime1,@Param("attendanceTime2")Timestamp attendanceTime2,@Param("id")Integer id,@Param("stuNo")String stuNo,@Param("stuName")String stuName,@Param("pageIndex")Integer pageIndex);
 	/**
 	 * @author 袁云
 	 * 获得考勤的最大记录数
@@ -68,4 +76,11 @@ public interface TeachersMapper {
 	 * @return 考勤记录集合
 	 */
 	public List<AttendanceRecord> findAll(@Param("pageIndex") Integer pageIndex);
+	
+	/**
+	 * @author 袁云
+	 * 老师按查询条件查看考勤记录获得记录总数
+	 * @return 符合条件的考勤记录总数
+	 */
+	public Integer getMaxRecordByCondition(@Param("attendanceTime1")Timestamp attendanceTime1, @Param("attendanceTime2")Timestamp attendanceTime2,@Param("stuClass") Integer stuClass,@Param("stuNo") String stuNo,@Param("stuName") String stuName);
 }

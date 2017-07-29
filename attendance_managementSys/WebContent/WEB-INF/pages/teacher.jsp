@@ -20,19 +20,28 @@
     <![endif]-->
 <style>
 .btn {
-	margin-left: 20px;
+	margin-left: 50px;
 	margin-top: 200px;
+}
+#top{
+	margin-left: 200px;
+}
+#bottom{
+	padding-left: 20px;
 }
 </style>
 </head>
 <body>
 	<div class="container-fluid">
-		<div class="row">
-		<div id="tecLogin" class="col-sm-3">${tecLogin }</div>
-		<button type="button" class="btn btn-info col-sm-3">给学生注册</button>
-		<button type="button" class="btn btn-info col-sm-3">查看学生考勤记录</button>
+		<div id="tecLogin">${tecLogin }</div>
+		<div class="row" id="top">
+		<button type="button" class="btn btn-info col-sm-4">给学生注册</button>
+		<button type="button" class="btn btn-info col-sm-4">查看学生考勤记录</button>
+		</div>
+		<div class="row" id="bottom">
 		<button type="button" class="btn btn-info col-sm-3">查看学生工作日志</button>
-		<button type="button" class="btn btn-info col-sm-3">修改密码</button>
+		<button type="button" class="btn btn-info col-sm-4">修改密码</button>
+		<button type="button" class="btn btn-info col-sm-3">查看学生考勤率</button>
 		</div>
 	</div>
 	<div id="tecUpdatePwd" class="col-sm-3">${update}</div>
@@ -42,6 +51,9 @@
 	<script src="js/bootstrap.min.js"></script>
 	<script type="text/javascript">
 		$(function () {
+			$("button:eq(0)").click(function () {
+				window.location.href="tecAttendance/reg";
+			})
 			$("button:eq(3)").click(function () {
 				window.location.href="tecAttendance/jumpUpdatePage";
 			});

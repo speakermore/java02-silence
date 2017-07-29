@@ -31,6 +31,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where classId=#{id} and stuNo=#{stuNo}
 	</select>
 	
+	<select id="verifyStuExist2" resultType="AttendanceRecord">
+		select * from attendance_record
+		where attendanceComeTime between #{attendanceTime1} and #{attendanceTime2}
+	</select>
+	
 	<select id="lookAttendanceRecord" resultType="attendanceRecord">
 		select s.stuNo,s.stuName,c.className,ar.attendanceComeTime,ar.attendanceBackTime 
 		from attendance_record ar join students s on ar.stuId=s.id 
@@ -48,8 +53,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	        <if test="stuName!=null and stuName!=''">
 	        	and s.stuName like CONCAT(CONCAT('%', #{stuName}),'%')
 	        </if>
+	        <if test="pageIndex != null">
+				limit #{pageIndex},5
+			</if>
         </where>
-		order by s.stuNo asc 
 	</select>
 	
 	<select id="getMaxRecord" resultType="Integer">
@@ -65,5 +72,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="pageIndex != null">
 		limit #{pageIndex},5
 		</if>
+	</select>
+	
+	<select id="getMaxRecordByCondition" resultType="Integer">
+		select count(*) 
+		from attendance_record ar join students s on ar.stuId=s.id 
+        join classes c on s.classId=c.id 
+        <where>
+	        <if test="attendanceTime1!=null and attendanceTime2!=null">
+	        	and ar.attendanceComeTime between #{attendanceTime1} and #{attendanceTime2}
+	        </if>
+	        <if test="stuClass!=0">
+	        	and c.id=#{stuClass}
+	        </if>
+	        <if test="stuNo!=null and stuNo!=''">
+	        	and s.stuNo=#{stuNo}
+	        </if>
+	        <if test="stuName!=null and stuName!=''">
+	        	and s.stuName like CONCAT(CONCAT('%', #{stuName}),'%')
+	        </if>
+        </where>
 	</select>
 </mapper>

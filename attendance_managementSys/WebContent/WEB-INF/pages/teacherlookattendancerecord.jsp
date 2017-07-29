@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!-- base获得在地址栏访问时项目的绝对路径（这里获得的路径是需要加上表单里action提交的地址的，目的是：这样就可以锁定到控制器相应的方法上，然后就可以做相应的处理） -->
 <base href="${pageContext.request.scheme }://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/" />
 <!DOCTYPE html>
@@ -38,7 +39,6 @@
 				<div class="row">
 					<div id="stu_info" class="col-sm-6">
 						<h3>欢迎来到查看考勤记录页面</h3></div>
-					<div id="attendance_rate" class="col-sm-6"><button type="submit" class="btn btn-default btn-lg">查看出勤率</button></div>
 				</div>
 				<!--头部信息结束-->
 
@@ -46,31 +46,33 @@
 				<!--显示内容头部开始-->
 				<form id="head-main" class="form-inline" action="tecAttendance/lookAttendanceRecord?curPage=1" method="post">
 					<div class="form-group">
-						<label for="attendanceTime">考勤时间：</label>
-						<input id="attendanceTime1" name="attendanceTime1" class="date_test form-control" />&nbsp;-&nbsp;
-						<input id="attendanceTime2" name="attendanceTime2" class="date_test form-control" />
+						<label for="attendanceTime1">考勤时间：</label>
+						<input id="attendanceTime1" name="attendanceTime1" class="date_test form-control" value="${attendanceTime1 }" />&nbsp;-&nbsp;
+						<input id="attendanceTime2" name="attendanceTime2" class="date_test form-control" value="${attendanceTime2 }" />
 					</div>
 					<div class="form-group">
 						<label for="stuClass">班级：</label>
-						<select id="stuClass" name="stuClass" class="form-control">
-							<option value="0">--请选择查看的班级--</option>
-							<option value="1">1</option>
-							<option value="2">2</option>
-							<option value="3">3</option>
-							<option value="4">4</option>
+						<select id="stuClass" name="stuClass" class="form-control" >
+							<option value="0" <c:if test="${stuClass == '0'}">selected</c:if>>--请选择查看的班级--</option>
+							<option value="1" <c:if test="${stuClass == '1'}">selected</c:if>>1</option>
+							<option value="2" <c:if test="${stuClass == '2'}">selected</c:if>>2</option>
+							<option value="3" <c:if test="${stuClass == '3'}">selected</c:if>>3</option>
+							<option value="4" <c:if test="${stuClass == '4'}">selected</c:if>>4</option>
 						</select>
 					</div>
 					<div class="form-group">
 						<label for="stuNo">学号：</label>
-						<input id="stuNo" name="stuNo" class="form-control" type="text" value="" placeholder="请输入要查看的学生学号"/>
+						<input id="stuNo" name="stuNo" class="form-control" type="text" value="${stuNo }" placeholder="请输入要查看的学生学号"/>
 					</div>
 					<div class="form-group">
 						<label for="stuName">姓名：</label>
-						<input id="stuName" name="stuName" class="form-control" type="text" value="" placeholder="请输入要查看的学生姓名"/>
+						<input id="stuName" name="stuName" class="form-control" type="text" value="${stuName }" placeholder="请输入要查看的学生姓名"/>
 					</div>
 					<button id="btn1" name="btn1" type="submit" class="btn btn-default">GO</button>
 				</form>
 				<div id="verifyStuExistInfo"></div>
+				<div id="verifyStuExistInfo2"></div>
+				<div id="info">${info }</div>
 				<!--显示内容头部结束-->
 
 				<!--显示内容主体开始-->
@@ -87,15 +89,14 @@
 						</li>
 						
 						<div id="main-attendContent">
-						<c:forEach items="${attendanceRecords }" var="a">
-							<li>
-								<a href=""><span class="col-sm-2">${a.stuNo }</span>
+							<c:forEach items="${attendanceRecords }" var="a">
+								<li>
+									<span class="col-sm-2">${a.stuNo }</span>
 									<span class="col-sm-1">${a.stuName }</span>
 									<span class="col-sm-3">${a.className }</span>
-									<span class="col-sm-3">${a.attendanceComeTime }</span>
-									<span class="col-sm-3">${a.attendanceBackTime }</span>
-								</a>
-							</li>
+									<span class="col-sm-3"><fmt:formatDate value="${a.attendanceComeTime}" pattern="yyyy-MM-dd HH:mm:ss" /></span>
+									<span class="col-sm-3"><fmt:formatDate value="${a.attendanceComeTime}" pattern="yyyy-MM-dd HH:mm:ss" /></span>
+								</li>
 							</c:forEach>
 						</div>
 						
@@ -109,26 +110,63 @@
 						<ul class="pagination">
 							<li><span>共${maxRecord}条记录&nbsp;${curPage}/${maxPage}页</span></li>
 							<li>
-								<a href="tecAttendance/jumpLookAttendanceRecord?curPage=1"><span>首页</span></a>
+								<c:if test="${attendanceTime1==null&&attendanceTime2==null&&stuClass==null&&stuNo==null&&stuName==null }">
+									<a href="tecAttendance/jumpLookAttendanceRecord?curPage=1"><span>首页</span></a>
+								</c:if>
+								<c:if test="${attendanceTime1!=null||attendanceTime2!=null||stuClass!=null||stuNo!=null||stuName!=null }">
+									<a href="tecAttendance/lookAttendanceRecords?attendanceTime1=${attendanceTime1 }&attendanceTime2=${attendanceTime2 }&stuClass=${stuClass }&stuNo=${stuNo }&stuName=${stuName }&curPage=1"><span>首页</span></a>
+								</c:if>
 							</li>
 							<li>
-								<a href="tecAttendance/jumpLookAttendanceRecord?curPage=${curPage-1}"><span>上一页</span></a>
+								<c:if test="${attendanceTime1==null&&attendanceTime2==null&&stuClass==null&&stuNo==null&&stuName==null }">
+									<a href="tecAttendance/jumpLookAttendanceRecord?curPage=${curPage-1}"><span>上一页</span></a>
+								</c:if>
+								<c:if test="${attendanceTime1!=null||attendanceTime2!=null||stuClass!=null||stuNo!=null||stuName!=null }">
+									<a href="tecAttendance/lookAttendanceRecords?attendanceTime1=${attendanceTime1 }&attendanceTime2=${attendanceTime2 }&stuClass=${stuClass }&stuNo=${stuNo }&stuName=${stuName }&curPage=${curPage-1}"><span>上一页</span></a>
+								</c:if>
 							</li>
 							<li>
-								<a href="tecAttendance/jumpLookAttendanceRecord?curPage=${curPage+1}"><span>下一页</span></a>
+								<c:if test="${attendanceTime1==null&&attendanceTime2==null&&stuClass==null&&stuNo==null&&stuName==null }">
+									<a href="tecAttendance/jumpLookAttendanceRecord?curPage=${curPage+1}"><span>下一页</span></a>
+								</c:if>
+								<c:if test="${attendanceTime1!=null||attendanceTime2!=null||stuClass!=null||stuNo!=null||stuName!=null }">
+									<a href="tecAttendance/lookAttendanceRecords?attendanceTime1=${attendanceTime1 }&attendanceTime2=${attendanceTime2 }&stuClass=${stuClass }&stuNo=${stuNo }&stuName=${stuName }&curPage=${curPage+1}"><span>下一页</span></a>
+								</c:if>
 							</li>
 							<li>
-								<a href="tecAttendance/jumpLookAttendanceRecord?curPage=${maxPage}"><span>尾页</span></a>
+								<c:if test="${attendanceTime1==null&&attendanceTime2==null&&stuClass==null&&stuNo==null&&stuName==null }">
+									<a href="tecAttendance/jumpLookAttendanceRecord?curPage=${maxPage}"><span>尾页</span></a>
+								</c:if>
+								<c:if test="${attendanceTime1!=null||attendanceTime2!=null||stuClass!=null||stuNo!=null||stuName!=null }">
+									<a href="tecAttendance/lookAttendanceRecords?attendanceTime1=${attendanceTime1 }&attendanceTime2=${attendanceTime2 }&stuClass=${stuClass }&stuNo=${stuNo }&stuName=${stuName }&curPage=${maxPage}"><span>尾页</span></a>
+								</c:if>
 							</li>
 						</ul>
 					</div>
-					<form class="navbar-form navbar-left" role="search" action="tecAttendance/jumpLookAttendanceRecord" method="get">
+					<c:if test="${attendanceTime1==null&&attendanceTime2==null&&stuClass==null&&stuNo==null&&stuName==null }">
+					<form class="navbar-form navbar-left" action="tecAttendance/jumpLookAttendanceRecord" role="search" method="get" >
 						<span>跳转至：</span>
 						<div class="form-group">
-							<input type="text" name="curPage" class="form-control" placeholder="页码">
+							<input id="curPage" type="text" name="curPage" class="form-control" placeholder="页码">
 						</div>
 						<button id="btn2" name="btn2" type="submit" class="btn btn-default">GO</button>
 					</form>
+					</c:if>
+					<c:if test="${attendanceTime1!=null||attendanceTime2!=null||stuClass!=null||stuNo!=null||stuName!=null }">
+					<form class="navbar-form navbar-left" action="tecAttendance/lookAttendanceRecords" role="search" method="get" >
+						<span>跳转至：</span>
+						<div class="form-group">
+							<input type="hidden" name="attendanceTime1" value="${attendanceTime1 }"/>
+							<input type="hidden" name="attendanceTime2" value="${attendanceTime2 }"/>
+							<input type="hidden" name="stuClass" value="${stuClass }"/>
+							<input type="hidden" name="stuNo" value="${stuNo }"/>
+							<input type="hidden" name="stuName" value="${stuName }"/>
+							<input id="curPage" type="text" name="curPage" class="form-control" placeholder="页码">
+						</div>
+						<button id="btn2" name="btn2" type="submit" class="btn btn-default">GO</button>
+					</form>
+					</c:if>
+					
 				</div>
 				<!--显示内容尾部结束-->
 				<!--显示内容结束-->
@@ -142,6 +180,7 @@
 		<script src="thirdpart/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
 	    <script src="thirdpart/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 	    <script>
+	    		/* 将时间输入框设置为日历选择框 */
 	    		$(function (){
 	    			$(".date_test").datetimepicker({
 	    				language:"zh-CN",
@@ -152,6 +191,53 @@
 	    				format:"yyyy-mm-dd" //选中之后显示到的时间级别
 	    			});
 	    			
+	    			/* 当光标离开第一个时间选择框时，如果第二个时间选择框不为空时，判断该时间段是否有考勤记录 */
+	    			$("#attendanceTime1").blur(function () {
+						if($(this).val()!="" && $("#attendanceTime2").val()!=""){
+							$.ajax({
+	    						url:"tecAttendance/verifyStuExist2",
+	    						type:"post",
+	    						dataType:"json",
+	    						data:{"attendanceTime1":$("#attendanceTime1").val(),"attendanceTime2":$("#attendanceTime2").val()},
+	    						success:function(data){
+	    							if(!data.succeed){
+	    								$("#stuName").attr("disabled","true");
+	    								$("#btn1").attr("disabled","true");
+	        							$("#verifyStuExistInfo2").html(data.message);
+	    							}else{
+	    								$("#stuName").removeAttr("disabled");
+	    								$("#btn1").removeAttr("disabled");
+	        							$("#verifyStuExistInfo2").html("");
+	    							}
+	    						}
+		    				});		
+						}
+					}); 
+	    			
+	    			/* 当光标离开第二个时间选择框时，如果第一个时间选择框不为空时，判断该时间段是否有考勤记录 */
+	    			$("#attendanceTime2").blur(function () {
+						if($(this).val()!="" && $("#attendanceTime1").val()!=""){
+							$.ajax({
+	    						url:"tecAttendance/verifyStuExist2",
+	    						type:"post",
+	    						dataType:"json",
+	    						data:{"attendanceTime1":$("#attendanceTime1").val(),"attendanceTime2":$("#attendanceTime2").val()},
+	    						success:function(data){
+	    							if(!data.succeed){
+	    								$("#stuName").attr("disabled","true");
+	    								$("#btn1").attr("disabled","true");
+	        							$("#verifyStuExistInfo2").html(data.message);
+	    							}else{
+	    								$("#stuName").removeAttr("disabled");
+	    								$("#btn1").removeAttr("disabled");
+	        							$("#verifyStuExistInfo2").html("");
+	    							}
+	    						}
+		    				});		
+						}
+					});
+	    			
+	    			/* 当光标离开班级选择框时，如果学号输入框不为空时，验证该班级是否有该学号的学生 */
 	    			$("#stuClass").blur(function () {
 	    				if($("#stuClass").val()!="0" && $("#stuNo").val()!=null && $("#stuNo").val()!=""){
 		    				$.ajax({
@@ -178,6 +264,7 @@
 	    				}
 	    			});
 	    			
+	    			/* 当光标离开学号输入框时，如果班级选择框不为空时，验证该班级是否有该学号的学生 */
 	    			$("#stuNo").blur(function () {
 	    				if($("#stuClass").val()!="0" && $("#stuNo").val()!=null && $("#stuNo").val()!=""){
 		    				$.ajax({
@@ -203,6 +290,20 @@
 	    					$("#btn1").removeAttr("disabled");
 	    				}
 	    			});
+	    			
+	    			/* 当输入页码不符合规范时，将提交按钮禁用，符合规范时又解禁 */
+	    			$('#curPage').bind('input propertychange', function() {
+						var page = $("#curPage").val();
+						var regExp = /^\d+$/;
+						if(!regExp.test(page)){
+							$("#btn2").attr("disabled","true");
+							$("#curPage").attr("placeholder","请输入一个整数!");
+						}else{
+							$("#btn2").removeAttr("disabled");
+						}
+					});
+	    				
+	    			
 	    			/* $("#btn1").click(function (){
 	    				window.location.href="tecAttendance/lookAttendanceRecord?curPage=1";
 	    			}); */
@@ -227,6 +328,20 @@
 	    					}
 	    				});
 					});  */
+					/* var attendanceTime1;
+					var attendanceTime2;
+					var stuClass;
+					var stuNo;
+					var stuName;
+					$("#btn1").click(function () {
+						attendanceTime1 = $("#attendanceTime1").val();
+						attendanceTime2 = $("#attendanceTime2").val();
+						stuClass = $("#stuClass").val();
+						stuNo = $("stuNo").val();
+						stuName = $("stuName").val();
+						
+					});
+					$.url().param("attendanceTime1":attendanceTime1); */
 	    		});
 	    </script>
 </body>

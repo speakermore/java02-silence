@@ -1,6 +1,7 @@
 package silence.service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import silence.entity.AttendanceRecord;
@@ -46,10 +47,16 @@ public interface TeachersService {
 	public Students verifyStuExist(Integer id,String stuNo);
 	/**
 	 * @author 袁云
+	 * 根据页面传过来的时间验证该时间段是否存在考勤记录
+	 * @return 考勤记录对象（返回值的意义）
+	 */
+	public ArrayList<AttendanceRecord> verifyStuExist2(Timestamp attendanceTime1,Timestamp attendanceTime2);
+	/**
+	 * @author 袁云
 	 * 老师根据查询条件查看考勤记录
 	 * @return 包含所有查出来的考勤记录实体对象的集合
 	 */
-	public List<AttendanceRecord> lookAttendanceRecord(Timestamp attendanceTime1,Timestamp attendanceTime2,Integer id,String stuNo,String stuName);
+	public List<AttendanceRecord> lookAttendanceRecord(Timestamp attendanceTime1,Timestamp attendanceTime2,Integer id,String stuNo,String stuName, Integer pageIndex);
 	/**
 	 * @author 袁云
 	 * 获得考勤的最大记录数
@@ -63,5 +70,12 @@ public interface TeachersService {
 	 * @return 包含所有考勤记录实体对象的集合
 	 */
 	public List<AttendanceRecord> findAll(Integer pageIndex);
+	
+	/**
+	 * @author 袁云
+	 * 老师按查询条件查看考勤记录获得记录总数
+	 * @return 符合条件的考勤记录总数
+	 */
+	public Integer getMaxRecordByCondition(Timestamp attendanceTime1, Timestamp attendanceTime2, Integer stuClass, String stuNo, String stuName);
 	
 }

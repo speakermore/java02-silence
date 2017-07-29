@@ -1,6 +1,7 @@
 package silence.service.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -53,12 +54,18 @@ public class TeachersServiceImpl implements TeachersService {
 		// TODO Auto-generated method stub
 		return teachersMapper.verifyStuExist(id, stuNo);
 	}
+	
+	@Override
+	public ArrayList<AttendanceRecord> verifyStuExist2(Timestamp attendanceTime1, Timestamp attendanceTime2) {
+		// TODO Auto-generated method stub
+		return teachersMapper.verifyStuExist2(attendanceTime1, attendanceTime2);
+	}
 
 	@Override
 	public List<AttendanceRecord> lookAttendanceRecord(Timestamp attendanceTime1, Timestamp attendanceTime2, Integer id,
-			String stuNo, String stuName) {
+			String stuNo, String stuName,Integer pageIndex) {
 		// TODO Auto-generated method stub
-		return teachersMapper.lookAttendanceRecord(attendanceTime1, attendanceTime2, id, stuNo, stuName);
+		return teachersMapper.lookAttendanceRecord(attendanceTime1, attendanceTime2, id, stuNo, stuName,pageIndex);
 	}
 
 	@Override
@@ -71,6 +78,13 @@ public class TeachersServiceImpl implements TeachersService {
 	public List<AttendanceRecord> findAll(Integer pageIndex) {
 		// TODO Auto-generated method stub
 		return teachersMapper.findAll(pageIndex);
+	}
+
+	@Override
+	public Integer getMaxRecordByCondition(Timestamp attendanceTime1, Timestamp attendanceTime2, Integer stuClass,
+			String stuNo, String stuName) {
+		// TODO Auto-generated method stub
+		return teachersMapper.getMaxRecordByCondition(attendanceTime1, attendanceTime2, stuClass, stuNo, stuName);
 	}
 
 }
