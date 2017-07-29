@@ -68,7 +68,4 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			and date_format(a.attendanceComeTime,'%Y-%m')=date_format(date_sub(curdate(), interval 1 month),'%Y-%m'); 
 		</if>
 	</select>
-	<select id="selectChoiceTime" resultType="ChoiceTime">
-		select * from choice_time order by id=#{id} desc 
-	</select>
 </mapper>
