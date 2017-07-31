@@ -1,6 +1,7 @@
 package silence.service.impl;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -41,8 +42,8 @@ public class StudentServiceImpl implements StudentService{
 	}
 
 	@Override
-	public Integer insertComeTime(Integer stuId, Timestamp comeTime) {
-		return studentMapper.insertComeTime(stuId, comeTime);
+	public Integer insertComeTime(Integer stuId,Date attDate,Timestamp comeTime,String attStatus) {
+		return studentMapper.insertComeTime(stuId,attDate,comeTime,attStatus);
 	}
 
 	@Override
@@ -63,5 +64,20 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	public Integer getMaxAttendanceRecordByTime(Integer id, Integer classId, Integer choice) {
 		return studentMapper.getMaxAttendanceRecordByTime(id, classId, choice);
+	}
+
+	@Override
+	public AttendanceRecord selectStuAttRecord(Integer stuId, String attendanceDate) {
+		return studentMapper.selectStuAttRecord(stuId, attendanceDate);
+	}
+
+	@Override
+	public Integer insertBackTime(Integer stuId, Date attDate, Timestamp backTime, String attStatus) {
+		return studentMapper.insertBackTime(stuId, attDate, backTime, attStatus);
+	}
+
+	@Override
+	public Integer updateBackTime(Integer stuId, String attDate, Timestamp backTime, String attStatus) {
+		return studentMapper.updateBackTime(stuId, attDate, backTime, attStatus);
 	}
 }

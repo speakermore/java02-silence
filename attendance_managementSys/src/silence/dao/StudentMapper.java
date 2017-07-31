@@ -1,6 +1,7 @@
 package silence.dao;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -37,10 +38,28 @@ public interface StudentMapper {
 	
 	/**
 	 * @author 连慧
-	 * @param stuId学生编号，comeTime学生到校时间
-	 * @return >0表示插入到校时间成功，否则失败
+	 * @param stuId学生编号，comeTime学生到校时间,attDate学生签到时间,attStatus考勤状态
+	 * @return >0表示插入到校时间和考勤状态成功，否则失败
 	 */
-	public Integer insertComeTime(@Param("stuId")Integer stuId,@Param("comeTime")Timestamp comeTime);
+	public Integer insertComeTime(@Param("stuId")Integer stuId,@Param("attDate")Date attDate,@Param("comeTime")Timestamp comeTime,@Param("attStatus")String attStatus);
+	/**
+	 * @author 连慧
+	 * @param stuId学生编号,attendanceDate学生签到时间
+	 * @return 符合条件的考勤记录
+	 */
+	public AttendanceRecord selectStuAttRecord(@Param("stuId")Integer stuId,@Param("attendanceDate")String attendanceDate);
+	/**
+	 * @author 连慧
+	 * @param stuId学生编号，backTime学生签退时间,attDate学生考勤时间,attStatus考勤状态
+	 * @return >0表示插入签退时间和考勤状态成功，否则失败
+	 */
+	public Integer insertBackTime(@Param("stuId")Integer stuId,@Param("attDate")Date attDate,@Param("backTime")Timestamp backTime,@Param("attStatus")String attStatus);
+	/**
+	 * @author 连慧
+	 * @param stuId学生编号，backTime学生签退时间,attDate学生考勤时间,attStatus考勤状态
+	 * @return >0表示更新签退时间和考勤状态成功，否则失败
+	 */
+	public Integer updateBackTime(@Param("stuId")Integer stuId,@Param("attDate")String attDate,@Param("backTime")Timestamp backTime,@Param("attStatus")String attStatus);
 	
 	/**
 	 * @author 连慧

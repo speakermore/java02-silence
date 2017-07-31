@@ -46,7 +46,7 @@
 				<div class="row">
 					<ul class="nav navbar-nav nav-pills">
 						<li><img src="#" alt="学生头像" class="img-thumbnail"
-							height="100px" width="100px"></li>
+							height="100px" width="100px" /></li>
 						<li class="active"><a href="#"> <span
 								class="badge pull-right">+42</span> 点赞
 						</a></li>
@@ -75,12 +75,13 @@
 	<div id="zhengwen" class="container-fluid">
 		<!--考勤按钮开始-->
 		<div id="btn2" class="row">
-			<div id="come" class="col-sm-3">
+			<div class="col-sm-3">
 				<button type="button" id="come" class="btn btn-success">签到</button>
 				<div id="comeInfo"></div>
 			</div>
-			<div id="back" class="col-sm-3">
+			<div class="col-sm-3">
 				<button type="button" id="back" class="btn btn-success">签退</button>
+				<div id="leaveInfo"></div>
 			</div>
 		</div>
 		<!--考勤按钮结束-->
@@ -104,18 +105,44 @@
 	<script src="js/bootstrap.min.js"></script>
 	<script type="text/javascript">
 		$(function() {
-			$("#come").click(function() {
+			$("#come").click(function() {    //签到的AJAX
 				$.ajax({
 					url:"stuAttendance/insertComeTime",
 					type:"post",
 					data:{"stuId":${student.id}},
-					dataType:"html",
+					dataType:"json",    //返回的数据类型是map所以最好用JSON
 					success:function(data){
-						$("#comeInfo").html(data);
-						if(data=="签到成功！"){
+						if(data.success==0){
+							$("#comeInfo").html(data.info);
 							$("#come").attr("disabled","true");
-						}else{
+						}else if(data.success==1){
+							$("#comeInfo").html(data.info);
 							$("#come").removeAttr("disabled");
+						}else{
+							$("#comeInfo").html(data.info);
+							$("#come").attr("disabled","true");
+						}
+					}
+				});
+			});
+			
+			$("#back").click(function() {    //签退AJAX
+				$.ajax({
+					url:"stuAttendance/saveBackTime",
+					type:"post",
+					data:{"stuId":${student.id}},
+					dataType:"json",
+					success:function(data){
+						if(data.success==0){
+							$("#leaveInfo").html(data.message);
+							$("#back").attr("disabled","true");
+						}else if(data.success==1){
+							$("#leaveInfo").html(data.message);
+							$("#back").removeAttr("disabled");
+						}else{
+							$("#leaveInfo").html(data.message);
+							$("#back").attr("disabled","true");
+							
 						}
 					}
 				});

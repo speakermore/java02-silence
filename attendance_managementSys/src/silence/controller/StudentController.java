@@ -1,9 +1,12 @@
 package silence.controller;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -73,47 +76,53 @@ public class StudentController {
 	public String login() {
 		return "studentLogin";
 	}
-	
+
 	/*
 	 * @author 连慧
+	 * 
 	 * @param 页面传过来的：id修改密码的学生编号，stuOldPwd旧密码
+	 * 
 	 * @return ModelAndView对象，用来设置跳转页面和向页面传递参数（把参数放到了request对象）
 	 */
-	@RequestMapping(value="/verifyPwd",method=RequestMethod.POST)
-	@ResponseBody       //AJAX注解,把info当作字符串返回给页面
-	public String verifyPwd(Integer id,String stuOldPwd) {
-		String info="";
-		String stuPwd=studentService.getStudentPwd(id);
+	@RequestMapping(value = "/verifyPwd", method = RequestMethod.POST)
+	@ResponseBody // AJAX注解,把info当作字符串返回给页面
+	public Map<String, Object> verifyPwd(Integer id, String stuOldPwd) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		String stuPwd = studentService.getStudentPwd(id);
 		if (stuPwd.equals(stuOldPwd)) {
-			info="密码输入正确!";
-		}else{
-			info="密码输入错误！请重新输入";
+			map.put("success", true);
+			map.put("message", "密码输入正确!");
+		} else {
+			map.put("success", false);
+			map.put("message", "密码输入错误！请重新输入");
 		}
-		return info;
+		return map;
 	}
 
 	/*
 	 * @author 连慧
+	 * 
 	 * @param 页面传过来的：id修改密码的学生编号，stuOldPwd旧密码，stuNewPwd新密码，stuRePwd重复密码
+	 * 
 	 * @return ModelAndView对象，用来设置跳转页面和向页面传递参数（把参数放到了request对象）
 	 */
 	@RequestMapping(value = "/updateStuPwd", method = RequestMethod.POST)
-	public ModelAndView updateStuPwd(Integer id,String stuNewPwd, String stuRePwd) {
+	public ModelAndView updateStuPwd(Integer id, String stuNewPwd, String stuRePwd) {
 		String info = "";
 		ModelAndView mv = new ModelAndView();
-			if (stuNewPwd.equals(stuRePwd)) {
-				int result = studentService.updateStuPwd(stuNewPwd, id);
-				if (result > 0) {
-					info = "修改密码成功！";
-					mv.setViewName("student");
-				} else {
-					info = "修改密码失败！";
-					mv.setViewName("studentUpdatePwd");
-				}
+		if (stuNewPwd.equals(stuRePwd)) {
+			int result = studentService.updateStuPwd(stuNewPwd, id);
+			if (result > 0) {
+				info = "修改密码成功！";
+				mv.setViewName("student");
 			} else {
-				info = "两次输入密码不一致！";
+				info = "修改密码失败！";
 				mv.setViewName("studentUpdatePwd");
 			}
+		} else {
+			info = "两次输入密码不一致！";
+			mv.setViewName("studentUpdatePwd");
+		}
 		mv.addObject("message", info);
 		return mv;
 	}
@@ -122,93 +131,188 @@ public class StudentController {
 	public String updateStuPwd() {
 		return "studentUpdatePwd";
 	}
-	
+
 	/*
 	 * @author 连慧
+	 * 
 	 * @param 页面传过来的：stuId插入到校时间的学生编号
+	 * 
 	 * @return 把签到是否成功的信息返回给页面
 	 */
 	@RequestMapping(value = "/insertComeTime", method = RequestMethod.POST)
 	@ResponseBody
-	public String insertComeTime(Integer stuId) {
-		String info="";
-		int result=studentService.insertComeTime(stuId,new Timestamp(System.currentTimeMillis()));
-		if(result>0){
-			info="签到成功！";
-		}else{
-			info="签到失败！";
+	public Map<String, Object> insertComeTime(Integer stuId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Date d = new Date();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String date = format.format(d);
+		// 查询是否有点击签到按钮获得的当前系统时间对应的考勤记录，如果有说明今天已经签到过，不能再继续签到；如果没有，则可以进行签到
+		AttendanceRecord att = studentService.selectStuAttRecord(stuId, date);
+		if (att == null) {
+			int result = studentService.insertComeTime(stuId, d, new Timestamp(System.currentTimeMillis()), "N");
+			if (result > 0) {
+				map.put("success", 0);
+				map.put("info", "签到成功！");
+			} else {
+				map.put("success", 1);
+				map.put("info", "签到失败！");
+			}
+		} else {
+			map.put("success", 2);
+			map.put("info", "不能重复签到!");
 		}
-		return info;
+		return map;
 	}
-	
+
 	/*
 	 * @author 连慧
+	 * 
+	 * @param 页面传过来的：stuId更新离校时间的学生编号
+	 * 
+	 * @return 把签到是否成功的信息返回给页面
+	 */
+	@RequestMapping(value = "/saveBackTime", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> saveBackTime(Integer stuId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 考勤时间
+		Date date = new Date();
+		SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
+		String dates = s.format(date);
+		// 签退时间
+		Timestamp attBackTime = new Timestamp(System.currentTimeMillis());
+		// 查询是否有点击签退按钮获得的当前系统时间对应的考勤记录，如果有说明今天已经签到过，只需更新签退时间和考勤状态；
+		// 如果没有，说明还没有签到过则需插入签退时间和考勤状态
+		AttendanceRecord att = studentService.selectStuAttRecord(stuId, dates);
+		if (att == null) {
+			// 插入离校时间和考勤状态
+			Integer result = studentService.insertBackTime(stuId, date, attBackTime, "N");
+			if (result > 0) {
+				map.put("success", 0);
+				map.put("message", "签退成功！");
+			} else {
+				map.put("success", 1);
+				map.put("message", "签退失败！");
+			}
+		} else {
+			if (att.getAttendanceBackTime() == null) {
+				// 更新离校时间和考勤状态
+				// 先获得考勤状态
+				String attStatus = "";
+				Timestamp attComeTime = att.getAttendanceComeTime();
+				SimpleDateFormat simple = new SimpleDateFormat("HH:mm:ss"); // 格式化时间函数
+				try {
+					// 签到时间
+					String comeTime = simple.format(attComeTime);
+					Date comeTimes = simple.parse(comeTime);
+					// 签退时间
+					String backTime = simple.format(attBackTime);
+					Date backTimes = simple.parse(backTime);
+					// 学校规定的考勤时间
+					Date time1 = simple.parse("08:30:00");
+					Date time2 = simple.parse("17:30:00");
+					if (comeTimes.getTime() < time1.getTime() && backTimes.getTime() > time2.getTime()) {
+						attStatus = "Y";
+					} else {
+						attStatus = "N";
+					}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				// 更新离校时间和考勤状态
+				Integer results = studentService.updateBackTime(stuId, dates, attBackTime, attStatus);
+				if (results > 0) {
+					map.put("success", 0);
+					map.put("message", "签退成功！");
+				} else {
+					map.put("success", 1);
+					map.put("message", "签退失败！");
+				}
+			}else{
+				map.put("success", 2);
+				map.put("message", "不能重复签退！");
+			}
+		}
+		return map;
+	}
+
+	/*
+	 * @author 连慧
+	 * 
 	 * @param 页面传过来的stuId学生编号,classId班级编号，curPage当前页码。
+	 * 
 	 * @return 学生编号对应的学生考勤记录
 	 */
-	@RequestMapping(value="/selectStuAttendanceRecord",method=RequestMethod.GET)
-	public ModelAndView selectStuAttendanceRecord(Integer stuId,Integer classId,Integer curPage){
-		if(curPage==null){
-			curPage=1;     //当页面传过来的参数为null时，纠正为第一页，避免出错
+	@RequestMapping(value = "/selectStuAttendanceRecord", method = RequestMethod.GET)
+	public ModelAndView selectStuAttendanceRecord(Integer stuId, Integer classId, Integer curPage) {
+		if (curPage == null) {
+			curPage = 1; // 当页面传过来的参数为null时，纠正为第一页，避免出错
 		}
-		if(curPage<1){
-			curPage=1;     //下限判断，当小于第一页时，纠正为第一页
+		if (curPage < 1) {
+			curPage = 1; // 下限判断，当小于第一页时，纠正为第一页
 		}
-		int maxRecord=studentService.getMaxStuAttendanceReocrd(stuId, classId);
-		int maxPage=(maxRecord+4)/5;   //每页显示五条信息，总共有几页
-		if(curPage>maxPage){
-			curPage=maxPage;     //上限判断，当大于最后一页时，纠正为最后一页
+		int maxRecord = studentService.getMaxStuAttendanceReocrd(stuId, classId);
+		int maxPage = (maxRecord + 4) / 5; // 每页显示五条信息，总共有几页
+		if (curPage > maxPage) {
+			curPage = maxPage; // 上限判断，当大于最后一页时，纠正为最后一页
 		}
-		int pageIndex=(curPage-1)*5;
-		List<AttendanceRecord> record=studentService.selectStuAttendanceReocrd(stuId, classId, pageIndex);
-		//创建一个模型和视图
-		ModelAndView mv=new ModelAndView("studentlookattendancerecord");
-		//向页面返回数据
+		int pageIndex = (curPage - 1) * 5;
+		List<AttendanceRecord> record = studentService.selectStuAttendanceReocrd(stuId, classId, pageIndex);
+		// 创建一个模型和视图
+		ModelAndView mv = new ModelAndView("studentlookattendancerecord");
+		// 向页面返回数据
 		mv.addObject("attendanceRecord", record);
 		mv.addObject("curPage", curPage);
 		mv.addObject("maxPage", maxPage);
 		mv.addObject("maxRecord", maxRecord);
 		return mv;
 	}
+
 	/*
 	 * @author 连慧
+	 * 
 	 * @param 页面传过来的stuId学生编号,classId班级编号，choice当前选择按什么查询。
+	 * 
 	 * @return 学生编号对应的学生考勤记录
 	 */
-	@RequestMapping(value="/selectStuAttendanceRecordByTime",method=RequestMethod.POST)
-	public ModelAndView selectStuAttendanceRecordByTime(Integer stuId,Integer classId,Integer choice,Integer curPage){
-		if(curPage==null){
-			curPage=1;     //当页面传过来的参数为null时，纠正为第一页，避免出错
+	@RequestMapping(value = "/selectStuAttendanceRecordByTime", method = RequestMethod.POST)
+	public ModelAndView selectStuAttendanceRecordByTime(Integer stuId, Integer classId, Integer choice,
+			Integer curPage) {
+		if (curPage == null) {
+			curPage = 1; // 当页面传过来的参数为null时，纠正为第一页，避免出错
 		}
-		if(curPage<1){
-			curPage=1;     //下限判断，当小于第一页时，纠正为第一页
+		if (curPage < 1) {
+			curPage = 1; // 下限判断，当小于第一页时，纠正为第一页
 		}
-		int maxRecord=studentService.getMaxAttendanceRecordByTime(stuId, classId, choice);
-		int maxPage=(maxRecord+4)/5;   //每页显示五条信息，总共有几页
-		if(curPage>maxPage){
-			curPage=maxPage;     //上限判断，当大于最后一页时，纠正为最后一页
+		int maxRecord = studentService.getMaxAttendanceRecordByTime(stuId, classId, choice);
+		int maxPage = (maxRecord + 4) / 5; // 每页显示五条信息，总共有几页
+		if (curPage > maxPage) {
+			curPage = maxPage; // 上限判断，当大于最后一页时，纠正为最后一页
 		}
-		int pageIndex=(curPage-1)*5;
-		List<AttendanceRecord> record=studentService.selectStuAttendanceRecordByTime(stuId, classId, choice,pageIndex);
-		//创建一个模型和视图
-		ModelAndView mv=new ModelAndView();
-		//设置跳转页面
+		int pageIndex = (curPage - 1) * 5;
+		List<AttendanceRecord> record = studentService.selectStuAttendanceRecordByTime(stuId, classId, choice,
+				pageIndex);
+		// 创建一个模型和视图
+		ModelAndView mv = new ModelAndView();
+		// 设置跳转页面
 		mv.setViewName("studentlookattendancerecord");
-		//向页面返回数据
+		// 向页面返回数据
 		mv.addObject("attendanceRecord", record);
 		mv.addObject("curPage", curPage);
 		mv.addObject("maxPage", maxPage);
 		mv.addObject("maxRecord", maxRecord);
-		if(choice!=0){
+		if (choice != 0) {
 			mv.addObject("choice", choice);
 		}
 		return mv;
 	}
-	
-	@RequestMapping(value="/selectStuAttendanceRecordByTimes",method=RequestMethod.GET)
-	public ModelAndView selectStuAttendanceRecordByTimes(Integer stuId,Integer classId,Integer choice,Integer curPage){
-		ModelAndView mv=selectStuAttendanceRecordByTime(stuId, classId, choice, curPage);
+
+	@RequestMapping(value = "/selectStuAttendanceRecordByTimes", method = RequestMethod.GET)
+	public ModelAndView selectStuAttendanceRecordByTimes(Integer stuId, Integer classId, Integer choice,
+			Integer curPage) {
+		ModelAndView mv = selectStuAttendanceRecordByTime(stuId, classId, choice, curPage);
 		return mv;
 	}
-	
+
 }
