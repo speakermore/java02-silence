@@ -1,8 +1,10 @@
 package silence.controller;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -192,7 +194,7 @@ public class TeachersController {
 	/**
 	 * 袁云：验证该班级是否有该学号的学生的功能
 	 * @param  页面传过来的班级id和学生学号
-	 * @return 老师对象
+	 * @return map集合
 	 */
 	@RequestMapping(value="/verifyStuExist",method=RequestMethod.POST)
 	@ResponseBody //ajax注解，把verifyStuExist当做字符串返回给页面
@@ -210,23 +212,25 @@ public class TeachersController {
 	}
 	
 	/**
-	 * 袁云：验证该班级是否有该学号的学生的功能
-	 * @param  页面传过来的班级id和学生学号
-	 * @return 老师对象
+	 * 袁云：验证该时间段是否有考勤记录
+	 * @param  页面传过来的时间段
+	 * @return map集合
 	 */
-	@RequestMapping(value="/verifyStuExist2",method=RequestMethod.POST)
+	@RequestMapping(value="/verifyAttendanceExistInfo",method=RequestMethod.POST)
 	@ResponseBody //ajax注解，把verifyStuExist当做字符串返回给页面
-	public Map<String,Object> verifyStuExist2(Timestamp attendanceTime1,Timestamp attendanceTime2){
-		Map<String, Object> verifyStuExistInfo = new HashMap<String,Object>();
-		ArrayList<AttendanceRecord> attendanceRecords = teacherService.verifyStuExist2(attendanceTime1,attendanceTime2);
+	public Map<String,Object> verifyAttendanceExistInfo(Timestamp attendanceTime1,Timestamp attendanceTime2){
+		Date date1 = new Date(attendanceTime1.getTime());
+		Date date2 = new Date(attendanceTime2.getTime());
+		Map<String, Object> verifyAttendanceExistInfo = new HashMap<String,Object>();
+		ArrayList<AttendanceRecord> attendanceRecords = teacherService.verifyStuExist2(date1,date2);
 		if(attendanceRecords.size()>0){
-			verifyStuExistInfo.put("succeed",true);
-			verifyStuExistInfo.put("message", "该时间段有考勤记录！");
+			verifyAttendanceExistInfo.put("succeed",true);
+			verifyAttendanceExistInfo.put("message", "该时间段有考勤记录！");
 		}else{
-			verifyStuExistInfo.put("succeed",false);
-			verifyStuExistInfo.put("message", "该时间段没有考勤记录！");
+			verifyAttendanceExistInfo.put("succeed",false);
+			verifyAttendanceExistInfo.put("message", "该时间段没有考勤记录！");
 		}
-		return verifyStuExistInfo;
+		return verifyAttendanceExistInfo;
 	}
 	
 	/**
@@ -240,13 +244,20 @@ public class TeachersController {
 		// 当什么查询条件都没有选择时的处理
 		if(attendanceTime1==null&&attendanceTime2==null&&stuClass==0&&stuNo==""&&stuName==""){
 			mv = jumpLookAttendanceRecord(1);
+			mv.addObject("attendanceRecordInfo", "请选择查询条件！");
 			return mv;
 		}else{
-			Integer maxRecord = teacherService.getMaxRecordByCondition(attendanceTime1, attendanceTime2, stuClass, stuNo, stuName);
+			Date date1=null;
+			Date date2=null;
+			if(attendanceTime1!=null&&attendanceTime2!=null){
+				date1 = new Date(attendanceTime1.getTime());
+				date2 = new Date(attendanceTime2.getTime());
+			}
+			Integer maxRecord = teacherService.getMaxRecordByCondition(date1, date2, stuClass, stuNo, stuName);
 			// 当没有符合查询条件的数据时的处理
 			if(maxRecord==0){
 				mv = jumpLookAttendanceRecord(1);
-				mv.addObject("info","没有符合条件的考勤记录！");
+				mv.addObject("attendanceRecordInfo","没有符合条件的考勤记录！");
 				return mv;
 			}else{
 				if(curPage < 1){
@@ -257,7 +268,7 @@ public class TeachersController {
 					curPage = maxPage; // 上限判断，当大于最后一页时，纠正为最后一页
 				}
 				Integer pageIndex = (curPage-1)*5; 
-				List<AttendanceRecord> attendanceRecords = teacherService.lookAttendanceRecord(attendanceTime1, attendanceTime2, stuClass, stuNo, stuName, pageIndex);
+				List<AttendanceRecord> attendanceRecords = teacherService.lookAttendanceRecord(date1, date2, stuClass, stuNo, stuName, pageIndex);
 				mv.setViewName("teacherlookattendancerecord");
 				mv.addObject("attendanceRecords",attendanceRecords);
 				mv.addObject("curPage",curPage);
@@ -302,5 +313,106 @@ public class TeachersController {
 		}
 	}
 	
+	/**
+	 * 袁云：老师查看个人出勤率
+	 * @param  页面传过来的时间段，班级，学号，姓名
+	 * @return 个人出勤率
+	 */
+	@RequestMapping(value="/lookPersonalAttendanceRate",method=RequestMethod.POST)
+	public ModelAndView lookPersonalAttendanceRate(Timestamp attendanceTime1,Timestamp attendanceTime2,Integer stuClass,String stuNo,String stuName){
+		ModelAndView mv = new ModelAndView("teacherlookattendancerecord");
+		if(attendanceTime1==null&&attendanceTime2==null&&stuClass==0&&stuNo==""&&stuName==""){
+			mv.addObject("personalVerify", "请选择查询条件！");
+		}else{
+			if(attendanceTime1==null||attendanceTime2==null){
+				mv.addObject("personalVerify", "考勤时间不能为空！");
+			}else{
+				if(stuClass==0&&stuNo==""&&stuName==""){
+					mv.addObject("personalVerify", "学号和姓名必须填一个");
+				}else{
+					Date date1 = new Date(attendanceTime1.getTime());
+					Date date2 = new Date(attendanceTime2.getTime());
+					Integer maxRecord = teacherService.getMaxRecordByCondition(date1 , date2, stuClass, stuNo, stuName);
+					if(maxRecord==0){
+						mv.addObject("personalVerify", "没有符合条件的记录！");
+					}else{
+						// 考勤状态为y的数量
+						Integer yCount = teacherService.getStuStatusIsYNo(date1, date2,stuClass, stuNo, stuName);
+						long second = date2.getTime()-date1.getTime();
+						// 期间段总天数
+						long days = second/(1000 * 60 * 60 * 24);
+						double attendanceRates = (double)yCount/days;
+						BigDecimal bg = new BigDecimal(attendanceRates);  
+						// 出勤率，保留两位小数
+						double personalAttendanceRate = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
+						List<AttendanceRecord> personalAttendanceRecords = teacherService.lookAttendanceRecord(date1, date2, stuClass, stuNo, stuName, 0);
+						mv.addObject("personalAttendanceRate",personalAttendanceRate);
+						mv.addObject("personalAttendanceRecords", personalAttendanceRecords);
+						String time1 = "";
+						String time2 = "";
+						// 当页面还需要用到传过来的值时，则将传过来的值在放到mv里传回给页面
+						time1 = new SimpleDateFormat("yyyy-MM-dd").format(attendanceTime1);
+						time2 = new SimpleDateFormat("yyyy-MM-dd").format(attendanceTime2);
+						mv.addObject("attendanceTime3",time1);
+						mv.addObject("attendanceTime4",time2);
+						mv.addObject("stuClass2",stuClass);
+						mv.addObject("stuNo2",stuNo);
+						mv.addObject("stuName2",stuName);
+						
+					}
+				}
+			}
+		}
+		return mv;
+	}
+	
+	/**
+	 * 袁云：老师查看班级出勤率
+	 * @param  页面传过来的时间段，班级
+	 * @return 班级出勤率
+	 */
+	@RequestMapping(value="/lookClassAttendanceRate",method=RequestMethod.POST)
+	public ModelAndView lookClassAttendanceRate(Timestamp attendanceTime1,Timestamp attendanceTime2,Integer stuClass){
+		ModelAndView mv = new ModelAndView("teacherlookattendancerecord");
+		if(attendanceTime1==null&&attendanceTime2==null&&stuClass==0){
+			mv.addObject("classVerify", "请选择查询条件！");
+		}else{
+			if(attendanceTime1==null||attendanceTime2==null){
+				mv.addObject("classVerify", "考勤时间不能为空！");
+			}else{
+				if(stuClass==0){
+					mv.addObject("classVerify", "必须选择班级！");
+				}else{
+					Date date1 = new Date(attendanceTime1.getTime());
+					Date date2 = new Date(attendanceTime2.getTime());
+					Integer maxRecord = teacherService.getMaxRecordByClass(date1, date2, stuClass);
+					if(maxRecord==0){
+						mv.addObject("classVerify", "没有符合条件的记录！");
+					}else{
+						// 考勤状态为y的数量
+						Integer yCount = teacherService.getClassStatusIsYNo(date1, date2, stuClass);
+						Integer classStuCount = teacherService.getClassStuCount(stuClass);
+						long second = date2.getTime()-date1.getTime();
+						// 期间段总天数
+						long days = second/(1000 * 60 * 60 * 24);
+						double attendanceRates = (double)yCount/(days*classStuCount);
+						BigDecimal bg = new BigDecimal(attendanceRates);  
+						// 出勤率，保留两位小数
+						double classAttendanceRate = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
+						mv.addObject("classAttendanceRate", classAttendanceRate);
+						String time1 = "";
+						String time2 = "";
+						// 当页面还需要用到传过来的值时，则将传过来的值在放到mv里传回给页面
+						time1 = new SimpleDateFormat("yyyy-MM-dd").format(attendanceTime1);
+						time2 = new SimpleDateFormat("yyyy-MM-dd").format(attendanceTime2);
+						mv.addObject("attendanceTime5",time1);
+						mv.addObject("attendanceTime6",time2);
+						mv.addObject("stuClass1",stuClass);
+					}
+				}
+			}
+		}
+		return mv;
+	}
 	
 }

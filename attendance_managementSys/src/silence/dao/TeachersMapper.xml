@@ -33,7 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="verifyStuExist2" resultType="AttendanceRecord">
 		select * from attendance_record
-		where attendanceComeTime between #{attendanceTime1} and #{attendanceTime2}
+		where attendanceDate between #{attendanceTime1} and #{attendanceTime2}
 	</select>
 	
 	<select id="lookAttendanceRecord" resultType="attendanceRecord">
@@ -42,7 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         join classes c on s.classId=c.id 
         <where>
 	        <if test="attendanceTime1!=null and attendanceTime2!=null">
-	        	and ar.attendanceComeTime between #{attendanceTime1} and #{attendanceTime2}
+	        	and ar.attendanceDate between #{attendanceTime1} and #{attendanceTime2}
 	        </if>
 	        <if test="id!=0">
 	        	and c.id=#{id}
@@ -80,7 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         join classes c on s.classId=c.id 
         <where>
 	        <if test="attendanceTime1!=null and attendanceTime2!=null">
-	        	and ar.attendanceComeTime between #{attendanceTime1} and #{attendanceTime2}
+	        	and ar.attendanceDate between #{attendanceTime1} and #{attendanceTime2}
 	        </if>
 	        <if test="stuClass!=0">
 	        	and c.id=#{stuClass}
@@ -90,6 +90,59 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	        </if>
 	        <if test="stuName!=null and stuName!=''">
 	        	and s.stuName like CONCAT(CONCAT('%', #{stuName}),'%')
+	        </if>
+        </where>
+	</select>
+	
+	<select id="getStuStatusIsYNo" resultType="Integer">
+		select count(ar.attendanceStatus="y") 
+		from attendance_record ar join students s on ar.stuId=s.id 
+        join classes c on s.classId=c.id 
+        <where>
+	        <if test="date1!=null and date2!=null">
+	        	and ar.attendanceDate between #{date1} and #{date2}
+	        </if>
+	        <if test="stuClass!=0">
+	        	and c.id=#{stuClass}
+	        </if>
+	        <if test="stuNo!=null and stuNo!=''">
+	        	and s.stuNo=#{stuNo}
+	        </if>
+	        <if test="stuName!=null and stuName!=''">
+	        	and s.stuName=#{stuName}
+	        </if>
+        </where>
+	</select>
+	
+	<select id="getClassStatusIsYNo" resultType="Integer">
+		select count(ar.attendanceStatus="y") 
+		from attendance_record ar join students s on ar.stuId=s.id 
+        join classes c on s.classId=c.id 
+        <where>
+	        <if test="date1!=null and date2!=null">
+	        	and ar.attendanceDate between #{date1} and #{date2}
+	        </if>
+	        <if test="stuClass!=0">
+	        	and c.id=#{stuClass}
+	        </if>
+        </where>
+	</select>
+	
+	<select id="getClassStuCount" resultType="Integer">
+		select count(*) from students where classId=${stuClass}
+	</select>
+	
+	<!-- 根据某个班在一段时间内的最大考勤记录数 -->
+	<select id="getMaxRecordByClass" resultType="Integer">
+		select count(*) 
+		from attendance_record ar join students s on ar.stuId=s.id 
+        join classes c on s.classId=c.id 
+        <where>
+	        <if test="date1!=null and date2!=null">
+	        	and ar.attendanceDate between #{date1} and #{date2}
+	        </if>
+	        <if test="stuClass!=0">
+	        	and c.id=#{stuClass}
 	        </if>
         </where>
 	</select>

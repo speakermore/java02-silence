@@ -71,21 +71,21 @@
 					<button id="btn1" name="btn1" type="submit" class="btn btn-default">GO</button>
 				</form>
 				<div id="verifyStuExistInfo"></div>
-				<div id="verifyStuExistInfo2"></div>
-				<div id="info">${info }</div>
+				<div id="verifyAttendanceExistInfo"></div>
+				<div id="attendanceRecordInfo">${attendanceRecordInfo }</div>
 				<!--显示内容头部结束-->
 
 				<!--显示内容主体开始-->
 				<div id="main-attend">
 					<ul class="list-unstyled">
 						<li>
-							<a href="">
+							<strong>
 								<span class="col-sm-2">学号</span>
 								<span class="col-sm-1">姓名</span>
 								<span class="col-sm-3">班级名称</span>
 								<span class="col-sm-3">到校时间</span>
 								<span class="col-sm-3">离校时间</span>
-							</a>
+							</strong>
 						</li>
 						
 						<div id="main-attendContent">
@@ -169,6 +169,92 @@
 					
 				</div>
 				<!--显示内容尾部结束-->
+				<!--显示个人出勤率内容头部开始-->
+				<form id="head-main" class="form-inline" action="tecAttendance/lookPersonalAttendanceRate" method="post">
+					<h4>个人出勤率：</h4>
+					<div class="form-group">
+						<label for="attendanceTime3">考勤时间：</label>
+						<input id="attendanceTime3" name="attendanceTime1" class="date_test form-control" value="${attendanceTime3 }" />&nbsp;-&nbsp;
+						<input id="attendanceTime4" name="attendanceTime2" class="date_test form-control" value="${attendanceTime4 }" />
+					</div>
+					<div class="form-group">
+						<label for="stuClass2">班级：</label>
+						<select id="stuClass2" name="stuClass" class="form-control" >
+							<option value="0" <c:if test="${stuClass2 == '0'}">selected</c:if>>--请选择查看的班级--</option>
+							<option value="1" <c:if test="${stuClass2 == '1'}">selected</c:if>>1</option>
+							<option value="2" <c:if test="${stuClass2 == '2'}">selected</c:if>>2</option>
+							<option value="3" <c:if test="${stuClass2 == '3'}">selected</c:if>>3</option>
+							<option value="4" <c:if test="${stuClass2 == '4'}">selected</c:if>>4</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="stuNo2">学号：</label>
+						<input id="stuNo2" name="stuNo" class="form-control" type="text" value="${stuNo2 }" placeholder="请输入要查看的学生学号"/>
+					</div>
+					<div class="form-group">
+						<label for="stuName2">姓名：</label>
+						<input id="stuName2" name="stuName" class="form-control" type="text" value="${stuName2 }" placeholder="请输入要查看的学生姓名"/>
+					</div>
+					<button id="btn3" name="btn3" type="submit" class="btn btn-default">GO</button>
+				</form>
+				<div id="verifyStuExistInfo2"></div>
+				<div id="verifyAttendanceExistInfo2"></div>
+				<div id="personalVerify">${personalVerify }</div>
+				<!--显示个人出勤率内容头部结束-->
+
+				<!--显示个人出勤率内容主体开始-->
+				<div id="main-attend" style="border: solid white 1px">
+					<ul class="list-unstyled">
+						<li>
+							<strong>
+								<span class="col-sm-3">学号</span>
+								<span class="col-sm-3">姓名</span>
+								<span class="col-sm-3">班级名称</span>
+								<span class="col-sm-3">出勤率</span>
+							</strong>
+						</li>
+						<li>
+							<span class="col-sm-3">${personalAttendanceRecords[0].stuNo }</span>
+							<span class="col-sm-3">${personalAttendanceRecords[0].stuName }</span>
+							<span class="col-sm-3">${personalAttendanceRecords[0].className }</span>
+							<span class="col-sm-3">${personalAttendanceRate}</span>
+						</li>
+					</ul>
+				</div>
+				<!--显示个人出勤率内容主体结束-->
+				<!--显示班级出勤率内容头部开始-->
+				<div>
+					<form id="head-main" class="form-inline" action="tecAttendance/lookClassAttendanceRate" method="post">
+						<h4 >班级出勤率：</h4>
+						<div class="form-group">
+							<label for="attendanceTimes5">考勤时间：</label>
+							<input id="attendanceTimes5" name="attendanceTime1" class="date_test form-control" value="${attendanceTime5 }" />&nbsp;-&nbsp;
+							<input id="attendanceTimes6" name="attendanceTime2" class="date_test form-control" value="${attendanceTime6 }" />
+						</div>
+						<div class="form-group">
+							<label for="stuClass1">班级：</label>
+							<select id="stuClass1" name="stuClass" class="form-control" >
+								<option value="0" <c:if test="${stuClass1 == '0'}">selected</c:if>>--请选择查看的班级--</option>
+								<option value="1" <c:if test="${stuClass1 == '1'}">selected</c:if>>1</option>
+								<option value="2" <c:if test="${stuClass1 == '2'}">selected</c:if>>2</option>
+								<option value="3" <c:if test="${stuClass1 == '3'}">selected</c:if>>3</option>
+								<option value="4" <c:if test="${stuClass1 == '4'}">selected</c:if>>4</option>
+							</select>
+						</div>
+						<button id="btn4" name="btn4" type="submit" class="btn btn-default">GO</button>
+					</form>
+				</div>
+				<div id="classVerify">${classVerify }</div>
+				<!--显示班级出勤率内容头部结束-->
+
+				<!--显示班级出勤率内容主体开始-->
+				<div id="main-attend">
+							<strong>
+								<span class="col-sm-2">出勤率:</span>
+							</strong>
+							<span class="col-sm-3">${classAttendanceRate}</span>
+				</div>
+				<!--显示班级出勤率内容主体结束-->
 				<!--显示内容结束-->
 			</div>
 		</div>
@@ -195,19 +281,15 @@
 	    			$("#attendanceTime1").blur(function () {
 						if($(this).val()!="" && $("#attendanceTime2").val()!=""){
 							$.ajax({
-	    						url:"tecAttendance/verifyStuExist2",
+	    						url:"tecAttendance/verifyAttendanceExistInfo",
 	    						type:"post",
 	    						dataType:"json",
 	    						data:{"attendanceTime1":$("#attendanceTime1").val(),"attendanceTime2":$("#attendanceTime2").val()},
 	    						success:function(data){
 	    							if(!data.succeed){
-	    								$("#stuName").attr("disabled","true");
-	    								$("#btn1").attr("disabled","true");
-	        							$("#verifyStuExistInfo2").html(data.message);
+	        							$("#verifyAttendanceExistInfo").html(data.message);
 	    							}else{
-	    								$("#stuName").removeAttr("disabled");
-	    								$("#btn1").removeAttr("disabled");
-	        							$("#verifyStuExistInfo2").html("");
+	        							$("#verifyAttendanceExistInfo").html("");
 	    							}
 	    						}
 		    				});		
@@ -218,19 +300,15 @@
 	    			$("#attendanceTime2").blur(function () {
 						if($(this).val()!="" && $("#attendanceTime1").val()!=""){
 							$.ajax({
-	    						url:"tecAttendance/verifyStuExist2",
+	    						url:"tecAttendance/verifyAttendanceExistInfo",
 	    						type:"post",
 	    						dataType:"json",
 	    						data:{"attendanceTime1":$("#attendanceTime1").val(),"attendanceTime2":$("#attendanceTime2").val()},
 	    						success:function(data){
 	    							if(!data.succeed){
-	    								$("#stuName").attr("disabled","true");
-	    								$("#btn1").attr("disabled","true");
-	        							$("#verifyStuExistInfo2").html(data.message);
+	        							$("#verifyAttendanceExistInfo").html(data.message);
 	    							}else{
-	    								$("#stuName").removeAttr("disabled");
-	    								$("#btn1").removeAttr("disabled");
-	        							$("#verifyStuExistInfo2").html("");
+	        							$("#verifyAttendanceExistInfo").html("");
 	    							}
 	    						}
 		    				});		
@@ -291,6 +369,98 @@
 	    				}
 	    			});
 	    			
+	    			/* 当光标离开个人考勤率的第一个时间选择框时，如果第二个时间选择框不为空时，判断该时间段是否有考勤记录 */
+	    			$("#attendanceTime3").blur(function () {
+						if($(this).val()!="" && $("#attendanceTime4").val()!=""){
+							$.ajax({
+	    						url:"tecAttendance/verifyAttendanceExistInfo",
+	    						type:"post",
+	    						dataType:"json",
+	    						data:{"attendanceTime1":$("#attendanceTime3").val(),"attendanceTime2":$("#attendanceTime4").val()},
+	    						success:function(data){
+	    							if(!data.succeed){
+	        							$("#verifyAttendanceExistInfo2").html(data.message);
+	    							}else{
+	        							$("#verifyAttendanceExistInfo2").html("");
+	    							}
+	    						}
+		    				});		
+						}
+					}); 
+	    			
+	    			/* 当光标离开个人考勤率的第二个时间选择框时，如果第一个时间选择框不为空时，判断该时间段是否有考勤记录 */
+	    			$("#attendanceTime4").blur(function () {
+						if($(this).val()!="" && $("#attendanceTime3").val()!=""){
+							$.ajax({
+	    						url:"tecAttendance/verifyAttendanceExistInfo",
+	    						type:"post",
+	    						dataType:"json",
+	    						data:{"attendanceTime1":$("#attendanceTime3").val(),"attendanceTime2":$("#attendanceTime4").val()},
+	    						success:function(data){
+	    							if(!data.succeed){
+	        							$("#verifyAttendanceExistInfo2").html(data.message);
+	    							}else{
+	        							$("#verifyAttendanceExistInfo2").html("");
+	    							}
+	    						}
+		    				});		
+						}
+					});
+	    			
+	    			/* 当光标离开个人考勤率班级选择框时，如果学号输入框不为空时，验证该班级是否有该学号的学生 */
+	    			$("#stuClass2").blur(function () {
+	    				if($("#stuClass2").val()!="0" && $("#stuNo2").val()!=null && $("#stuNo2").val()!=""){
+		    				$.ajax({
+	    						url:"tecAttendance/verifyStuExist",
+	    						type:"post",
+	    						dataType:"json",
+	    						data:{"id":$("#stuClass2").val(),"stuNo":$("#stuNo2").val()},
+	    						success:function(data){
+	    							if(!data.succeed){
+	    								$("#stuName2").attr("disabled","true");
+	    								$("#btn3").attr("disabled","true");
+	        							$("#verifyStuExistInfo2").html(data.message);
+	    							}else{
+	    								$("#stuName2").removeAttr("disabled");
+	    								$("#btn3").removeAttr("disabled");
+	        							$("#verifyStuExistInfo2").html("");
+	    							}
+	    						}
+		    				});	
+	    				}else{
+	    					$("#verifyStuExistInfo2").html("");
+							$("#stuName2").removeAttr("disabled");
+	    					$("#btn3").removeAttr("disabled");
+	    				}
+	    			});
+	    			
+	    			/* 当光标离开学号输入框时，如果班级选择框不为空时，验证该班级是否有该学号的学生 */
+	    			$("#stuNo2").blur(function () {
+	    				if($("#stuClass2").val()!="0" && $("#stuNo2").val()!=null && $("#stuNo2").val()!=""){
+		    				$.ajax({
+	    						url:"tecAttendance/verifyStuExist",
+	    						type:"post",
+	    						dataType:"json",
+	    						data:{"id":$("#stuClass2").val(),"stuNo":$("#stuNo2").val()},
+	    						success:function(data){
+	    							if(!data.succeed){
+	    								$("#stuName2").attr("disabled","true");
+	    								$("#btn3").attr("disabled","true");
+	        							$("#verifyStuExistInfo2").html(data.message);
+	    							}else{
+	    								$("#stuName2").removeAttr("disabled");
+	    								$("#btn3").removeAttr("disabled");
+	        							$("#verifyStuExistInfo2").html("");
+	    							}
+	    						}
+		    				});	
+	    				}else{
+	    					$("#verifyStuExistInfo2").html("");
+							$("#stuName2").removeAttr("disabled");
+	    					$("#btn3").removeAttr("disabled");
+	    				}
+	    			});
+	    			
 	    			/* 当输入页码不符合规范时，将提交按钮禁用，符合规范时又解禁 */
 	    			$('#curPage').bind('input propertychange', function() {
 						var page = $("#curPage").val();
@@ -302,46 +472,6 @@
 							$("#btn2").removeAttr("disabled");
 						}
 					});
-	    				
-	    			
-	    			/* $("#btn1").click(function (){
-	    				window.location.href="tecAttendance/lookAttendanceRecord?curPage=1";
-	    			}); */
-	    			
-	    			/* $("#btn1").click(function () {
-	    				$.ajax({
-	    					url:"tecAttendance/lookAttendanceRecord?curPage=1",
-	    					type:"post",
-	    					data:{"attendanceTime1":$("#attendanceTime1").val(),"attendanceTime2":$("#attendanceTime2").val(),"id":$("#stuClass").val(),"stuNo":$("#stuNo").val(),"stuName":$("#stuName").val()},
-	    					dataType:"json",
-	    					success:function(data){
-	    						var content = $("#main-attendContent");
-	    						content.empty();
-	    						for(var i = 0 ;i < data.length;i++){
-	    							$("<li><span class='col-sm-2'>"+data[i].stuNo+
-	    									"</span><span class='col-sm-1'>"+data[i].stuName+
-	    									"</span><span class='col-sm-3'>"+data[i].className+
-	    									"</span><span class='col-sm-3'>"+data[i].attendanceComeTime+
-	    									"</span><span class='col-sm-3'>"+data[i].attendanceBackTime+
-	    									"</span></li>").appendTo(content); 
-    							} 
-	    					}
-	    				});
-					});  */
-					/* var attendanceTime1;
-					var attendanceTime2;
-					var stuClass;
-					var stuNo;
-					var stuName;
-					$("#btn1").click(function () {
-						attendanceTime1 = $("#attendanceTime1").val();
-						attendanceTime2 = $("#attendanceTime2").val();
-						stuClass = $("#stuClass").val();
-						stuNo = $("stuNo").val();
-						stuName = $("stuName").val();
-						
-					});
-					$.url().param("attendanceTime1":attendanceTime1); */
 	    		});
 	    </script>
 </body>

@@ -1,7 +1,7 @@
 package silence.dao;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -56,14 +56,14 @@ public interface TeachersMapper {
 	 * 根据页面传过来的时间验证改时间段是否存在考勤记录
 	 * @return 考勤记录对象（返回值的意义）
 	 */
-	public ArrayList<AttendanceRecord> verifyStuExist2(@Param("attendanceTime1")Timestamp attendanceTime1,@Param("attendanceTime2")Timestamp attendanceTime2);
+	public ArrayList<AttendanceRecord> verifyStuExist2(@Param("attendanceTime1")Date attendanceTime1,@Param("attendanceTime2")Date attendanceTime2);
 	
 	/**
 	 * @author 袁云
 	 * 老师根据查询条件查看考勤记录
 	 * @return 考勤记录集合
 	 */
-	public List<AttendanceRecord> lookAttendanceRecord(@Param("attendanceTime1")Timestamp attendanceTime1,@Param("attendanceTime2")Timestamp attendanceTime2,@Param("id")Integer id,@Param("stuNo")String stuNo,@Param("stuName")String stuName,@Param("pageIndex")Integer pageIndex);
+	public List<AttendanceRecord> lookAttendanceRecord(@Param("attendanceTime1")Date attendanceTime1,@Param("attendanceTime2")Date attendanceTime2,@Param("id")Integer id,@Param("stuNo")String stuNo,@Param("stuName")String stuName,@Param("pageIndex")Integer pageIndex);
 	/**
 	 * @author 袁云
 	 * 获得考勤的最大记录数
@@ -82,5 +82,33 @@ public interface TeachersMapper {
 	 * 老师按查询条件查看考勤记录获得记录总数
 	 * @return 符合条件的考勤记录总数
 	 */
-	public Integer getMaxRecordByCondition(@Param("attendanceTime1")Timestamp attendanceTime1, @Param("attendanceTime2")Timestamp attendanceTime2,@Param("stuClass") Integer stuClass,@Param("stuNo") String stuNo,@Param("stuName") String stuName);
+	public Integer getMaxRecordByCondition(@Param("attendanceTime1")Date attendanceTime1, @Param("attendanceTime2")Date attendanceTime2,@Param("stuClass") Integer stuClass,@Param("stuNo") String stuNo,@Param("stuName") String stuName);
+	
+	/**
+	 * @author 袁云
+	 * 查询某个同学在一段时间内的出勤状态为y（出勤）的数量
+	 * @return 出勤状态为y（出勤）的数量
+	 */
+	public Integer getStuStatusIsYNo(@Param("date1") Date date1,@Param("date2") Date date2,@Param("stuClass")Integer stuClass,@Param("stuNo")String stuNo,@Param("stuName")String stuName);
+	
+	/**
+	 * @author 袁云
+	 * 查询某个班级在一段时间内的出勤状态为y（出勤）的数量
+	 * @return 出勤状态为y（出勤）的数量
+	 */
+	public Integer getClassStatusIsYNo(@Param("date1") Date date1,@Param("date2") Date date2,@Param("stuClass")Integer stuClass);
+	
+	/**
+	 * @author 袁云
+	 * 查看某个班有多少个学生
+	 * @return 学生数量
+	 */
+	public Integer getClassStuCount(@Param("stuClass")Integer stuClass);
+	
+	/**
+	 * @author 袁云
+	 * 查看某个班在一段时间内的考勤记录总数
+	 * @return 考勤记录数
+	 */
+	public Integer getMaxRecordByClass(@Param("date1") Date date1,@Param("date2") Date date2,@Param("stuClass")Integer stuClass);
 }

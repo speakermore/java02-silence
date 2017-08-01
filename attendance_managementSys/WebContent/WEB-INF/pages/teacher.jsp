@@ -39,9 +39,8 @@
 		<button type="button" class="btn btn-info col-sm-4">查看学生考勤记录</button>
 		</div>
 		<div class="row" id="bottom">
-		<button type="button" class="btn btn-info col-sm-3">查看学生工作日志</button>
+		<button type="button" class="btn btn-info col-sm-4">查看学生工作日志</button>
 		<button type="button" class="btn btn-info col-sm-4">修改密码</button>
-		<button type="button" class="btn btn-info col-sm-3">查看学生考勤率</button>
 		</div>
 	</div>
 	<div id="tecUpdatePwd" class="col-sm-3">${update}</div>

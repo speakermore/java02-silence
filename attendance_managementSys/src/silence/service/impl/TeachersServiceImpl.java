@@ -1,7 +1,7 @@
 package silence.service.impl;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -56,13 +56,13 @@ public class TeachersServiceImpl implements TeachersService {
 	}
 	
 	@Override
-	public ArrayList<AttendanceRecord> verifyStuExist2(Timestamp attendanceTime1, Timestamp attendanceTime2) {
+	public ArrayList<AttendanceRecord> verifyStuExist2(Date attendanceTime1, Date attendanceTime2) {
 		// TODO Auto-generated method stub
 		return teachersMapper.verifyStuExist2(attendanceTime1, attendanceTime2);
 	}
 
 	@Override
-	public List<AttendanceRecord> lookAttendanceRecord(Timestamp attendanceTime1, Timestamp attendanceTime2, Integer id,
+	public List<AttendanceRecord> lookAttendanceRecord(Date attendanceTime1, Date attendanceTime2, Integer id,
 			String stuNo, String stuName,Integer pageIndex) {
 		// TODO Auto-generated method stub
 		return teachersMapper.lookAttendanceRecord(attendanceTime1, attendanceTime2, id, stuNo, stuName,pageIndex);
@@ -81,10 +81,34 @@ public class TeachersServiceImpl implements TeachersService {
 	}
 
 	@Override
-	public Integer getMaxRecordByCondition(Timestamp attendanceTime1, Timestamp attendanceTime2, Integer stuClass,
+	public Integer getMaxRecordByCondition(Date attendanceTime1, Date attendanceTime2, Integer stuClass,
 			String stuNo, String stuName) {
 		// TODO Auto-generated method stub
 		return teachersMapper.getMaxRecordByCondition(attendanceTime1, attendanceTime2, stuClass, stuNo, stuName);
+	}
+
+	@Override
+	public Integer getStuStatusIsYNo(Date date1, Date date2, Integer stuClass, String stuNo, String stuName) {
+		// TODO Auto-generated method stub
+		return teachersMapper.getStuStatusIsYNo(date1, date2, stuClass, stuNo, stuName);
+	}
+
+	@Override
+	public Integer getClassStatusIsYNo(Date date1, Date date2, Integer stuClass) {
+		// TODO Auto-generated method stub
+		return teachersMapper.getClassStatusIsYNo(date1, date2, stuClass);
+	}
+
+	@Override
+	public Integer getClassStuCount(Integer stuClass) {
+		// TODO Auto-generated method stub
+		return teachersMapper.getClassStuCount(stuClass);
+	}
+
+	@Override
+	public Integer getMaxRecordByClass(Date date1, Date date2, Integer stuClass) {
+		// TODO Auto-generated method stub
+		return teachersMapper.getMaxRecordByClass(date1, date2, stuClass);
 	}
 
 }

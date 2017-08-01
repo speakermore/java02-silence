@@ -1,7 +1,7 @@
 package silence.service;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import silence.entity.AttendanceRecord;
@@ -50,13 +50,13 @@ public interface TeachersService {
 	 * 根据页面传过来的时间验证该时间段是否存在考勤记录
 	 * @return 考勤记录对象（返回值的意义）
 	 */
-	public ArrayList<AttendanceRecord> verifyStuExist2(Timestamp attendanceTime1,Timestamp attendanceTime2);
+	public ArrayList<AttendanceRecord> verifyStuExist2(Date attendanceTime1,Date attendanceTime2);
 	/**
 	 * @author 袁云
 	 * 老师根据查询条件查看考勤记录
 	 * @return 包含所有查出来的考勤记录实体对象的集合
 	 */
-	public List<AttendanceRecord> lookAttendanceRecord(Timestamp attendanceTime1,Timestamp attendanceTime2,Integer id,String stuNo,String stuName, Integer pageIndex);
+	public List<AttendanceRecord> lookAttendanceRecord(Date attendanceTime1,Date attendanceTime2,Integer id,String stuNo,String stuName, Integer pageIndex);
 	/**
 	 * @author 袁云
 	 * 获得考勤的最大记录数
@@ -76,6 +76,33 @@ public interface TeachersService {
 	 * 老师按查询条件查看考勤记录获得记录总数
 	 * @return 符合条件的考勤记录总数
 	 */
-	public Integer getMaxRecordByCondition(Timestamp attendanceTime1, Timestamp attendanceTime2, Integer stuClass, String stuNo, String stuName);
+	public Integer getMaxRecordByCondition(Date attendanceTime1, Date attendanceTime2, Integer stuClass, String stuNo, String stuName);
 	
+	/**
+	 * @author 袁云
+	 * 查询某个同学在一段时间内的出勤状态为y（出勤）的数量
+	 * @return 出勤状态为y（出勤）的数量
+	 */
+	public Integer getStuStatusIsYNo(Date date1,Date date2,Integer stuClass,String stuNo,String stuName);
+	
+	/**
+	 * @author 袁云
+	 * 查询某个班级在一段时间内的出勤状态为y（出勤）的数量
+	 * @return 出勤状态为y（出勤）的数量
+	 */
+	public Integer getClassStatusIsYNo(Date date1,Date date2,Integer stuClass);
+	
+	/**
+	 * @author 袁云
+	 * 查看某个班有多少个学生
+	 * @return 学生数量
+	 */
+	public Integer getClassStuCount(Integer stuClass);
+	
+	/**
+	 * @author 袁云
+	 * 查看某个班在一段时间内的考勤记录总数
+	 * @return 考勤记录数量
+	 */
+	public Integer getMaxRecordByClass(Date date1,Date date2,Integer stuClass);
 }
