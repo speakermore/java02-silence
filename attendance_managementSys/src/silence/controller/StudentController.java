@@ -1,5 +1,6 @@
 package silence.controller;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -314,5 +315,50 @@ public class StudentController {
 		ModelAndView mv = selectStuAttendanceRecordByTime(stuId, classId, choice, curPage);
 		return mv;
 	}
-
+	
+	/*
+	 * @author 连慧
+	 * 
+	 * @param 页面传过来的stuId学生编号,
+	 * 
+	 * @return 学生编号对应的学生考勤率
+	 */
+	@RequestMapping(value = "/selectStuAttendanceRate", method = RequestMethod.POST)
+	public ModelAndView selectStuAttendanceRate(Integer stuId,Integer classId,String choiceTime1,String choiceTime2){
+		String attRate="";    //考勤率
+		//查询某个学生某个时间内全勤的记录数
+		Integer count=studentService.countStuAttendanceRate(stuId, choiceTime1, choiceTime2);
+		SimpleDateFormat sim=new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			Date time1=sim.parse(choiceTime1);
+			long times1=time1.getTime();
+			Date time2=sim.parse(choiceTime2);
+			long times2=time2.getTime();
+			long days=(times2-times1)/(1000*60*60*24);
+			if(count>0){
+				//double保留两位小数(四舍五入)
+				double f=(double)count/days;  
+				BigDecimal b=new BigDecimal(f);  
+				double f1=b.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+				attRate=""+f1;
+			}else{
+				attRate="没有全勤记录，故没有出勤率。";
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//查询某个学生的考勤记录
+		List<AttendanceRecord> record = studentService.selectStuAttendanceRecordByTime(stuId, classId, null, null);
+		//创建一个模型和视图
+		ModelAndView mv=new ModelAndView();
+		// 设置跳转页面
+		mv.setViewName("studentlookattendancerecord");
+		// 向页面返回数据
+		mv.addObject("attStu", record);
+		mv.addObject("attRate",attRate);
+		mv.addObject("choiceTime1",choiceTime1);
+		mv.addObject("choiceTime2",choiceTime2);
+		return mv;
+	}
 }

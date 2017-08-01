@@ -83,4 +83,12 @@ public interface StudentMapper {
 	 */
 	public List<AttendanceRecord> selectStuAttendanceRecordByTime(@Param("id")Integer id,@Param("classId")Integer classId,@Param("choice")Integer choice,@Param("pageIndex")Integer pageIndex);
 	public Integer getMaxAttendanceRecordByTime(@Param("id")Integer id,@Param("classId")Integer classId,@Param("choice")Integer choice);
+	
+	/**
+	 * @author 连慧
+	 * 查询某个学生某个时间内全勤的记录数
+	 * @param stuId学生编号，choiceTime1为查询的开始时间,choiceTime2为查询的结束时间
+	 * @return 符合条件的所有考勤率的记录数
+	 */
+	public Integer countStuAttendanceRate(@Param("stuId")Integer stuId,@Param("choiceTime1")String choiceTime1,@Param("choiceTime2")String choiceTime2);
 }

@@ -76,4 +76,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			and date_format(a.attendanceComeTime,'%Y-%m')=date_format(date_sub(curdate(), interval 1 month),'%Y-%m'); 
 		</if>
 	</select>
+	<select id="countStuAttendanceRate" resultType="Integer">
+		select count(*) from attendance_record 
+		where attendanceDate between #{choiceTime1} and #{choiceTime2} and attendanceStatus="Y" and stuId=#{stuId}
+	</select>
 </mapper>

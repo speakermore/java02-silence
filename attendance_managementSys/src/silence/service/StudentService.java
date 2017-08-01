@@ -35,4 +35,6 @@ public interface StudentService {
 	//根据时间查询学生考勤记录
 	public List<AttendanceRecord> selectStuAttendanceRecordByTime(Integer id,Integer classId,Integer choice,Integer pageIndex);
 	public Integer getMaxAttendanceRecordByTime(Integer id,Integer classId,Integer choice);
+	//查询某个学生某个时间内全勤的记录数
+	public Integer countStuAttendanceRate(Integer stuId,String choiceTime1,String choiceTime2);
 }

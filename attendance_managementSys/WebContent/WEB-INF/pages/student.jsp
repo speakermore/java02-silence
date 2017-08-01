@@ -62,7 +62,6 @@
 			<div id="topRight" class="col-sm-5">
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="stuAttendance/selectStuAttendanceRecord?stuId=${student.id}&classId=${student.classId}&curPage=1">查看考勤记录</a></li>
-					<li><a href="stuAttendance/selectStuAttendanceRecord?stuId=${student.id}&classId=${student.classId}&curPage=1">查看出勤率</a></li>
 					<li><a href="stuAttendance/updateStuPwd">修改密码</a></li>
 				</ul>
 			</div>
