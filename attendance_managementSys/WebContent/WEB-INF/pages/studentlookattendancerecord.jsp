@@ -182,7 +182,7 @@
 		<script src="thirdpart/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
 		<script src="thirdpart/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 		<script type="text/javascript">
-			$(function () {
+			$(function () {    //验证输入的页码格式正不正确
 				$("#page").bind('input propertychange',function() {
 					var page=$("#page").val();
 					var ex = /^\d+$/;

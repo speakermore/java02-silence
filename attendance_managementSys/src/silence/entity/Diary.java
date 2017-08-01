@@ -17,14 +17,41 @@ public class Diary implements Serializable {
 	private Integer id;    //答复工作日志Id
 	private Integer stuId;   //学生Id
 	private Timestamp diaryCommitTime;   //工作日志提交时间
-	private String diaryContent;   //答工作日志内容
+	private String diaryContent;   //工作日志内容
+	private String stuNo;    //学号
+	private String stuName;   //学生姓名
+	private String className;  //班级名称
 	
 	public Diary() {
 	}
-	public Diary(Integer stuId, Timestamp diaryCommitTime, String diaryContent) {
+	
+	public Diary(Integer stuId, Timestamp diaryCommitTime, String diaryContent, String stuNo, String stuName,
+			String className) {
 		this.stuId = stuId;
 		this.diaryCommitTime = diaryCommitTime;
 		this.diaryContent = diaryContent;
+		this.stuNo = stuNo;
+		this.stuName = stuName;
+		this.className = className;
+	}
+
+	public String getStuNo() {
+		return stuNo;
+	}
+	public void setStuNo(String stuNo) {
+		this.stuNo = stuNo;
+	}
+	public String getStuName() {
+		return stuName;
+	}
+	public void setStuName(String stuName) {
+		this.stuName = stuName;
+	}
+	public String getClassName() {
+		return className;
+	}
+	public void setClassName(String className) {
+		this.className = className;
 	}
 	public Integer getId() {
 		return id;
@@ -53,10 +80,11 @@ public class Diary implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
 	@Override
 	public String toString() {
 		return "Diary [id=" + id + ", stuId=" + stuId + ", diaryCommitTime=" + diaryCommitTime + ", diaryContent="
-				+ diaryContent + "]";
+				+ diaryContent + ", stuNo=" + stuNo + ", stuName=" + stuName + ", className=" + className + "]";
 	}
 	
 }
