@@ -24,8 +24,8 @@
 			#attendance_foot form {
 				margin-left: -80px;
 			}
-			#attendance_foot{margin-top: 200px;}
-			#main-attend,#head-main{margin-top: 50px;}
+			#attendance_foot{margin-top: 160px;}
+			#main-attend,#head-main{margin-top: 10px;}
 		</style>
 </head>
 <body>
@@ -40,7 +40,7 @@
 				<!--显示内容头部开始-->
 				<form id="head-main" class="form-inline " action="stuAttendance/selectStuAttendanceRecordByTime" method="post">
 					<div class="form-group">
-						<label for="exampleInputName2">考勤时间：</label>
+						<label for="exampleInputName2">选择查看考勤记录的时间：</label>
 						<select class="form-control" id="time" name="choice">
 								<option value="0" <c:if test="${choice=='0'}">selected</c:if>>--请选择查看考勤的时间--</option>
 								<option value="1" <c:if test="${choice=='1'}">selected</c:if>>本周</option>
@@ -76,7 +76,6 @@
 						</li>
 					  </c:forEach>
 					</ul>
-
 				</div>
 				<!--显示内容主体结束-->
 				<!--显示内容尾部开始-->
@@ -145,13 +144,43 @@
 					</c:if>
 				</div>
 				<!--显示内容尾部结束-->
+				<!-- 显示出勤率开始-->
+				<form  class="form-inline " action="stuAttendance/selectStuAttendanceRate" method="post">
+					<div class="form-group">
+						<label for="exampleInputName2">选择查看出勤率的时间：</label>
+						<input id="choiceTime1" name="choiceTime1" class="date_test form-control" value="${choiceTime1}"  />
+						<input id="choiceTime2" name="choiceTime2" class="date_test form-control" value="${choiceTime2}""  />
+					</div>
+					<button id="btn" type="submit" class="btn btn-default">GO</button>
+					<input type="hidden" name="stuId" value="${student.id}"/>
+					<input type="hidden" name="classId" value="${student.classId}"/>
+				</form>
+				<div >
+					<ul class="list-unstyled">
+						<li>
+								<span class="col-sm-3">学号</span>
+								<span class="col-sm-3">姓名</span>
+								<span class="col-sm-3">班级姓名</span>
+								<span class="col-sm-3">出勤率</span>
+						</li>
+						<li>
+						 	<span class="col-sm-3">${attStu[0].stuNo}</span>
+							<span class="col-sm-3">${attStu[0].stuName}</span>
+							<span class="col-sm-3">${attStu[0].className}</span>
+							<span class="col-sm-3">${attRate}</span>
+						</li>
+					</ul>
+				</div>
+				<!-- 显示出勤率结束 -->
 				<!--显示内容结束-->
 			</div>
-		</div>
 		<!--学生查看考勤记录主体结束-->
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 		<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="js/bootstrap.min.js"></script>
+		<script src="thirdpart/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+		<script src="thirdpart/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 		<script type="text/javascript">
 			$(function () {
 				$("#page").bind('input propertychange',function() {
@@ -164,7 +193,17 @@
 					if(ex.test(page)){  //如果是整数
 						$("[name='bottomGo']").removeAttr("disabled");
 					}
-				}); 
+				});
+				
+				/*时间插件*/
+				$(".date_test").datetimepicker({
+				language:"zh-CN",		//"zh-CN"表示显示中文
+				format:"yyyy-mm-dd",    //非常重要的并且常用的参数：格式化显示的日期格式，eg:2014-02-09
+				autoclose:"true",		//"true"表示点击完时间之后自动关闭视图出口
+				todayBtn:"true",    //添加一个“今天”按钮，点击之后在文本框显示今天的时间
+				startView:2,       //日期时间选择器打开之后首先显示的视图。(3: 'year' for the 12-month overview)
+				minView:"year"     //日期时间选择器所能够提供的最精确的时间选择视图。
+				});
 			});
 		</script>
 </body>

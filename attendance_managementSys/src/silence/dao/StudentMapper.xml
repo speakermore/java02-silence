@@ -17,9 +17,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		update students set stuPwd=#{stuPwd} where id=#{id}
 	</update>
 	<insert id="insertComeTime">
-		insert into attendance_record (stuId,attendanceComeTime) values (#{stuId},#{comeTime})
+		insert into attendance_record (stuId,attendanceDate,attendanceComeTime,attendanceStatus) values (#{stuId},#{attDate},#{comeTime},#{attStatus})
 	</insert>
-	
+	<select id="selectStuAttRecord" resultType="AttendanceRecord">
+		select *from attendance_record where stuId=#{stuId} and attendanceDate=#{attendanceDate}
+	</select>
+	<insert id="insertBackTime">
+		insert into attendance_record (stuId,attendanceDate,attendanceBackTime,attendanceStatus) values (#{stuId},#{attDate},#{backTime},#{attStatus})
+	</insert>
+	<update id="updateBackTime">
+		update attendance_record set attendanceBackTime=#{backTime},attendanceStatus=#{attStatus} where stuId=#{stuId} and attendanceDate=#{attDate}
+	</update>
 	<select id="selectStuAttendanceReocrd" resultType="AttendanceRecord">
 		select s.stuNo,s.stuName,c.className,a.attendanceComeTime,a.attendanceBackTime 
 		from students s,classes c,attendance_record a 
@@ -67,5 +75,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="choice==4">
 			and date_format(a.attendanceComeTime,'%Y-%m')=date_format(date_sub(curdate(), interval 1 month),'%Y-%m'); 
 		</if>
+	</select>
+	<select id="countStuAttendanceRate" resultType="Integer">
+		select count(*) from attendance_record 
+		where attendanceDate between #{choiceTime1} and #{choiceTime2} and attendanceStatus="Y" and stuId=#{stuId}
 	</select>
 </mapper>

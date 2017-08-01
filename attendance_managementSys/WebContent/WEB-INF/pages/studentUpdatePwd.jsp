@@ -92,15 +92,16 @@ body {
 				url:"stuAttendance/verifyPwd",
 				type:"post",
 				data:{"id":${student.id},"stuOldPwd":$(this).val()},
-				dataType:"html",
+				dataType:"json",    //注意返回值类型应该是json,因为返回的是一个Map
 				success:function(data){
-					$("#info").html(data);
-					if(data=="密码输入错误！请重新输入"){
+					if(!(data.success)){
+						$("#info").html(data.message);
 		    			$("#btn").attr("disabled","true");
-		    		}else{
+					}else{
+						$("#info").html(data.message);
 		    			$("#btn").removeAttr("disabled");
-		    		}
-				}
+					}
+		    	}
 			});
 		});
 	});
