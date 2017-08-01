@@ -100,7 +100,7 @@ public interface TeachersMapper {
 	
 	/**
 	 * @author 袁云
-	 * 查看某个班有多少个学生
+	 * 查看某个班学生总数
 	 * @return 学生数量
 	 */
 	public Integer getClassStuCount(@Param("stuClass")Integer stuClass);
