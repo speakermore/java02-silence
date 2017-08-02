@@ -88,8 +88,8 @@
 		<div id="lists" class="row">
 			<div id="listLeft" class="col-sm-2">
 				<div class="list-group">
-					<a href="#" class="list-group-item active"> 提问 </a> <a href="#"
-						class="list-group-item">工作日志</a>
+					<a href="#" class="list-group-item active"> 提问 </a> 
+					<a href="stuAttendance/selectStuDiary?stuId=${student.id}&classId=${student.classId}&curPage=1" class="list-group-item">工作日志</a>
 				</div>
 			</div>
 			<div id="listRight" class="col-sm-10"

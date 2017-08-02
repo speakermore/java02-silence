@@ -80,4 +80,61 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select count(*) from attendance_record 
 		where attendanceDate between #{choiceTime1} and #{choiceTime2} and attendanceStatus="Y" and stuId=#{stuId}
 	</select>
+	<select id="getMaxDiary" resultType="Integer">
+		select count(*) from students s,classes c,diary d 
+		where c.id=#{classId} and d.stuId=#{id} and s.id=#{id}
+	</select>
+	<select id="selectDiary" resultType="Diary">
+		select s.stuNo,s.stuName,c.className,d.diaryContent,d.diaryCommitTime 
+		from students s,classes c,diary d 
+		where c.id=#{classId} and d.stuId=#{id} and s.id=#{id}
+		<if test="pageIndex!=null">
+			limit #{pageIndex},5;
+		</if>
+	</select>
+	<select id="selectDiaryByTime" resultType="Diary">
+		select s.stuNo,s.stuName,c.className,d.diaryContent,d.diaryCommitTime 
+		from students s,classes c,diary d 
+		where c.id=#{classId} and d.stuId=#{id} and s.id=#{id}
+		<if test="choice==1">
+			and YEARWEEK(date_format(d.diaryCommitTime,'%Y-%m-%d')) = YEARWEEK(now())
+		</if>
+		<if test="choice==2">
+			and YEARWEEK(date_format(d.diaryCommitTime,'%Y-%m-%d')) = YEARWEEK(now())-1
+		</if>
+		<if test="choice==3">
+			and date_format(d.diaryCommitTime,'%Y-%m')=date_format(now(),'%Y-%m')
+		</if>
+		<if test="choice==4">
+			and date_format(d.diaryCommitTime,'%Y-%m')=date_format(date_sub(curdate(), interval 1 month),'%Y-%m') 
+		</if>
+		<if test="pageIndex!=null">
+			limit #{pageIndex},5
+		</if>
+	</select>
+	<select id="getMaxDiaryByTime" resultType="Integer">
+		select count(*) from students s,classes c,diary d 
+		where c.id=#{classId} and d.stuId=#{id} and s.id=#{id}
+		<if test="choice==1">
+			and YEARWEEK(date_format(d.diaryCommitTime,'%Y-%m-%d')) = YEARWEEK(now()); 
+		</if>
+		<if test="choice==2">
+			and YEARWEEK(date_format(d.diaryCommitTime,'%Y-%m-%d')) = YEARWEEK(now())-1;
+		</if>
+		<if test="choice==3">
+			and date_format(d.diaryCommitTime,'%Y-%m')=date_format(now(),'%Y-%m');
+		</if>
+		<if test="choice==4">
+			and date_format(d.diaryCommitTime,'%Y-%m')=date_format(date_sub(curdate(), interval 1 month),'%Y-%m'); 
+		</if>
+	</select>
+	<insert id="insertDiary">
+		insert into diary (stuId,diaryContent,diaryCommitTime,diaryDate) value (#{stuId},#{diaryContent},#{commitTime},#{diaryDate})
+	</insert>
+	<insert id="insertQuestion">
+		insert into question (stuId,questionContent,questionTime) value (#{stuId},#{questionContent},#{commitTime})
+	</insert>
+	<select id="selectDiaryByDiaryDate" resultType="Diary">
+		select * from diary where stuId=#{stuId} and diaryDate=#{diaryDate}
+	</select>
 </mapper>

@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import silence.entity.AttendanceRecord;
+import silence.entity.Diary;
 import silence.entity.Students;
 
 /**
@@ -37,4 +38,18 @@ public interface StudentService {
 	public Integer getMaxAttendanceRecordByTime(Integer id,Integer classId,Integer choice);
 	//查询某个学生某个时间内全勤的记录数
 	public Integer countStuAttendanceRate(Integer stuId,String choiceTime1,String choiceTime2);
+	//查询某个学生的工作日志最大记录数
+	public Integer getMaxDiary(Integer id,Integer classId);
+	//查询学生工作日志
+	public List<Diary> selectDiary(Integer id,Integer classId,Integer pageIndex);
+	//查询某个学生某个时间内的工作日志
+	public List<Diary> selectDiaryByTime(Integer id,Integer classId,Integer choice,Integer pageIndex);
+	//查询某个学生某个时间内工作日志的记录数
+	public Integer getMaxDiaryByTime(Integer id,Integer classId,Integer choice);
+	//插入工作日志信息
+	public Integer insertDiary(Integer stuId,String diaryContent,String commitTime,String diaryDate);
+	//插入提问信息
+	public Integer insertQuestion(Integer stuId,String questionContent,String commitTime);
+	//通过日志日期查询学生工作日志
+	public Diary selectDiaryByDiaryDate(Integer stuId,String diaryDate);
 }

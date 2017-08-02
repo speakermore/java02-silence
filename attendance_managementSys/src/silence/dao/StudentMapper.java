@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import silence.entity.AttendanceRecord;
+import silence.entity.Diary;
 import silence.entity.Students;
 
 /**
@@ -91,4 +92,53 @@ public interface StudentMapper {
 	 * @return 符合条件的所有考勤率的记录数
 	 */
 	public Integer countStuAttendanceRate(@Param("stuId")Integer stuId,@Param("choiceTime1")String choiceTime1,@Param("choiceTime2")String choiceTime2);
+	/**
+	 * @author 连慧
+	 * 查询某个学生的工作日志最大记录数
+	 * @param stuId学生编号，classId为班级编号
+	 * @return 获得符合条件的工作日志记录数
+	 */
+	public Integer getMaxDiary(@Param("id")Integer id,@Param("classId")Integer classId);
+	/**
+	 * @author 连慧
+	 * 查询学生工作日志
+	 * @param id学生编号，classId为班级编号,pageIndex为页码下标
+	 * @return 符合该学生条件的所有工作日志
+	 */
+	public List<Diary> selectDiary(@Param("id")Integer id,@Param("classId")Integer classId,@Param("pageIndex")Integer pageIndex);
+	/**
+	 * @author 连慧
+	 * 通过时间查询学生工作日志
+	 * @param id学生编号，classId为班级编号,choice是option选择的值,pageIndex页码下标
+	 * @return 符合该时间段的学生所有工作日志
+	 */
+	public List<Diary> selectDiaryByTime(@Param("id")Integer id,@Param("classId")Integer classId,@Param("choice")Integer choice,@Param("pageIndex")Integer pageIndex);
+	/**
+	 * @author 连慧
+	 * 查询某个学生某个时段的工作日志最大记录数
+	 * @param stuId学生编号，classId为班级编号
+	 * @return 获得符合条件的工作日志记录数
+	 */
+	public Integer getMaxDiaryByTime(@Param("id")Integer id,@Param("classId")Integer classId,@Param("choice")Integer choice);
+	/**
+	 * @author 连慧
+	 * 插入日志信息
+	 * @param stuId学生编号，diaryContent问题内容，commitTime提交时间
+	 * @return >0插入工作日志成功，否则失败
+	 */
+	public Integer insertDiary(@Param("stuId")Integer stuId,@Param("diaryContent")String diaryContent,@Param("commitTime")String commitTime,@Param("diaryDate")String diaryDate);
+	/**
+	 * @author 连慧
+	 * 插入提问信息
+	 * @param stuId学生编号，questionContent问题内容，commitTime提交时间
+	 * @return >0插入问题成功，否则失败
+	 */
+	public Integer insertQuestion(@Param("stuId")Integer stuId,@Param("questionContent")String questionContent,@Param("commitTime")String commitTime);
+	/**
+	 * @author 连慧
+	 * 通过日志时间查询学生工作日志
+	 * @param stuId学生编号，diaryDate日志提交时间（年月日）
+	 * @return 符合该时间段的学生所有工作日志
+	 */
+	public Diary selectDiaryByDiaryDate(@Param("stuId")Integer stuId,@Param("diaryDate")String diaryDate);
 }

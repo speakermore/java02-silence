@@ -50,7 +50,7 @@
 						</select>
 					</div>
 					<button id="btn" type="submit" class="btn btn-default">GO</button>
-					 <input type="hidden" name="stuId" value="${student.id}"/>
+					<input type="hidden" name="stuId" value="${student.id}"/>
 					<input type="hidden" name="classId" value="${student.classId}"/>
 					<input type="hidden" name="curPage" value="1"/> 
 				</form>
@@ -66,15 +66,20 @@
 								<span class="col-sm-3">到校时间</span>
 								<span class="col-sm-3">离校时间</span>
 						</li>
-						<c:forEach items="${attendanceRecord}" var="a">
-						<li>
-						 	<span class="col-sm-2">${a.stuNo}</span>
-							<span class="col-sm-1">${a.stuName}</span>
-							<span class="col-sm-3">${a.className}</span>
-							<span class="col-sm-3"><fmt:formatDate value="${a.attendanceComeTime}" pattern="yyyy年MM月dd日 HH:mm:ss" /></span>
-							<span class="col-sm-3"><fmt:formatDate value="${a.attendanceBackTime}" pattern="yyyy年MM月dd日 HH:mm:ss" /></span>
-						</li>
-					  </c:forEach>
+						<c:if test="${info==''}">
+							<c:forEach items="${attendanceRecord}" var="a">
+							<li>
+							 	<span class="col-sm-2">${a.stuNo}</span>
+								<span class="col-sm-1">${a.stuName}</span>
+								<span class="col-sm-3">${a.className}</span>
+								<span class="col-sm-3"><fmt:formatDate value="${a.attendanceComeTime}" pattern="yyyy年MM月dd日 HH:mm:ss" /></span>
+								<span class="col-sm-3"><fmt:formatDate value="${a.attendanceBackTime}" pattern="yyyy年MM月dd日 HH:mm:ss" /></span>
+							</li>
+						  </c:forEach>
+					  </c:if>
+					  <c:if test="${info=='此时段没有考勤记录。'}">
+							<li>${info}</li>
+					  </c:if>
 					</ul>
 				</div>
 				<!--显示内容主体结束-->
