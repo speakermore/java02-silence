@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import silence.entity.AttendanceRecord;
+import silence.entity.Diary;
 import silence.entity.Students;
 import silence.entity.Teacher;
 import silence.service.StudentService;
@@ -415,4 +416,145 @@ public class TeachersController {
 		return mv;
 	}
 	
+	/**
+	 * 袁云：用于点击查看学生工作日志按钮时跳转到查看学生工作日志页面
+	 * @param  页面传过来的当前页
+	 * @return 工作日志对象
+	 */
+	@RequestMapping(value="/jumpLookDiary",method=RequestMethod.GET)
+	public ModelAndView jumpLookDiary(Integer curPage ){
+		ModelAndView mv = new ModelAndView();
+		if(curPage==null){
+			mv = jumpLookDiary(1);
+			return mv;
+		}else{
+			if(curPage < 1){
+				curPage=1;//下限判断，当小于第一页是，纠正为第一页
+			}
+			Integer maxRecord = teacherService.getMaxDiaryRecord();
+			Integer maxPage = (maxRecord+4)/5;
+			if(curPage > maxPage){
+				curPage = maxPage; // 上限判断，当大于最后一页时，纠正为最后一页
+			}
+			Integer pageIndex = (curPage-1)*5; 
+			List<Diary> diarys = teacherService.findAllDiary(pageIndex);
+			mv.setViewName("teacherLookDiary");
+			mv.addObject("diarys",diarys);
+			mv.addObject("curPage",curPage);
+			mv.addObject("maxPage",maxPage);
+			mv.addObject("maxRecord",maxRecord);
+			return mv;
+		}
+	}
+	
+	/**
+	 * 袁云：老师查看工作日志
+	 * @param  页面传过来的提交时间、班级、姓名和学号，可以为空
+	 * @return 工作日志集合
+	 */
+	@RequestMapping(value="/lookDiary",method=RequestMethod.POST)
+	public ModelAndView lookDiary(Timestamp diaryCommitTime1,Timestamp diaryCommitTime2,Integer stuClass,String stuNo,String stuName,Integer curPage){
+		ModelAndView mv = new ModelAndView();
+		// 当什么查询条件都没有选择时的处理
+		if(diaryCommitTime1==null&&diaryCommitTime1==null&&stuClass==0&&stuNo==""&&stuName==""){
+			mv = jumpLookDiary(1);
+			mv.addObject("diaryInfo", "请选择查询条件！");
+			return mv;
+		}else{
+			Integer maxRecord = teacherService.getDiaryMaxByCondition(diaryCommitTime1, diaryCommitTime2, stuClass, stuNo, stuName);
+			// 当没有符合查询条件的数据时的处理
+			if(maxRecord==0){
+				mv = jumpLookDiary(1);
+				mv.addObject("diaryInfo","没有符合条件的工作日志！");
+				return mv;
+			}else{
+				if(curPage < 1){
+					curPage=1;//下限判断，当小于第一页是，纠正为第一页
+				}
+				Integer maxPage = (maxRecord+4)/5;
+				if(curPage > maxPage){
+					curPage = maxPage; // 上限判断，当大于最后一页时，纠正为最后一页
+				}
+				Integer pageIndex = (curPage-1)*5; 
+				List<Diary> diarys = teacherService.lookDiary(diaryCommitTime1, diaryCommitTime2, stuClass, stuNo, stuName, pageIndex);
+				mv.setViewName("teacherLookDiary");
+				mv.addObject("diarys",diarys);
+				mv.addObject("curPage",curPage);
+				mv.addObject("maxPage",maxPage);
+				mv.addObject("maxRecord",maxRecord);
+				String time1 = "";
+				String time2 = "";
+				// 当页面还需要用到传过来的值时，则将传过来的值在放到mv里传回给页面
+				if(diaryCommitTime1==null){
+					time1 = "";
+				}else{
+					time1 = new SimpleDateFormat("yyyy-MM-dd").format(diaryCommitTime1);
+				}
+				if(diaryCommitTime2==null){
+					time2 = "";
+				}else{
+					time2 = new SimpleDateFormat("yyyy-MM-dd").format(diaryCommitTime2);
+				}
+				mv.addObject("diaryCommitTime1",time1);
+				mv.addObject("diaryCommitTime2",time2);
+				mv.addObject("stuClass",stuClass);
+				mv.addObject("stuNo",stuNo);
+				mv.addObject("stuName",stuName);
+				return mv;
+			}
+		}
+	}
+	
+	/**
+	 * 袁云：验证该时间段是否有工作日志
+	 * @param  页面传过来的时间段
+	 * @return map集合
+	 */
+	@RequestMapping(value="/verifyDiaryExist",method=RequestMethod.POST)
+	@ResponseBody //ajax注解，把verifyStuExist当做字符串返回给页面
+	public Map<String,Object> verifyDiaryExist(Timestamp diaryCommitTime1,Timestamp diaryCommitTime2){
+		Map<String, Object> verifyDiaryExistInfo = new HashMap<String,Object>();
+		ArrayList<Diary> diarys = teacherService.verifyDiaryExists(diaryCommitTime1,diaryCommitTime2);
+		if(diarys.size()>0){
+			verifyDiaryExistInfo.put("succeed",true);
+			verifyDiaryExistInfo.put("message", "该时间段有工作日志！");
+		}else{
+			verifyDiaryExistInfo.put("succeed",false);
+			verifyDiaryExistInfo.put("message", "该时间段没有工作日志！");
+		}
+		return verifyDiaryExistInfo;
+	}
+	
+	/**
+	 * 袁云：按条件查询查出来的数据当点击上一页、下一页等时，跳转的方法且需要将查询条件通过参数的形式传过来
+	 * @param  页面传过来的考勤时间、班级、姓名和学号
+	 * @return 考勤记录集合
+	 */
+	@RequestMapping(value="/lookDiarys",method=RequestMethod.GET)
+	public ModelAndView lookDiarys(Timestamp diaryCommitTime1,Timestamp diaryCommitTime2,Integer stuClass,String stuNo,String stuName,Integer curPage){
+		ModelAndView mv = new ModelAndView();
+		if(curPage==null){
+			mv = lookDiary(diaryCommitTime1, diaryCommitTime2, stuClass, stuNo, stuName,1);
+			return mv;
+		}else{
+			mv = lookDiary(diaryCommitTime1, diaryCommitTime2, stuClass, stuNo, stuName, curPage);
+			return mv;
+		}
+	}
+	
+	/**
+	 * 袁云：查看工作日志的详细内容
+	 * @param  页面传过来的提交时间、班级、姓名和学号
+	 * @return 某一条工作日志
+	 */
+	@RequestMapping(value="/lookDiaryDetail",method=RequestMethod.GET)
+	public ModelAndView lookDiaryDetail(Timestamp diaryCommitTime,String className,String stuNo,String stuName,String diaryContent){
+		ModelAndView mv = new ModelAndView("teacherLookDiaryDetail");
+			mv.addObject("diaryCommitTime", diaryCommitTime);
+			mv.addObject("stuClass", className);
+			mv.addObject("stuNo", stuNo);
+			mv.addObject("stuName", stuName);
+			mv.addObject("diaryContent", diaryContent);
+			return mv;
+	}
 }

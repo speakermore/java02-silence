@@ -1,5 +1,6 @@
 package silence.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import silence.dao.TeachersMapper;
 import silence.entity.AttendanceRecord;
+import silence.entity.Diary;
 import silence.entity.Students;
 import silence.entity.Teacher;
 import silence.service.TeachersService;
@@ -109,6 +111,38 @@ public class TeachersServiceImpl implements TeachersService {
 	public Integer getMaxRecordByClass(Date date1, Date date2, Integer stuClass) {
 		// TODO Auto-generated method stub
 		return teachersMapper.getMaxRecordByClass(date1, date2, stuClass);
+	}
+
+	@Override
+	public Integer getMaxDiaryRecord() {
+		// TODO Auto-generated method stub
+		return teachersMapper.getMaxDiaryRecord();
+	}
+
+	@Override
+	public List<Diary> findAllDiary(Integer pageIndex) {
+		// TODO Auto-generated method stub
+		return teachersMapper.findAllDiary(pageIndex);
+	}
+
+	@Override
+	public Integer getDiaryMaxByCondition(Timestamp diaryCommitTime1, Timestamp diaryCommitTime2, Integer stuClass, String stuNo,
+			String stuName) {
+		// TODO Auto-generated method stub
+		return teachersMapper.getDiaryMaxByCondition(diaryCommitTime1, diaryCommitTime2, stuClass, stuNo, stuName);
+	}
+
+	@Override
+	public List<Diary> lookDiary(Timestamp diaryCommitTime1, Timestamp diaryCommitTime2, Integer id, String stuNo, String stuName,
+			Integer pageIndex) {
+		// TODO Auto-generated method stub
+		return teachersMapper.lookDiary(diaryCommitTime1, diaryCommitTime2, id, stuNo, stuName, pageIndex);
+	}
+
+	@Override
+	public ArrayList<Diary> verifyDiaryExists(Timestamp diaryCommitTime1, Timestamp diaryCommitTime2) {
+		// TODO Auto-generated method stub
+		return teachersMapper.verifyDiaryExists(diaryCommitTime1, diaryCommitTime2);
 	}
 
 }

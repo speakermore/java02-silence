@@ -1,10 +1,12 @@
 package silence.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import silence.entity.AttendanceRecord;
+import silence.entity.Diary;
 import silence.entity.Students;
 import silence.entity.Teacher;
 
@@ -59,7 +61,7 @@ public interface TeachersService {
 	public List<AttendanceRecord> lookAttendanceRecord(Date attendanceTime1,Date attendanceTime2,Integer id,String stuNo,String stuName, Integer pageIndex);
 	/**
 	 * @author 袁云
-	 * 获得考勤的最大记录数
+	 * 获得所有学生考勤的最大记录数
 	 * @return 考勤最大记录数
 	 */
 	public Integer getMaxRecord();
@@ -105,4 +107,39 @@ public interface TeachersService {
 	 * @return 考勤记录数量
 	 */
 	public Integer getMaxRecordByClass(Date date1,Date date2,Integer stuClass);
+	
+	/**
+	 * @author 袁云
+	 * 获得所有学生工作日志的最大记录数
+	 * @return 工作日志最大记录数
+	 */
+	public Integer getMaxDiaryRecord();
+	
+	/**
+	 * @author 袁云
+	 * 老师查看所有学生所有工作日志
+	 * @return 工作日志集合
+	 */
+	public List<Diary> findAllDiary(Integer pageIndex);
+	
+	/**
+	 * @author 袁云
+	 * 老师按查询条件查看工作日志获得日志总数
+	 * @return 符合条件的工作日志总数
+	 */
+	public Integer getDiaryMaxByCondition(Timestamp diaryCommitTime1, Timestamp diaryCommitTime2, Integer stuClass, String stuNo, String stuName);
+	
+	/**
+	 * @author 袁云
+	 * 老师根据查询条件查看工作日志
+	 * @return 包含所有查出来的工作日志实体对象的集合
+	 */
+	public List<Diary> lookDiary(Timestamp diaryCommitTime1,Timestamp diaryCommitTime2,Integer id,String stuNo,String stuName, Integer pageIndex);
+	
+	/**
+	 * @author 袁云
+	 * 根据页面传过来的时间验证该时间段是否存在工作日志
+	 * @return 工作日志对象集合（返回值的意义）
+	 */
+	public ArrayList<Diary> verifyDiaryExists(Timestamp attendanceTime1,Timestamp attendanceTime2);
 }

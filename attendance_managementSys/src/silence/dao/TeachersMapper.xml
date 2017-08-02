@@ -146,4 +146,71 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	        </if>
         </where>
 	</select>
+	<!-- 获得所有学生工作日志的最大记录数 -->
+	<select id="getMaxDiaryRecord" resultType="Integer">
+		select count(*) from diary
+	</select>
+	
+	<!-- 老师查看所有学生所有工作日志 -->
+	<select id="findAllDiary" resultType="Diary">
+		<!-- 起始的下标，每页显示数量，limit一定是放在select的最后 -->
+		select s.stuNo,s.stuName,c.className,d.diaryContent,d.diaryCommitTime 
+		from diary d,students s,classes c 
+		WHERE d.stuId=s.id AND s.classId=c.id
+		<!-- 动态sql --> 
+		<if test="pageIndex != null">
+		limit #{pageIndex},5
+		</if>
+	</select>
+	
+	<!-- 老师按查询条件查看工作日志获得日志总数 -->
+	<select id="getDiaryMaxByCondition" resultType="Integer">
+		select count(*) 
+		from diary d join students s on d.stuId=s.id 
+        join classes c on s.classId=c.id 
+        <where>
+	        <if test="diaryCommitTime1!=null and diaryCommitTime2!=null">
+	        	and d.diaryCommitTime between #{diaryCommitTime1} and #{diaryCommitTime2}
+	        </if>
+	        <if test="stuClass!=0">
+	        	and c.id=#{stuClass}
+	        </if>
+	        <if test="stuNo!=null and stuNo!=''">
+	        	and s.stuNo=#{stuNo}
+	        </if>
+	        <if test="stuName!=null and stuName!=''">
+	        	and s.stuName like CONCAT(CONCAT('%', #{stuName}),'%')
+	        </if>
+        </where>
+	</select>
+	
+	<!-- 老师根据查询条件查看工作日志 -->
+	<select id="lookDiary" resultType="Diary">
+		select s.stuNo,s.stuName,c.className,d.diaryContent,d.diaryCommitTime 
+		from diary d join students s on d.stuId=s.id 
+        join classes c on s.classId=c.id 
+        <where>
+	        <if test="diaryCommitTime1!=null and diaryCommitTime2!=null">
+	        	and d.diaryCommitTime between #{diaryCommitTime1} and #{diaryCommitTime2}
+	        </if>
+	        <if test="id!=0">
+	        	and c.id=#{id}
+	        </if>
+	        <if test="stuNo!=null and stuNo!=''">
+	        	and s.stuNo=#{stuNo}
+	        </if>
+	        <if test="stuName!=null and stuName!=''">
+	        	and s.stuName like CONCAT(CONCAT('%', #{stuName}),'%')
+	        </if>
+	        <if test="pageIndex != null">
+				limit #{pageIndex},5
+			</if>
+        </where>
+	</select>
+	
+	<!-- 根据页面传过来的时间验证改时间段是否存在工作日志，存在返回日志集合 -->
+	<select id="verifyDiaryExists" resultType="Diary">
+		select * from diary
+		where diaryCommitTime between #{diaryCommitTime1} and #{diaryCommitTime2}
+	</select>
 </mapper>
