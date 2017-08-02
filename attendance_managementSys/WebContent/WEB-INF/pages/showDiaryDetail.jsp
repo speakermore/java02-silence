@@ -19,11 +19,11 @@
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 		<style>
-			#dairy_main2{
+			#diary_main2{
 				margin-top: 30px;
 			}
 			
-			#dairy_content,#dairy_question {
+			#diary_content,#diary_question {
 				height: 300px;
 				width: 600px;
 			}
@@ -37,14 +37,14 @@
 			</div>
 			<!--显示主体日志信息开始-->
 			<div id="dairy_main1" class="row">
-				<div class="col-sm-2">学号：<span id="stuId">20132112</span></div>
-				<div class="col-sm-2">姓名：<span id="stuName">张三</span></div>
-				<div class="col-sm-2">班级编号：<span id="stuClassId">01</span></div>
-				<div class="col-sm-6">提交时间：<span id="commitTime">2012-12-3-12:00</span></div>
+				<div class="col-sm-2">学号：<span id="stuId">${diary.stuNo}</span></div>
+				<div class="col-sm-2">姓名：<span id="stuName">${diary.stuName}</span></div>
+				<div class="col-sm-2">班级：<span id="stuClassId">${className}</span></div>
+				<div class="col-sm-6">提交时间：<span id="commitTime">${diary.diaryCommitTime}</span></div>
 			</div>
 			<div id="dairy_main2" class="row">
-				<div class="col-sm-6">日志内容：<textarea id="dairy_content">dxmfjeresxmkld,xmkjfcmxz,slkdsmjcnskxm,zdkjsdsjkdskddk</textarea></div>
-				<div class="col-sm-6">提问内容：<textarea id="dairy_question">十万个为什么？钢铁是怎样炼成的？.......</textarea></div>
+				<div class="col-sm-6">日志内容：<textarea id="diary_content">${diary.diaryContent}</textarea></div>
+				<div class="col-sm-6">提问内容：<textarea id="diary_question">十万个为什么？钢铁是怎样炼成的？.......</textarea></div>
 			</div>
 			<!--显示主体日志信息结束-->
 		</div>
