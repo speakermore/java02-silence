@@ -231,7 +231,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="queryQuestionByStuIdAndTime" resultType="Question">
 		select s.stuNo,s.stuName,c.className,q.questionTime,q.questionContent,q.stuId,q.id 
 		from question q,students s,classes c
-		where q.stuId=s.id and s.classId=c.id and q.questionTime=#{diaryCommitTime} and q.stuId=${stuId}
+		where q.stuId=s.id and s.classId=c.id and q.questionTime=#{diaryCommitTime} and q.stuId=#{stuId}
 	</select>
 	
 	<!-- 根据页面传过来的学生id和日志提交时间查询满足条件的日志对象 -->
@@ -243,14 +243,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- 查询本周新提问 -->
 	<select id="findWeekQuestion" resultType="Question">
-		select s.stuNo,s.stuName,c.className,q.questionTime,q.questionContent,q.stuId,q.id 
+		select s.stuNo,s.stuName,c.className,q.questionTime,q.questionContent,q.id 
 		from question q,students s,classes c
 		WHERE q.stuId=s.id and s.classId=c.id and YEARWEEK(date_format(q.questionTime,'%Y-%m-%d')) = YEARWEEK(now()) order by questionTime desc
 	</select>
 	
 	<!-- 查询本周前十条新提问 -->
 	<select id="findTenQuestion" resultType="Question">
-		select s.stuNo,s.stuName,c.className,q.questionTime,q.questionContent,q.stuId,q.id
+		select s.stuNo,s.stuName,c.className,q.questionTime,q.questionContent,q.id
 		from question q,students s,classes c
 		WHERE q.stuId=s.id and s.classId=c.id and YEARWEEK(date_format(q.questionTime,'%Y-%m-%d')) = YEARWEEK(now()) order by questionTime desc limit 10
 	</select>

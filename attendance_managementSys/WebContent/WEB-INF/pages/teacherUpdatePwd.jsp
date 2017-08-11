@@ -63,8 +63,8 @@
 							</div>
 							<div style="display: inline;">
 								<label class="left"></label>
-								<img src="" title="看不清，换一张" alt="看不清，换一张" />&nbsp;&nbsp;<a>换一张</a>
-							</div>
+								<a href="javascript:reloadCode();"><img id="kaptchaImage" src="kaptcha.jpg?" title="看不清，换一张" alt="看不清，换一张" />&nbsp;&nbsp;换一张</a>
+							</div>&nbsp;&nbsp;<span id="captchaInfo" style="color: red">${captchaInfo }</span>
 						</div>
 						<div class="form-group">
 							<div class="col-xs-offset-4">
@@ -97,7 +97,12 @@
 					}
 				});
 			});
-		})
+		});
+    	
+    	function reloadCode(){  
+            var time = new Date().getTime();  
+            document.getElementById("kaptchaImage").src = "kaptcha.jpg?"+time;  
+        } 
     </script>
   </body>
 </html>

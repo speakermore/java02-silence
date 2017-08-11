@@ -1,5 +1,6 @@
 package silence.entity;
 
+import java.beans.Transient;
 import java.io.Serializable;
 
 /** 
@@ -16,13 +17,15 @@ public class Teacher implements Serializable {
 	private Integer id; // 老师id
 	private String tecName; //老师姓名
 	private String tecPwd; //老师密码
+	private String captcha; //验证码
 	
 	public Teacher() {
 	}
 
-	public Teacher(String tecName, String tecPwd) {
+	public Teacher(String tecName, String tecPwd, String captcha) {
 		this.tecName = tecName;
 		this.tecPwd = tecPwd;
+		this.captcha = captcha;
 	}
 
 	public Integer getId() {
@@ -48,9 +51,18 @@ public class Teacher implements Serializable {
 	public void setTecPwd(String tecPwd) {
 		this.tecPwd = tecPwd;
 	}
+	@Transient   //不需要持久到DB的属性使用该注解 
+	public String getCaptcha() {
+		return captcha;
+	}
+
+	public void setCaptcha(String captcha) {
+		this.captcha = captcha;
+	}
 
 	@Override
 	public String toString() {
-		return "Teacher [id=" + id + ", tecName=" + tecName + ", tecPwd=" + tecPwd + "]";
+		return "Teacher [id=" + id + ", tecName=" + tecName + ", tecPwd=" + tecPwd + ", captcha=" + captcha + "]";
 	}
+
 }

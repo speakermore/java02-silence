@@ -81,18 +81,21 @@ public class TeachersController {
 		ModelAndView mv = new ModelAndView();
 		if(teacher != null){
 			if(tecPwd.equals(teacher.getTecPwd())){
-				if (captcha.equalsIgnoreCase(session.getAttribute("captcha").toString())) {
-					mv.addObject("captchaInfo","验证通过!");
+				String captchaInfo = "";
+				if (captcha.equalsIgnoreCase(session.getAttribute(com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY).toString())) {
+					captchaInfo = "验证通过!";
+					mv.addObject("captchaInfo",captchaInfo);
 					tecLogin = "登录成功!";
 					session.setAttribute("teacher", teacher);
 					mv.setViewName("teacher");
-					//本月所有提问集合
+					//本周所有提问集合
 					List<Question> weekQuestion = teacherService.findWeekQuestion();
 					Integer questionNo = weekQuestion.size();
 					mv.addObject("questionNo",questionNo);
 				}else{
 					mv.setViewName("teacherLogin");
-					mv.addObject("captchaInfo","验证码不正确！");
+					captchaInfo = "验证码不正确！";
+					mv.addObject("captchaInfo",captchaInfo);
 				}
 			}else {
 				tecLogin = "姓名或密码错误，请重新输入！";
@@ -144,19 +147,28 @@ public class TeachersController {
 	 * @return 老师对象
 	 */
 	@RequestMapping(value="/tecUpdatePwd",method=RequestMethod.POST)
-	public ModelAndView tecUpdatePwd(Integer id,String oldPwd,String newPwd,String confirmPwd){
+	public ModelAndView tecUpdatePwd(Integer id,String oldPwd,String newPwd,String confirmPwd,String captcha,HttpSession session){
 		String update = "";
 		ModelAndView mv = new ModelAndView();
 		if(verifyPwd(id, oldPwd).equals("验证密码成功！")){
 			if(newPwd.equals(confirmPwd)){
-				int result = teacherService.tecUpdatePwd(id,newPwd);
-				if(result > 0){
-					update = "修改密码成功！";
-					// 设置跳转的页面
-					mv.setViewName("teacher");
+				String captchaInfo = "";
+				if (captcha.equalsIgnoreCase(session.getAttribute(com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY).toString())) {
+					captchaInfo = "验证通过!";
+					mv.addObject("captchaInfo",captchaInfo);
+					int result = teacherService.tecUpdatePwd(id,newPwd);
+					if(result > 0){
+						update = "修改密码成功！";
+						// 设置跳转的页面
+						mv.setViewName("teacher");
+					}else{
+						update = "修改密码失败";
+						mv.setViewName("teacherUpdatePwd");
+					}
 				}else{
-					update = "修改密码失败";
 					mv.setViewName("teacherUpdatePwd");
+					captchaInfo = "验证码不正确！";
+					mv.addObject("captchaInfo",captchaInfo);
 				}
 			}else{
 				update = "两次输入的密码不一致，请重新输入！";

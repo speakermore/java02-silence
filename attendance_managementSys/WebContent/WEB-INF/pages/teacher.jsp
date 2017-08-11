@@ -47,7 +47,7 @@
 		<button type="button" class="btn btn-info col-sm-4">修改密码</button>
 		</div>
 	</div>
-	<div id="tecUpdatePwd" class="col-sm-3">${update}</div>
+	<div id="tecUpdatePwd" class="col-sm-3" style="margin-left: 600px;color: green">${update}</div>
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->

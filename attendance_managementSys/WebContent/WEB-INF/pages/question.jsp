@@ -76,7 +76,6 @@
 	  				<div class="row page_main">
 			  			<a href="tecAttendance/lookQuestionDetail?questionId=${t.id}">
 			  				<div id="left" class="col-sm-3">
-								<input id="stuId" type="hidden" value="${t.stuId }"/>
 								<input id="questionId" type="hidden" value="${t.id }"/>
 								<span>学号：</span><span>${t.stuNo }</span><br/>
 								<span>姓名：</span><span>${t.stuName }</span><br/>
@@ -114,7 +113,6 @@
 		  			<div class="row page_main">
 			  			<a href="tecAttendance/lookQuestionDetail?questionId=${w.id}">
 			  				<div id="left" class="col-sm-3">
-								<input id="stuId" type="hidden" value="${w.stuId }"/>
 								<span>学号：</span><span>${w.stuNo }</span><br/>
 								<span>姓名：</span><span>${w.stuName }</span><br/>
 								<span>班级：</span><span>${w.className }</span><br/>

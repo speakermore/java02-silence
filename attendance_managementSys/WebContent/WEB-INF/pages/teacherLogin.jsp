@@ -57,12 +57,12 @@
 					<div class="form-group">
 						<label for="captcha" class="control-label col-xs-4">验证码：</label>
 						<div class="col-xs-2" style="display: inline;">
-							<input type="text" id="captcha" name="captcha" class="form-control" />
+							<input type="text" id="captcha" name="captcha" class="form-control" placeholder="请输入验证码"/>
 						</div>
 						<div style="display: inline;">
 							<label class="left"></label>
-							<img src="" title="看不清，换一张" alt="看不清，换一张" />&nbsp;&nbsp;<a>换一张</a>
-						</div>
+							<a href="javascript:reloadCode();"><img id="kaptchaImage" src="kaptcha.jpg" title="看不清，换一张" alt="看不清，换一张" />&nbsp;<span style="font-size: 15px;color: gray;">换一张</span></a>
+						</div>&nbsp;&nbsp;<span id="captchaInfo" style="color: red">${captchaInfo }</span> 
 					</div>
 	  			<div class="form-group">
 	  				<div class="col-xs-offset-4">
@@ -77,5 +77,11 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">  
+	    function reloadCode(){  
+	        var time = new Date().getTime();  
+	        document.getElementById("kaptchaImage").src = "kaptcha.jpg?"+time;  
+	    }  
+	</script>
   </body>
 </html>
