@@ -49,46 +49,27 @@
 		</div>
 		<div class="row">
 			<!--填写工作日志信息开始-->
-			<form class="form-horizontal">
-				<div class="form-group">
-					<label for="inputID" class="col-sm-2 control-label">学生ID</label>
-					<div class="col-sm-10">
-						<input type="email" class="form-control" id="inputID"
-							placeholder="学生ID">
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="inputName" class="col-sm-2 control-label">姓名</label>
-					<div class="col-sm-10">
-						<input type="password" class="form-control" id="inputName"
-							placeholder="姓名">
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="inputTime" class="col-sm-2 control-label">提交时间</label>
-					<div class="col-sm-10">
-						<input type="password" class="form-control" id="inputTime"
-							placeholder="提交时间">
-					</div>
-				</div>
+			<form class="form-horizontal" action="stuAttendance/addDiary" method="post">
 				<div class="form-group">
 					<label for="inputDairy" class="col-sm-2 control-label">日志内容</label>
 					<div class="col-sm-10">
-						<textarea class="form-control" id="inputDairy" placeholder="日志内容"></textarea>
+						<textarea class="form-control" id="inputDairy" name="diaryContent" placeholder="日志内容"></textarea>
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="inputQuestion" class="col-sm-2 control-label">提问</label>
 					<div class="col-sm-10">
-						<textarea class="form-control" id="inputQuestion" placeholder="提问"></textarea>
+						<textarea class="form-control" id="inputQuestion" name="questionContent" placeholder="提问"></textarea>
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-10">
-						<button type="submit" class="btn btn-default">保存</button>
+						<button type="submit" id="save" class="btn btn-default">保存</button>
 						<button type="submit" class="btn btn-default">重置</button>
 					</div>
 				</div>
+				<input type="hidden" name="stuId" value="${student.id}"/>
+				<div id="message">${message}</div>
 			</form>
 			<!--填写工作日志信息结束-->
 		</div>
@@ -98,5 +79,17 @@
 	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("#save").click(function() {
+			var message=$("#message").html();
+			if(message=="保存成功！"||message=="今天已经写过工作日志！"){
+				$("#save").attr("disabled","true");
+			}else{
+				$("#save").removeAttr("disabled");
+			}
+			});
+		});
+	</script>
 </body>
 </html>

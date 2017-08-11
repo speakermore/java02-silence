@@ -16,12 +16,14 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sun.glass.ui.SystemClipboard;
 
 import silence.entity.AttendanceRecord;
+import silence.entity.Diary;
 import silence.entity.Students;
 import silence.service.StudentService;
 import silence.util.PageSupport;
@@ -230,7 +232,7 @@ public class StudentController {
 					map.put("success", 1);
 					map.put("message", "签退失败！");
 				}
-			}else{
+			} else {
 				map.put("success", 2);
 				map.put("message", "不能重复签退！");
 			}
@@ -260,6 +262,7 @@ public class StudentController {
 		}
 		int pageIndex = (curPage - 1) * 5;
 		List<AttendanceRecord> record = studentService.selectStuAttendanceReocrd(stuId, classId, pageIndex);
+		String info = "";
 		// 创建一个模型和视图
 		ModelAndView mv = new ModelAndView("studentlookattendancerecord");
 		// 向页面返回数据
@@ -267,6 +270,7 @@ public class StudentController {
 		mv.addObject("curPage", curPage);
 		mv.addObject("maxPage", maxPage);
 		mv.addObject("maxRecord", maxRecord);
+		mv.addObject("info", info);
 		return mv;
 	}
 
@@ -292,8 +296,13 @@ public class StudentController {
 			curPage = maxPage; // 上限判断，当大于最后一页时，纠正为最后一页
 		}
 		int pageIndex = (curPage - 1) * 5;
-		List<AttendanceRecord> record = studentService.selectStuAttendanceRecordByTime(stuId, classId, choice,
-				pageIndex);
+		List<AttendanceRecord> record = null;
+		String info = "";
+		if (pageIndex < 0) {
+			info = "此时段没有考勤记录。";
+		} else {
+			record = studentService.selectStuAttendanceRecordByTime(stuId, classId, choice, pageIndex);
+		}
 		// 创建一个模型和视图
 		ModelAndView mv = new ModelAndView();
 		// 设置跳转页面
@@ -303,6 +312,7 @@ public class StudentController {
 		mv.addObject("curPage", curPage);
 		mv.addObject("maxPage", maxPage);
 		mv.addObject("maxRecord", maxRecord);
+		mv.addObject("info", info);
 		if (choice != 0) {
 			mv.addObject("choice", choice);
 		}
@@ -315,7 +325,7 @@ public class StudentController {
 		ModelAndView mv = selectStuAttendanceRecordByTime(stuId, classId, choice, curPage);
 		return mv;
 	}
-	
+
 	/*
 	 * @author 连慧
 	 * 
@@ -324,41 +334,203 @@ public class StudentController {
 	 * @return 学生编号对应的学生考勤率
 	 */
 	@RequestMapping(value = "/selectStuAttendanceRate", method = RequestMethod.POST)
-	public ModelAndView selectStuAttendanceRate(Integer stuId,Integer classId,String choiceTime1,String choiceTime2){
-		String attRate="";    //考勤率
-		//查询某个学生某个时间内全勤的记录数
-		Integer count=studentService.countStuAttendanceRate(stuId, choiceTime1, choiceTime2);
-		SimpleDateFormat sim=new SimpleDateFormat("yyyy-MM-dd");
+	public ModelAndView selectStuAttendanceRate(Integer stuId, Integer classId, String choiceTime1,
+			String choiceTime2) {
+		String attRate = ""; // 考勤率
+		// 查询某个学生某个时间内全勤的记录数
+		Integer count = studentService.countStuAttendanceRate(stuId, choiceTime1, choiceTime2);
+		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			Date time1=sim.parse(choiceTime1);
-			long times1=time1.getTime();
-			Date time2=sim.parse(choiceTime2);
-			long times2=time2.getTime();
-			long days=(times2-times1)/(1000*60*60*24);
-			if(count>0){
-				//double保留两位小数(四舍五入)
-				double f=(double)count/days;  
-				BigDecimal b=new BigDecimal(f);  
-				double f1=b.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
-				attRate=""+f1;
-			}else{
-				attRate="没有全勤记录，故没有出勤率。";
+			Date time1 = sim.parse(choiceTime1);
+			long times1 = time1.getTime();
+			Date time2 = sim.parse(choiceTime2);
+			long times2 = time2.getTime();
+			long days = (times2 - times1) / (1000 * 60 * 60 * 24);
+			if (count > 0) {
+				// double保留两位小数(四舍五入)
+				double f = (double) count / days;
+				BigDecimal b = new BigDecimal(f);
+				double f1 = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+				attRate = "" + f1;
+			} else {
+				attRate = "没有全勤记录，故没有出勤率。";
 			}
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//查询某个学生的考勤记录
+		// 查询某个学生的考勤记录
 		List<AttendanceRecord> record = studentService.selectStuAttendanceRecordByTime(stuId, classId, null, null);
-		//创建一个模型和视图
-		ModelAndView mv=new ModelAndView();
+		// 创建一个模型和视图
+		ModelAndView mv = new ModelAndView();
 		// 设置跳转页面
 		mv.setViewName("studentlookattendancerecord");
 		// 向页面返回数据
 		mv.addObject("attStu", record);
-		mv.addObject("attRate",attRate);
-		mv.addObject("choiceTime1",choiceTime1);
-		mv.addObject("choiceTime2",choiceTime2);
+		mv.addObject("attRate", attRate);
+		mv.addObject("choiceTime1", choiceTime1);
+		mv.addObject("choiceTime2", choiceTime2);
+		return mv;
+	}
+
+	/*
+	 * @author 连慧
+	 * 
+	 * @param 页面传过来的stuId学生编号，classId班级编号，curPage页码
+	 * 
+	 * @return 学生编号对应的学生日志
+	 */
+	@RequestMapping(value = "/selectStuDiary", method = RequestMethod.GET)
+	public ModelAndView selectStuDiary(Integer stuId, Integer classId, Integer curPage) {
+		String info = "";
+		if (curPage == null) {
+			curPage = 1; // 当页面传过来的参数为null时，纠正为第一页，避免出错
+		}
+		if (curPage < 1) {
+			curPage = 1; // 下限判断，当小于第一页时，纠正为第一页
+		}
+		int maxRecord = studentService.getMaxDiary(stuId, classId);
+		int maxPage = (maxRecord + 4) / 5; // 每页显示五条信息，总共有几页
+		if (curPage > maxPage) {
+			curPage = maxPage; // 上限判断，当大于最后一页时，纠正为最后一页
+		}
+		int pageIndex = (curPage - 1) * 5;
+		List<Diary> diarys = studentService.selectDiary(stuId, classId, pageIndex);
+		// 创建一个模型和视图
+		ModelAndView mv = new ModelAndView();
+		// 设置跳转页面
+		mv.setViewName("diary");
+		// 向页面返回数据
+		mv.addObject("diarys", diarys);
+		mv.addObject("curPage", curPage);
+		mv.addObject("maxPage", maxPage);
+		mv.addObject("maxRecord", maxRecord);
+		mv.addObject("info", info);
+		return mv;
+	}
+
+	/*
+	 * @author 连慧
+	 * 
+	 * @param 页面传过来的stuId学生编号，classId班级编号，curPage页码
+	 * 
+	 * @return 学生编号和对应时间所对应的学生日志
+	 */
+	@RequestMapping(value = "/selectStuDiaryByTime", method = RequestMethod.GET)
+	public ModelAndView selectStuDiaryByTime(Integer stuId, Integer classId, Integer choice, Integer curPage,
+			HttpSession session) {
+		if (curPage == null) {
+			curPage = 1; // 当页面传过来的参数为null时，纠正为第一页，避免出错
+		}
+		if (curPage < 1) {
+			curPage = 1; // 下限判断，当小于第一页时，纠正为第一页
+		}
+		int maxRecord = studentService.getMaxDiaryByTime(stuId, classId, choice);
+		int maxPage = (maxRecord + 4) / 5; // 每页显示五条信息，总共有几页
+		if (curPage > maxPage) {
+			curPage = maxPage; // 上限判断，当大于最后一页时，纠正为最后一页
+		}
+		int pageIndex = (curPage - 1) * 5;
+		List<Diary> diarys = null;
+		String info = "";
+		if (pageIndex < 0) {
+			info = "此时间段没有日志信息。";
+		} else {
+			diarys = studentService.selectDiaryByTime(stuId, classId, choice, pageIndex);
+			session.setAttribute("diarys", diarys);
+		}
+		// 创建一个模型和视图
+		ModelAndView mv = new ModelAndView();
+		// 设置跳转页面
+		mv.setViewName("diary");
+		// 向页面返回数据
+		// mv.addObject("diarys", diarys);
+		mv.addObject("curPage", curPage);
+		mv.addObject("maxPage", maxPage);
+		mv.addObject("maxRecord", maxRecord);
+		mv.addObject("info", info);
+		if (choice != 0) {
+			mv.addObject("choice", choice);
+		}
+		return mv;
+	}
+
+	/*
+	 * @author 连慧
+	 * 
+	 * @param 页面传过来的stuId学生编号，classId班级编号，curPage页码
+	 * 
+	 * @return 学生编号对应的学生日志
+	 */
+	@RequestMapping(value = "/selectStuDiaryDetail", method = RequestMethod.GET)
+	public ModelAndView selectStuDiaryDetail(Integer stuId, String stuName, String className, Timestamp diaryCommitTime,
+			String diaryContent) {
+		// 创建一个模型和视图
+		ModelAndView mv = new ModelAndView("showDiaryDetail");
+		// 向页面返回数据
+		mv.addObject("stuId", stuId);
+		mv.addObject("stuName", stuName);
+		mv.addObject("className", className);
+		mv.addObject("diaryCommitTime", diaryCommitTime);
+		mv.addObject("diaryContent", diaryContent);
+		return mv;
+	}
+
+	/*
+	 * @author 连慧
+	 * 
+	 * @param 页面传过来的：stuId为增加工作日志的学生编号
+	 * 
+	 * @return ModelAndView对象，用来设置跳转页面和向页面传递参数（把参数放到了request对象）
+	 */
+	@RequestMapping(value = "/addDiary", method = RequestMethod.GET)
+	public String addDiary() {
+		return "addDiary";
+	}
+
+	/*
+	 * @author 连慧
+	 * 
+	 * @param 页面传过来的：stuId为增加工作日志的学生编号
+	 * 
+	 * @return ModelAndView对象，用来设置跳转页面和向页面传递参数（把参数放到了request对象）
+	 */
+	@RequestMapping(value = "/addDiary", method = RequestMethod.POST)
+	public ModelAndView addDiary(Integer stuId, String diaryContent, String questionContent) {
+		String message="";
+		// 获得系统当前时间
+		Date date=new Date();
+		Timestamp time = new Timestamp(System.currentTimeMillis());
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 定义格式，不显示毫秒
+		SimpleDateFormat sdfs = new SimpleDateFormat("yyyy-MM-dd");// 定义格式，不显示毫秒
+		ModelAndView mv = new ModelAndView("addDiary");
+		String commitTime = sdf.format(time);
+		String dates=sdfs.format(date);
+		Diary diary=studentService.selectDiaryByDiaryDate(stuId, dates);
+		if(diary==null){   //当天没有写过工作日志才能插入日志
+			if (diaryContent != "") {  //工作日志内容不为空才能保存插入工作日志
+				// 插入日志
+				Integer result = studentService.insertDiary(stuId, diaryContent, commitTime,dates);
+				if(questionContent != ""){
+				// 插入问题
+				Integer results = studentService.insertQuestion(stuId, questionContent, commitTime);
+					
+				}
+				if (result > 0 ) {
+					mv.setViewName("addDiary");
+					message="保存成功！";
+				} else {
+					mv.setViewName("addDiary");
+					message="保存失败！";
+				}
+			} else {
+				mv.setViewName("addDiary");
+				message="尚未填写日志,请填写！";
+			}
+		}else{
+			message="今天已经写过工作日志！";
+		}	
+		mv.addObject("message", message);
 		return mv;
 	}
 }

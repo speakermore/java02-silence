@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import silence.dao.StudentMapper;
 import silence.entity.AttendanceRecord;
+import silence.entity.Diary;
 import silence.entity.Students;
 import silence.service.StudentService;
 
@@ -85,4 +86,40 @@ public class StudentServiceImpl implements StudentService {
 	public Integer countStuAttendanceRate(Integer stuId, String choiceTime1, String choiceTime2) {
 		return studentMapper.countStuAttendanceRate(stuId, choiceTime1, choiceTime2);
 	}
+
+	@Override
+	public Integer getMaxDiary(Integer id, Integer classId) {
+		return studentMapper.getMaxDiary(id, classId);
+	}
+
+	@Override
+	public List<Diary> selectDiary(Integer id, Integer classId, Integer pageIndex) {
+		return studentMapper.selectDiary(id, classId, pageIndex);
+	}
+
+	@Override
+	public List<Diary> selectDiaryByTime(Integer id, Integer classId, Integer choice, Integer pageIndex) {
+		return studentMapper.selectDiaryByTime(id, classId, choice, pageIndex);
+	}
+
+	@Override
+	public Integer getMaxDiaryByTime(Integer id, Integer classId, Integer choice) {
+		return studentMapper.getMaxDiaryByTime(id, classId, choice);
+	}
+
+	@Override
+	public Integer insertDiary(Integer stuId, String diaryContent, String commitTime,String diaryDate) {
+		return studentMapper.insertDiary(stuId, diaryContent, commitTime,diaryDate);
+	}
+
+	@Override
+	public Integer insertQuestion(Integer stuId, String questionContent, String commitTime) {
+		return studentMapper.insertQuestion(stuId, questionContent, commitTime);
+	}
+
+	@Override
+	public Diary selectDiaryByDiaryDate(Integer stuId, String diaryDate) {
+		return studentMapper.selectDiaryByDiaryDate(stuId, diaryDate);
+	}
+
 }

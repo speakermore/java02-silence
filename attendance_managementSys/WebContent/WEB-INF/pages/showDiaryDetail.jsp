@@ -37,13 +37,13 @@
 			</div>
 			<!--显示主体日志信息开始-->
 			<div id="dairy_main1" class="row">
-				<div class="col-sm-2">学号：<span id="stuId">${diary.stuNo}</span></div>
-				<div class="col-sm-2">姓名：<span id="stuName">${diary.stuName}</span></div>
+				<div class="col-sm-2">学号：<span id="stuId">${stuId}</span></div>
+				<div class="col-sm-2">姓名：<span id="stuName">${stuName}</span></div>
 				<div class="col-sm-2">班级：<span id="stuClassId">${className}</span></div>
-				<div class="col-sm-6">提交时间：<span id="commitTime">${diary.diaryCommitTime}</span></div>
+				<div class="col-sm-6">提交时间：<span id="commitTime">${diaryCommitTime}</span></div>
 			</div>
 			<div id="dairy_main2" class="row">
-				<div class="col-sm-6">日志内容：<textarea id="diary_content">${diary.diaryContent}</textarea></div>
+				<div class="col-sm-6">日志内容：<textarea id="diary_content">${diaryContent}</textarea></div>
 				<div class="col-sm-6">提问内容：<textarea id="diary_question">十万个为什么？钢铁是怎样炼成的？.......</textarea></div>
 			</div>
 			<!--显示主体日志信息结束-->
