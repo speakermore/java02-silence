@@ -19,16 +19,26 @@ public class Question implements Serializable {
 	private String questionContent; // 提问内容
 	private Timestamp questionTime; // 提问时间
 	private Integer questionGiveIntegral; //提问者给出的积分
+	private String stuNo;  //学号
+	private String stuName;  //学生姓名
+	private String className; //班级名称
 	
 	public Question() {
 	}
 
-	public Question(Integer stuId, String questionContent, Timestamp questionTime, Integer questionGiveIntegral) {
+	public Question(Integer stuId, String questionContent, Timestamp questionTime, Integer questionGiveIntegral,
+			String stuNo, String stuName, String className) {
+		super();
 		this.stuId = stuId;
 		this.questionContent = questionContent;
 		this.questionTime = questionTime;
 		this.questionGiveIntegral = questionGiveIntegral;
+		this.stuNo = stuNo;
+		this.stuName = stuName;
+		this.className = className;
 	}
+
+
 
 	public Integer getId() {
 		return id;
@@ -70,9 +80,35 @@ public class Question implements Serializable {
 		this.questionGiveIntegral = questionGiveIntegral;
 	}
 
+	public String getStuNo() {
+		return stuNo;
+	}
+
+	public void setStuNo(String stuNo) {
+		this.stuNo = stuNo;
+	}
+
+	public String getStuName() {
+		return stuName;
+	}
+
+	public void setStuName(String stuName) {
+		this.stuName = stuName;
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
+	}
+
 	@Override
 	public String toString() {
 		return "Question [id=" + id + ", stuId=" + stuId + ", questionContent=" + questionContent + ", questionTime="
-				+ questionTime + ", questionGiveIntegral=" + questionGiveIntegral + "]";
+				+ questionTime + ", questionGiveIntegral=" + questionGiveIntegral + ", stuNo=" + stuNo + ", stuName="
+				+ stuName + ", className=" + className + "]";
 	}
+
 }

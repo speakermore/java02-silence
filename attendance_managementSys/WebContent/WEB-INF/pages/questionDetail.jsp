@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
     <!-- 获得在地址栏访问时的项目的绝对路径，具体的访问时要拼上提交的表单的action属性的值， -->
 <base href="${pageContext.request.scheme }://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/" />
 <!DOCTYPE html>
@@ -38,11 +40,7 @@
     		background: white;
     	}
     	
-    	#searchMore span{
-    		margin-left: 500px;
-    	}
-    	
-    	#questionButton{
+    	#answerButton{
     		margin-left: 550px;
     		margin-top: 10px;
     	}
@@ -52,30 +50,73 @@
 	<div class="container">
 			<!--提问开始-->
 			<div id="questionHeader" class="row">
-				<div id="question" class="col-xs-6">
-					<h4>问题</h4>
+				<input type="hidden" id="questionId" name="questionId" value="${question.id }"/>
+				<div class="row">
+					<div id="question" class="col-xs-6">
+						<h5><strong>问题:${question.questionContent }</strong></h5>
+					</div>
+					<div id="questionAuthorInfo" class="col-xs-6">
+						<span>提问者名字：${question.stuName }</span>&nbsp;&nbsp;
+						<span>提问者所在班级：${question.className }</span>&nbsp;&nbsp;
+						<span>提问时间：<fmt:formatDate value="${question.questionTime }" pattern="yyyy-MM-dd HH:mm:ss"/></span>
+					</div>
 				</div>
-				<div id="questionAuthorInfo" class="col-xs-6">
-					<span>名字：</span>
-					<span>时间：</span>
+				<div class="row">
+					<button id="answerButton" class="glyphicon glyphicon-pencil">回答</button>
 				</div>
-				<button id="questionButton" class="glyphicon glyphicon-pencil">回答</button>
 			</div>
 			<!--提问结束-->
 			<!--提问对应的回答开始-->
 			<div id="answer" class="row" style="margin-top: 10px;">
-				<div id="questionTitle">回答1</div>
-				<div id="questionTitle">回答2</div>
-				<div id="questionTitle">回答3</div>
-				<div id="questionTitle">回答4</div>
-  			<div id="searchMore"><span>查看全部n个回答</span></div>
+				<c:choose>
+					<c:when test="${stuAnswerNo==0&&tecAnswerNo==0 }">
+						${answerInfo }
+					</c:when>
+					<c:otherwise>
+						<c:forEach items="${stuAnswers }" var="s">
+							<div class="row page_main">
+								<c:if test="${stuAnswerNo!=0 }">
+					  				<div id="left" class="col-sm-3">
+										<span>回答者姓名：</span><span>${s.stuName }</span><br/>
+										<span>回答者所属班级：</span><span>${s.className }</span><br/>
+										<span>回答时间：</span><span><fmt:formatDate value="${s.answerTime }" pattern="yyyy-MM-dd HH:mm:ss"/></span><br/>
+									</div>
+						  			<div id="answerContent" class="col-sm-9">
+						  			${s.answerContent }
+						  			</div>
+						  		</c:if>
+					  		</div>
+						</c:forEach>
+						<c:forEach items="${tecAnswers }" var="t">
+							<div class="row page_main">
+								<c:if test="${tecAnswerNo!=0 }">
+					  				<div id="left" class="col-sm-3">
+										<span>回答者姓名：</span><span>${t.tecName }</span><br/>
+										<span>回答时间：</span><span><fmt:formatDate value="${t.answerTime }" pattern="yyyy-MM-dd HH:mm:ss"/></span><br/>
+									</div>
+						  			<div id="answerContent" class="col-sm-9">
+						  			${t.answerContent }
+						  			</div>
+						  		</c:if>
+					  		</div>
+						</c:forEach>
+					</c:otherwise>
+				</c:choose>
 			</div>
-			 <!--提问对应的回答开始-->
+			 <!--提问对应的回答结束 -->
 			 
   	</div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+	    $(function () {
+	    	$("#answerButton").click(function () {
+	    		var questionId = $("#questionId").val();
+				window.location.href="tecAttendance/jumpAnswerPage?questionId="+questionId;
+			})
+		})
+    </script>
 </body>
 </html>

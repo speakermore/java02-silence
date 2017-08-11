@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import silence.entity.Answer;
 import silence.entity.AttendanceRecord;
 import silence.entity.Diary;
+import silence.entity.Question;
 import silence.entity.Students;
 import silence.entity.Teacher;
 import silence.service.StudentService;
@@ -72,16 +74,26 @@ public class TeachersController {
 	 * @return 老师对象
 	 */
 	@RequestMapping(value="/teacherLogin", method = RequestMethod.POST)
-	public ModelAndView teacherLogin(String tecName,String tecPwd,HttpSession session){
+	public ModelAndView teacherLogin(String tecName,String tecPwd,String captcha,HttpSession session){
 		String tecLogin= "";
 		Teacher teacher = teacherService.getTeacherByName(tecName);
 		//创建一个模型和试图用于设置返回页面及向页面返回数据
 		ModelAndView mv = new ModelAndView();
 		if(teacher != null){
 			if(tecPwd.equals(teacher.getTecPwd())){
-				tecLogin = "登录成功!";
-				session.setAttribute("teacher", teacher);
-				mv.setViewName("teacher");
+				if (captcha.equalsIgnoreCase(session.getAttribute("captcha").toString())) {
+					mv.addObject("captchaInfo","验证通过!");
+					tecLogin = "登录成功!";
+					session.setAttribute("teacher", teacher);
+					mv.setViewName("teacher");
+					//本月所有提问集合
+					List<Question> weekQuestion = teacherService.findWeekQuestion();
+					Integer questionNo = weekQuestion.size();
+					mv.addObject("questionNo",questionNo);
+				}else{
+					mv.setViewName("teacherLogin");
+					mv.addObject("captchaInfo","验证码不正确！");
+				}
 			}else {
 				tecLogin = "姓名或密码错误，请重新输入！";
 				mv.setViewName("teacherLogin");
@@ -544,17 +556,121 @@ public class TeachersController {
 	
 	/**
 	 * 袁云：查看工作日志的详细内容
-	 * @param  页面传过来的提交时间、班级、姓名和学号
+	 * @param  页面传过来的提交时间和学生id（stuId），因为日志提交时间和问题提交时同时的，所以提交时间是一样的
 	 * @return 某一条工作日志
 	 */
 	@RequestMapping(value="/lookDiaryDetail",method=RequestMethod.GET)
-	public ModelAndView lookDiaryDetail(Timestamp diaryCommitTime,String className,String stuNo,String stuName,String diaryContent){
+	public ModelAndView lookDiaryDetail(Timestamp diaryCommitTime,Integer stuId){
+		Diary diary = teacherService.queryDiaryByStuIdAndTime(diaryCommitTime, stuId);
+		Question question = teacherService.queryQuestionByStuIdAndTime(diaryCommitTime, stuId);
 		ModelAndView mv = new ModelAndView("teacherLookDiaryDetail");
-			mv.addObject("diaryCommitTime", diaryCommitTime);
-			mv.addObject("stuClass", className);
-			mv.addObject("stuNo", stuNo);
-			mv.addObject("stuName", stuName);
-			mv.addObject("diaryContent", diaryContent);
+			mv.addObject("diary", diary);
+			mv.addObject("questionContent", question.getQuestionContent());
 			return mv;
+	}
+	
+	/**
+	 * 袁云：用于点击问题提示数字时跳转到查看学生问题（question）页面
+	 * @return 学生问题集合
+	 */
+	@RequestMapping(value="/jumpLookQuestion",method=RequestMethod.GET)
+	public ModelAndView jumpLookQuestion(){
+		ModelAndView mv = new ModelAndView();
+		//本周前十条提问集合
+		List<Question> tenQuestion = teacherService.findTenQuestion();
+		if(tenQuestion.size()==0){    //本周没有同学提问
+			mv.addObject("findQuestionInfo", "没有同学提问！");
+			mv.setViewName("teacher");
+		}else{
+			//本周所有提问集合
+			List<Question> weekQuestion = teacherService.findWeekQuestion();
+			Integer weekQuestionNo=weekQuestion.size();
+			mv.addObject("weekQuestionNo",weekQuestionNo);
+			mv.addObject("tenQuestion", tenQuestion);
+			mv.setViewName("question");
+		}
+		return mv;
+	}
+	
+	/**
+	 * 袁云：在question页面当点击查看所有时，查询本周所有提问
+	 * @return 学生问题集合
+	 */
+	@RequestMapping(value="/jumpWeekQuestion",method=RequestMethod.GET)
+	public ModelAndView findWeekQuestion(){
+		ModelAndView mv = new ModelAndView();
+		//本周所有提问集合
+		List<Question> weekQuestion = teacherService.findWeekQuestion();
+		mv.addObject("weekQuestion", weekQuestion);
+		mv.setViewName("question");
+		return mv;
+	}
+	
+	/**
+	 * 袁云：查看问题的详细内容
+	 * @param  页面传过来的提问id
+	 * @return 某一个问题
+	 */
+	@RequestMapping(value="/lookQuestionDetail",method=RequestMethod.GET)
+	public ModelAndView lookQuestionDetail(Integer questionId){
+		Question question = teacherService.queryQuestionByQuestionId(questionId);
+		List<Answer> stuAnswers = teacherService.findStuAnswerByQuestionId(questionId);
+		List<Answer> tecAnswers = teacherService.findTecAnswerByQuestionId(questionId);
+		ModelAndView mv = new ModelAndView("questionDetail");
+		Integer stuAnswerNo = stuAnswers.size();
+		Integer tecAnswerNo = tecAnswers.size();
+		mv.addObject("stuAnswerNo", stuAnswerNo);
+		mv.addObject("tecAnswerNo", tecAnswerNo);
+		if (stuAnswerNo==0&&tecAnswerNo==0) {
+			mv.addObject("answerInfo", "没有人回答该问题");
+			mv.addObject("question", question);
+		}else{
+			mv.addObject("question", question);
+			mv.addObject("stuAnswers", stuAnswers);
+			mv.addObject("tecAnswers", tecAnswers);
+		}
+		return mv;
+	}
+	
+	/**
+	 * 袁云：在questionDetail页面当点击回答按钮时，跳转到回答页面
+	 * @param  页面传过来的提问id
+	 * @return 某一个提问
+	 */
+	@RequestMapping(value="/jumpAnswerPage",method=RequestMethod.GET)
+	public ModelAndView jumpAnswerPage(Integer questionId){
+		ModelAndView mv = new ModelAndView("answer");
+		Question question = teacherService.queryQuestionByQuestionId(questionId);
+		mv.addObject("question", question);
+		return mv;
+	}
+	
+	/**
+	 * 袁云：将提交的回答保存到数据库的answer表里
+	 * @param  页面传过来的提问id，回答内容，回答者id
+	 * @return 大于0表示添加成功，否则失败
+	 */
+	@RequestMapping(value="/insertAnswer",method=RequestMethod.POST)
+	public ModelAndView insertAnswer(Answer answer,Integer giveIntegrals){
+		ModelAndView mv = new ModelAndView();
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		answer.setAnswerTime(timestamp);
+		Integer insertAnswer = teacherService.insertAnswer(answer);
+		String insertAnswerInfo="";
+		if(insertAnswer>0){
+			mv.setViewName("questionDetail");
+			insertAnswerInfo="提交回答成功！";
+			Integer questionId = answer.getQuestionId();
+			Integer answerId = answer.getAnswerId();
+			mv = lookQuestionDetail(answer.getQuestionId());
+			mv.addObject("insertAnswerInfo", insertAnswerInfo);
+			teacherService.insertIntegrals(questionId,answerId, giveIntegrals);
+			
+		}else{
+			mv.setViewName("answer");
+			insertAnswerInfo="提交回答失败！";
+			mv.addObject("insertAnswerInfo", insertAnswerInfo);
+		}
+		return mv;
 	}
 }

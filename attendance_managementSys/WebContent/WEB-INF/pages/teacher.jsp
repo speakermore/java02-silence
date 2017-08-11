@@ -34,6 +34,10 @@
 <body>
 	<div class="container-fluid">
 		<div id="tecLogin">${tecLogin }</div>
+		<div >
+			<input id="questionNo" type="button" value="${questionNo }" style="color: red"/>
+		</div>
+		<div id="findQuestionInfo">${findQuestionInfo }</div>
 		<div class="row" id="top">
 		<button type="button" class="btn btn-info col-sm-4">给学生注册</button>
 		<button type="button" class="btn btn-info col-sm-4">查看学生考勤记录</button>
@@ -62,6 +66,9 @@
 			$("button:eq(2)").click(function () {
 				window.location.href="tecAttendance/jumpLookDiary?curPage=1";
 			});
+			$("#questionNo").click(function () {
+				window.location.href="tecAttendance/jumpLookQuestion";
+			})
 		});
 	</script>
 </body>

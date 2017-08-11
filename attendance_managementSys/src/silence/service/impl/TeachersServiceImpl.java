@@ -10,8 +10,10 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import silence.dao.TeachersMapper;
+import silence.entity.Answer;
 import silence.entity.AttendanceRecord;
 import silence.entity.Diary;
+import silence.entity.Question;
 import silence.entity.Students;
 import silence.entity.Teacher;
 import silence.service.TeachersService;
@@ -143,6 +145,60 @@ public class TeachersServiceImpl implements TeachersService {
 	public ArrayList<Diary> verifyDiaryExists(Timestamp diaryCommitTime1, Timestamp diaryCommitTime2) {
 		// TODO Auto-generated method stub
 		return teachersMapper.verifyDiaryExists(diaryCommitTime1, diaryCommitTime2);
+	}
+
+	@Override
+	public Question queryQuestionByStuIdAndTime(Timestamp diaryCommitTime, Integer stuId) {
+		// TODO Auto-generated method stub
+		return teachersMapper.queryQuestionByStuIdAndTime(diaryCommitTime, stuId);
+	}
+
+	@Override
+	public Diary queryDiaryByStuIdAndTime(Timestamp diaryCommitTime, Integer stuId) {
+		// TODO Auto-generated method stub
+		return teachersMapper.queryDiaryByStuIdAndTime(diaryCommitTime, stuId);
+	}
+
+	@Override
+	public List<Question> findWeekQuestion() {
+		// TODO Auto-generated method stub
+		return teachersMapper.findWeekQuestion();
+	}
+
+	@Override
+	public List<Question> findTenQuestion() {
+		// TODO Auto-generated method stub
+		return teachersMapper.findTenQuestion();
+	}
+
+	@Override
+	public List<Answer> findStuAnswerByQuestionId(Integer questionId) {
+		// TODO Auto-generated method stub
+		return teachersMapper.findStuAnswerByQuestionId(questionId);
+	}
+
+	@Override
+	public List<Answer> findTecAnswerByQuestionId(Integer questionId) {
+		// TODO Auto-generated method stub
+		return teachersMapper.findTecAnswerByQuestionId(questionId);
+	}
+
+	@Override
+	public Question queryQuestionByQuestionId(Integer questionId) {
+		// TODO Auto-generated method stub
+		return teachersMapper.queryQuestionByQuestionId(questionId);
+	}
+
+	@Override
+	public Integer insertAnswer(Answer answer) {
+		// TODO Auto-generated method stub
+		return teachersMapper.insertAnswer(answer);
+	}
+
+	@Override
+	public Integer insertIntegrals(Integer questionId,Integer answerId, Integer integrals) {
+		// TODO Auto-generated method stub
+		return teachersMapper.insertIntegrals(questionId,answerId,integrals);
 	}
 
 }

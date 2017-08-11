@@ -76,8 +76,9 @@
 				<!--分页主体开始-->
 				<c:forEach items="${diarys }" var="d">
 					<div id="page_main" class="row">
-						<a href="tecAttendance/lookDiaryDetail?diaryCommitTime=${d.diaryCommitTime }&className=${d.className }&stuNo=${d.stuNo }&stuName=${d.stuName }&diaryContent=${d.diaryContent }">
+						<a href="tecAttendance/lookDiaryDetail?diaryCommitTime=${d.diaryCommitTime }&stuId=${d.stuId}">
 							<div id="left" class="col-sm-3">
+								<input id="stuId" type="hidden" value="${d.stuId }"/>
 								<span>学号：</span><span>${d.stuNo }</span><br/>
 								<span>姓名：</span><span>${d.stuName }</span><br/>
 								<span>班级：</span><span>${d.className }</span><br/>

@@ -19,15 +19,24 @@ public class Answer implements Serializable {
 	private Integer answerId;   //答复者id
 	private String answerContent;   //答复内容
 	private Timestamp answerTime;   //答复时间
+	private String stuNo;  //学号
+	private String stuName;  //学生姓名
+	private String className; //班级名称
+	private String tecName; //老师姓名
 	
 	public Answer() {
 	}
 
-	public Answer(Integer questionId, Integer answerId, String answerContent, Timestamp answerTime) {
+	public Answer(Integer questionId, Integer answerId, String answerContent, Timestamp answerTime, String stuNo,
+			String stuName, String className, String tecName) {
 		this.questionId = questionId;
 		this.answerId = answerId;
 		this.answerContent = answerContent;
 		this.answerTime = answerTime;
+		this.stuNo = stuNo;
+		this.stuName = stuName;
+		this.className = className;
+		this.tecName = tecName;
 	}
 
 	public Integer getId() {
@@ -69,12 +78,45 @@ public class Answer implements Serializable {
 	public void setAnswerTime(Timestamp answerTime) {
 		this.answerTime = answerTime;
 	}
+	
+
+	public String getStuName() {
+		return stuName;
+	}
+
+	public void setStuName(String stuName) {
+		this.stuName = stuName;
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
+	}
+	
+	public String getTecName() {
+		return tecName;
+	}
+
+	public void setTecName(String tecName) {
+		this.tecName = tecName;
+	}
+
+	public String getStuNo() {
+		return stuNo;
+	}
+
+	public void setStuNo(String stuNo) {
+		this.stuNo = stuNo;
+	}
 
 	@Override
 	public String toString() {
 		return "Answer [id=" + id + ", questionId=" + questionId + ", answerId=" + answerId + ", answerContent="
-				+ answerContent + ", answerTime=" + answerTime + "]";
+				+ answerContent + ", answerTime=" + answerTime + ", stuNo=" + stuNo + ", stuName=" + stuName
+				+ ", className=" + className + ", tecName=" + tecName + "]";
 	}
-	
-	
+
 }

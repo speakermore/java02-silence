@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
     <!-- 获得在地址栏访问时的项目的绝对路径，具体的访问时要拼上提交的表单的action属性的值， -->
 <base href="${pageContext.request.scheme }://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/" />
 <!DOCTYPE html>
@@ -24,7 +26,7 @@
     		background: rgb(247, 248, 250);
     	}
     	
-    	.question{
+    	.page_main{
     		margin: 10px;
     		background: white;
     	}
@@ -46,10 +48,10 @@
 <body>
 	<div class="container">
   		<!--头部导航开始-->
-  		<div id="topNav" class="row">
+  		<!-- <div id="topNav" class="row">
   				<button id="myQuestion" class="btn btn-group col-xs-offset-1 col-xs-4 glyphicon glyphicon-question-sign" data-toggle="button" >&nbsp;我的提问</button>
   				<button id="myAnswer" class="btn btn-group col-xs-offset-2 col-xs-4 glyphicon glyphicon-list-alt " data-toggle="button">&nbsp;我的回答</button>
-  		</div>
+  		</div> -->
   		<!--头部导航结束-->
   		<!--正文开始-->
   		<div id="bodyContent">
@@ -69,8 +71,28 @@
   			</div>
   			<!--搜索表当结束-->
   			<!--提问正文开始-->
-  			<div id="questionContent" class="row">
-	  			<div class="question">
+  			<div id="questionContext" class="row">
+  				<c:forEach items="${tenQuestion }" var="t">
+	  				<div class="row page_main">
+			  			<a href="tecAttendance/lookQuestionDetail?questionId=${t.id}">
+			  				<div id="left" class="col-sm-3">
+								<input id="stuId" type="hidden" value="${t.stuId }"/>
+								<input id="questionId" type="hidden" value="${t.id }"/>
+								<span>学号：</span><span>${t.stuNo }</span><br/>
+								<span>姓名：</span><span>${t.stuName }</span><br/>
+								<span>班级：</span><span>${t.className }</span><br/>
+								<span>提交时间：</span><span><fmt:formatDate value="${t.questionTime }" pattern="yyyy-MM-dd HH:mm:ss"/></span><br/>
+							</div>
+				  			<div id="question" class="col-sm-9">
+				  				<div id="questionContent" style="color: black">${t.questionContent }</div>
+				  				<div id="look" style="padding-left: 800px;">查看</div>
+				  				<!-- <div id="answerContent">最新回答内容</div>
+				  				<div id="answerLink" class="glyphicon glyphicon-pencil">回答</div> -->
+				  			</div>
+			  			</a>
+			  		</div>
+	  			</c:forEach>
+	  			<!-- <div class="question">
 	  				<div id="questionTitle">提问1</div>
 	  				<div id="answerContent">最新回答内容</div>
 	  				<div id="answerLink" class="glyphicon glyphicon-pencil">回答</div>
@@ -84,13 +106,27 @@
 	  				<div id="questionTitle">提问1</div>
 	  				<div id="answerContent">最新回答内容</div>
 	  				<div id="answerLink" class="glyphicon glyphicon-pencil">回答</div>
-	  			</div>
-	  			<div class="question">
-	  				<div id="questionTitle">提问1</div>
-	  				<div id="answerContent">最新回答内容</div>
-	  				<div id="answerLink" class="glyphicon glyphicon-pencil">回答</div>
-	  			</div>
+	  			</div> -->
+	  			<c:if test="${weekQuestionNo>10 }">
 	  			<button id="searchMore" class="btn btn-primary ">查看更多</button>
+	  			</c:if>
+	  			<c:forEach items="${weekQuestion }" var="w">
+		  			<div class="row page_main">
+			  			<a href="tecAttendance/lookQuestionDetail?questionId=${w.id}">
+			  				<div id="left" class="col-sm-3">
+								<input id="stuId" type="hidden" value="${w.stuId }"/>
+								<span>学号：</span><span>${w.stuNo }</span><br/>
+								<span>姓名：</span><span>${w.stuName }</span><br/>
+								<span>班级：</span><span>${w.className }</span><br/>
+								<span>提交时间：</span><span><fmt:formatDate value="${w.questionTime }" pattern="yyyy-MM-dd HH:mm:ss"/></span><br/>
+							</div>
+				  			<div id="question" class="col-sm-9">
+				  				<div id="questionContent" style="color: black">${w.questionContent }</div>
+				  				<div id="look" style="padding-left: 800px;">查看</div>
+				  			</div>
+			  			</a>
+			  		</div>
+	  			</c:forEach>
   			</div>
   			<!--提问正文结束-->
   		</div>
@@ -103,5 +139,12 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+	    $(function () {
+	    	$("#searchMore").click(function () {
+				window.location.href="tecAttendance/jumpWeekQuestion";
+			})
+		})
+    </script>
 </body>
 </html>

@@ -43,21 +43,24 @@
   		<!--回答头部开始-->
 			<div id="answerHeader" class="row">
 				<div id="question" class="col-xs-5">
-					<h4>问题</h4>
+					<h4>${question.questionContent }</h4>
 				</div>
 				<div id="questionAuthorInfo" class="col-xs-5">
-					<span>名字：</span>
-					<span>时间：</span>
+					<span>名字：${question.stuName }</span>
+					<span>时间：${question.questionTime }</span>
 				</div>
 			</div>
 			<!--回答头部结束-->
 			<!--回答正文开始-->
-			<form action="">
-				<div class="">
-					<textarea name="answer" class="ckeditor">写回答...</textarea>
-				</div>
-				<input id="submit" type="submit" name="submit" value="提交回答" />
+			<form action="tecAttendance/insertAnswer" method="post">
+				<textarea name="answerContent" class="ckeditor" placeholder="写回答..."></textarea>
+				<input type="hidden" name="answerId" value="${teacher.id }"/>
+				<input type="hidden" name="stuId" value="${question.stuId }"/>
+				<input type="hidden" name="questionId" value="${question.id }"/>
+				给出的积分数：<input style="margin-top: 5px" type="text" id="giveIntegrals" name="giveIntegrals" value=""/><br>
+				<input id="submit" type="submit" value="提交回答" />
 			</form>
+			<div id="insertAnswerInfo">${insertAnswerInfo }</div>
 			<!--回答正文结束-->
 		</div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -66,7 +69,7 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="thirdpart/ckeditor/ckeditor.js"></script>
     <script type="text/javascript">
-    	CKEDITOR.replace("answer");
+    	CKEDITOR.replace("answerContent");
     </script>
   </body>
 </html>

@@ -4,6 +4,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="silence.dao.TeachersMapper">
+	<!-- 老师添加学生用户，添加内容为学号，学生所在班级，学生姓名，密码，学生初始积分，学生性别 -->
 	<insert id="reg" parameterType="Students">
 		<!-- insert into 表名（列名列表） values（值列表）
 		1.列名列表与值列表必须一一对应
@@ -12,30 +13,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		insert into students(stuNo,stuName,stuPwd,classId,stuIntegrals,stuGender) values(#{stuNo},#{stuName},#{stuPwd},#{classId},#{integrals},#{stuGender})
 	</insert>
 	
+	<!-- 查询所有老师，用于对老师登录信息的验证 -->
 	<select id="getTeacherByName" resultType="Teacher">
 		select * from teachers
 		where tecName=#{tecName}
 	</select>
 	
+	<!-- 根据id获得老师对象 -->
 	<select id="getTecById" resultType="Teacher">
 		select * from teachers
 		where id=#{id}
 	</select>
 	
+	<!-- 跟新修改的密码到数据库 -->
 	<insert id="tecUpdatePwd">
 		update teachers set tecPwd=#{newPwd} where id=#{id}
 	</insert>
 	
+	<!-- 根据页面传过来的班级id和学号验证该班级是否存在该学生 -->
 	<select id="verifyStuExist" resultType="Students">
 		select * from students
 		where classId=#{id} and stuNo=#{stuNo}
 	</select>
 	
+	<!-- 根据页面传过来的时间验证该时间段是否存在考勤记录 -->
 	<select id="verifyStuExist2" resultType="AttendanceRecord">
 		select * from attendance_record
 		where attendanceDate between #{attendanceTime1} and #{attendanceTime2}
 	</select>
 	
+	<!-- 老师根据查询条件查看考勤记录 -->
 	<select id="lookAttendanceRecord" resultType="attendanceRecord">
 		select s.stuNo,s.stuName,c.className,ar.attendanceComeTime,ar.attendanceBackTime 
 		from attendance_record ar join students s on ar.stuId=s.id 
@@ -59,10 +66,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
 	</select>
 	
+	<!-- 获得所有学生考勤的最大记录数 -->
 	<select id="getMaxRecord" resultType="Integer">
 		select count(*) from attendance_record
 	</select>
 	
+	<!-- 老师查看考勤记录 -->
 	<select id="findAll" resultType="attendanceRecord">
 		<!-- 起始的下标，每页显示数量，limit一定是放在select的最后 -->
 		select s.stuNo,s.stuName,c.className,ar.attendanceComeTime,ar.attendanceBackTime 
@@ -74,6 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 	</select>
 	
+	<!-- 获得根据条件查询出来的考勤记录总数 -->
 	<select id="getMaxRecordByCondition" resultType="Integer">
 		select count(*) 
 		from attendance_record ar join students s on ar.stuId=s.id 
@@ -94,6 +104,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
 	</select>
 	
+	<!-- 获得某个人在一段时间内出勤状态为y的人数 -->
 	<select id="getStuStatusIsYNo" resultType="Integer">
 		select count(ar.attendanceStatus="y") 
 		from attendance_record ar join students s on ar.stuId=s.id 
@@ -114,6 +125,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
 	</select>
 	
+	<!-- 获得某个班在一段时间内出勤状态为y的人数 -->
 	<select id="getClassStatusIsYNo" resultType="Integer">
 		select count(ar.attendanceStatus="y") 
 		from attendance_record ar join students s on ar.stuId=s.id 
@@ -128,6 +140,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
 	</select>
 	
+	<!-- 获得某个班级的学生总数 -->
 	<select id="getClassStuCount" resultType="Integer">
 		select count(*) from students where classId=${stuClass}
 	</select>
@@ -154,7 +167,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 老师查看所有学生所有工作日志 -->
 	<select id="findAllDiary" resultType="Diary">
 		<!-- 起始的下标，每页显示数量，limit一定是放在select的最后 -->
-		select s.stuNo,s.stuName,c.className,d.diaryContent,d.diaryCommitTime 
+		select s.stuNo,s.stuName,c.className,d.diaryContent,d.stuId,d.diaryCommitTime 
 		from diary d,students s,classes c 
 		WHERE d.stuId=s.id AND s.classId=c.id
 		<!-- 动态sql --> 
@@ -186,7 +199,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- 老师根据查询条件查看工作日志 -->
 	<select id="lookDiary" resultType="Diary">
-		select s.stuNo,s.stuName,c.className,d.diaryContent,d.diaryCommitTime 
+		select s.stuNo,s.stuName,c.className,d.diaryContent,d.stuId,d.diaryCommitTime 
 		from diary d join students s on d.stuId=s.id 
         join classes c on s.classId=c.id 
         <where>
@@ -213,4 +226,63 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select * from diary
 		where diaryCommitTime between #{diaryCommitTime1} and #{diaryCommitTime2}
 	</select>
+	
+	<!-- 根据页面传过来的学生id和提问时间查询满足条件的提问内容 -->
+	<select id="queryQuestionByStuIdAndTime" resultType="Question">
+		select s.stuNo,s.stuName,c.className,q.questionTime,q.questionContent,q.stuId,q.id 
+		from question q,students s,classes c
+		where q.stuId=s.id and s.classId=c.id and q.questionTime=#{diaryCommitTime} and q.stuId=${stuId}
+	</select>
+	
+	<!-- 根据页面传过来的学生id和日志提交时间查询满足条件的日志对象 -->
+	<select id="queryDiaryByStuIdAndTime" resultType="Diary">
+		select s.stuNo,s.stuName,c.className,d.diaryContent,d.stuId,d.diaryCommitTime 
+		from diary d,students s,classes c
+		where d.stuId=s.id and s.classId=c.id and d.diaryCommitTime=#{diaryCommitTime} and s.id=${stuId}
+	</select>
+	
+	<!-- 查询本周新提问 -->
+	<select id="findWeekQuestion" resultType="Question">
+		select s.stuNo,s.stuName,c.className,q.questionTime,q.questionContent,q.stuId,q.id 
+		from question q,students s,classes c
+		WHERE q.stuId=s.id and s.classId=c.id and YEARWEEK(date_format(q.questionTime,'%Y-%m-%d')) = YEARWEEK(now()) order by questionTime desc
+	</select>
+	
+	<!-- 查询本周前十条新提问 -->
+	<select id="findTenQuestion" resultType="Question">
+		select s.stuNo,s.stuName,c.className,q.questionTime,q.questionContent,q.stuId,q.id
+		from question q,students s,classes c
+		WHERE q.stuId=s.id and s.classId=c.id and YEARWEEK(date_format(q.questionTime,'%Y-%m-%d')) = YEARWEEK(now()) order by questionTime desc limit 10
+	</select>
+	
+	<!-- 查询某一个问题id对应的学生回答 -->
+	<select id="findStuAnswerByQuestionId" resultType="Answer">
+		select s.stuNo,s.stuName,c.className,a.answerContent,a.answerId,a.answerTime 
+		from answer a,students s,classes c
+		where a.answerId=s.id and s.classId=c.id and a.questionId=#{questionId} order by a.answerTime desc
+	</select>
+	
+	<!-- 查询某一个问题id对应的老师回答 -->
+	<select id="findTecAnswerByQuestionId" resultType="Answer">
+		select t.tecName,a.answerContent,a.answerTime 
+		from answer a,teachers t
+		where a.answerId=t.id and a.questionId=#{questionId} order by a.answerTime desc
+	</select>
+	
+	<!-- 根据页面传过来的提问id查询满足条件的提问 -->
+	<select id="queryQuestionByQuestionId" resultType="Question">
+		select s.stuNo,s.stuName,c.className,q.questionTime,q.questionContent,q.stuId,q.id
+		from question q,students s,classes c
+		where q.stuId=s.id and s.classId=c.id and q.id=#{questionId}
+	</select>
+	
+	<!-- 将提交的回答保存到数据库的answer表里 -->
+	<insert id="insertAnswer" parameterType="Answer">
+		insert into answer(questionId,answerContent,answerTime,answerId) values(#{questionId},#{answerContent},#{answerTime},#{answerId})
+	</insert>
+	
+	<!-- 提交回答后将给出的积分插入到积分记录表里 -->
+	<insert id="insertIntegrals" >
+		insert into integrals(integralsGetStuId,integralsGiverId,integrals) values(#{questionId},#{answerId},#{integrals})
+	</insert>
 </mapper>
