@@ -51,8 +51,6 @@
         <!-- 生成图片的Servlet -->  
         <servlet-name>KaptchaServlet</servlet-name>  
         <servlet-class>com.google.code.kaptcha.servlet.KaptchaServlet</servlet-class>  
-            
-           
          <!-- 是否有边框-->  
         <init-param>  
              <param-name>kaptcha.border</param-name>  
