@@ -47,12 +47,6 @@
   </head>
 <body>
 	<div class="container">
-  		<!--头部导航开始-->
-  		<!-- <div id="topNav" class="row">
-  				<button id="myQuestion" class="btn btn-group col-xs-offset-1 col-xs-4 glyphicon glyphicon-question-sign" data-toggle="button" >&nbsp;我的提问</button>
-  				<button id="myAnswer" class="btn btn-group col-xs-offset-2 col-xs-4 glyphicon glyphicon-list-alt " data-toggle="button">&nbsp;我的回答</button>
-  		</div> -->
-  		<!--头部导航结束-->
   		<!--正文开始-->
   		<div id="bodyContent">
   			<!--搜索表单开始开始-->
@@ -86,8 +80,6 @@
 				  			<div id="question" class="col-sm-9">
 				  				<div id="questionContent" style="color: black">${t.questionContent }</div>
 				  				<div id="look" style="padding-left: 800px;">查看</div>
-				  				<!-- <div id="answerContent">最新回答内容</div>
-				  				<div id="answerLink" class="glyphicon glyphicon-pencil">回答</div> -->
 				  			</div>
 			  			</a>
 			  		</div>
