@@ -126,8 +126,8 @@
 	    $(function () {
 	    	$("#searchMore").click(function () {
 				window.location.href="tecAttendance/jumpWeekQuestion";
-			})
-		})
+			});
+		});
     </script>
 </body>
 </html>
