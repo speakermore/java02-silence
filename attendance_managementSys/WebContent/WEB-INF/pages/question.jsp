@@ -49,21 +49,21 @@
 	<div class="container">
   		<!--正文开始-->
   		<div id="bodyContent">
-  			<!--搜索表单开始开始-->
+  			<!--搜索表单开始-->
   			<div id="search" class="row" style="margin-top: 50px;">
   				<form action="" role ="form" class="container-fluid form-horizontal">
-							<div class="form-group col-sm-10">
-								<!--placeholder:默认值的聚焦隐藏，失焦显示-->
-								<!--class="form-control input-group-lg-->
-								<input placeholder="输入关键字，多个关键字之间用空格分隔" class="form-control input-lg" type="text" />
-							</div>
-							<div class="form-group col-sm-2">
-								<!--input-lg是让样式变大-->
-								<input class="form-control input-lg" type="submit" value="搜索" />
-							</div>
-						</form>
+					<div class="form-group col-sm-10">
+						<!--placeholder:默认值的聚焦隐藏，失焦显示-->
+						<!--class="form-control input-group-lg-->
+						<input placeholder="输入关键字，多个关键字之间用空格分隔" class="form-control input-lg" type="text" />
+					</div>
+					<div class="form-group col-sm-2">
+						<!--input-lg是让样式变大-->
+						<input class="form-control input-lg" type="submit" value="搜索" />
+					</div>
+				</form>
   			</div>
-  			<!--搜索表当结束-->
+  			<!--搜索表单结束-->
   			<!--提问正文开始-->
   			<div id="questionContext" class="row">
   				<c:forEach items="${tenQuestion }" var="t">
@@ -84,21 +84,6 @@
 			  			</a>
 			  		</div>
 	  			</c:forEach>
-	  			<!-- <div class="question">
-	  				<div id="questionTitle">提问1</div>
-	  				<div id="answerContent">最新回答内容</div>
-	  				<div id="answerLink" class="glyphicon glyphicon-pencil">回答</div>
-	  			</div>
-	  			<div class="question">
-	  				<div id="questionTitle">提问1</div>
-	  				<div id="answerContent">最新回答内容</div>
-	  				<div id="answerLink" class="glyphicon glyphicon-pencil">回答</div>
-	  			</div>
-	  			<div class="question">
-	  				<div id="questionTitle">提问1</div>
-	  				<div id="answerContent">最新回答内容</div>
-	  				<div id="answerLink" class="glyphicon glyphicon-pencil">回答</div>
-	  			</div> -->
 	  			<c:if test="${weekQuestionNo>10 }">
 	  			<button id="searchMore" class="btn btn-primary ">查看更多</button>
 	  			</c:if>
@@ -123,9 +108,6 @@
   			<!--提问正文结束-->
   		</div>
   		<!--正文结束-->
-  		<!--foot开始-->
-  		
-  		<!--foot开始-->
   	</div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
