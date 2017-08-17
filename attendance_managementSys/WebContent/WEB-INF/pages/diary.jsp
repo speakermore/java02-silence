@@ -33,11 +33,6 @@
 			h6,h3{margin-left: 16px}
 			h6{color: gray; font-size: 8px;padding-top: 20px;}
 		</style>
-		<script type="text/javascript">
-			function jump() {
-				window.location.href="stuAttendance/addDiary";
-			}
-		</script>
 </head>
 <body>
 		<!--学生自己的工作日志主体开始-->
@@ -71,7 +66,12 @@
 						<input type="hidden" name="classId" value="${student.classId}"/>
 						<input type="hidden" name="curPage" value="1"/> 
 					</form>
-					<div id="attendance_rate" class="col-sm-3"><button type="submit" class="btn btn-default" onclick="jump()">新增工作日志</button></div>
+						<c:if test="${flag==false}">
+							<div id="attendance_rate" class="col-sm-3"><button type="button" class="btn btn-default" onclick="jump()">新增工作日志</button></div>
+						</c:if>
+						<c:if test="${flag==true}">
+							<div id="attendance_rate" class="col-sm-3"><button id="dis" type="button" class="btn btn-default">新增工作日志</button></div>
+						</c:if>
 				</div>
 				<!--显示内容头部结束-->
 
@@ -82,12 +82,18 @@
 							<c:forEach items="${diarys}" var="diary">
 							<li>
 								<c:if test="${fn:length(diary.diaryContent)<=60}">
-									<span class="col-sm-11">${diary.diaryContent}</span>
+									<span class="col-sm-10">${diary.diaryContent}</span>
 								</c:if>
 								<c:if test="${fn:length(diary.diaryContent)>60}">
-									<span class="col-sm-11">${fn:substring(diary.diaryContent,0,59)}......</span>
+									<span class="col-sm-10">${fn:substring(diary.diaryContent,0,59)}......</span>
 								</c:if>
-								<a href="stuAttendance/selectStuDiaryDetail?stuId=${diary.stuNo}&stuName=${diary.stuName}&className=${diary.className}&diaryCommitTime=${diary.diaryCommitTime}&diaryContent=${diary.diaryContent}"><span class="col-sm-1">查看/修改</span></a>
+								<a href="stuAttendance/selectStuDiaryDetail?stuId=${diary.stuId}&diaryCommitTime=${diary.diaryCommitTime}&stuNo=${diary.stuNo}&stuName=${diary.stuName}&className=${diary.className}"><span class="col-sm-1">查看</span></a>
+								<c:if test="${flag==false}">
+								<a href="stuAttendance/updateDiary?stuId=${diary.stuId}&diaryCommitTime=${diary.diaryCommitTime}&stuNo=${diary.stuNo}&stuName=${diary.stuName}&className=${diary.className}"><span class="col-sm-1">修改</span></a>
+								</c:if>
+								<c:if test="${flag==true}">
+								<a href=""><span onclick="changeInfo()" class="col-sm-1">修改</span></a>
+								</c:if>
 							</li>
 							<h6>日志提交时间:<fmt:formatDate value="${diary.diaryCommitTime}" pattern="yyyy年MM月dd日" /></h6>
 							</c:forEach>
@@ -174,6 +180,12 @@
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
 		<script src="js/bootstrap.min.js"></script>
 		<script type="text/javascript">
+		function jump() {
+			window.location.href="stuAttendance/addDiary";
+		}
+		function changeInfo() {
+			alert("周末不能修改工作日志。");
+		}
 		$(function () {  //验证输入的页码格式正不正确
 			$("#page").bind('input propertychange',function() {
 				var page=$("#page").val();
@@ -184,6 +196,12 @@
 				}else{  //如果是整数
 					$("[name='bottomGo']").removeAttr("disabled");
 				}
+			});
+			$("#dis").mouseover(function () {
+				$(this).attr("disable","true");
+			}).mouseout(function () {
+				$(this).removeAttr("disable");
+					
 			});
 		});
 		</script>

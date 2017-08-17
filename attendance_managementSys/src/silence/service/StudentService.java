@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import silence.entity.AttendanceRecord;
 import silence.entity.Diary;
+import silence.entity.Question;
 import silence.entity.Students;
 
 /**
@@ -52,4 +53,14 @@ public interface StudentService {
 	public Integer insertQuestion(Integer stuId,String questionContent,String commitTime);
 	//通过日志日期查询学生工作日志
 	public Diary selectDiaryByDiaryDate(Integer stuId,String diaryDate);
+	//通过问题时间查询学生提问
+	public Question selectQuestionByDate(Integer stuId,Timestamp questionDate);
+	//修改工作日志，只能修改日志内容
+	public Integer updateDiary(Integer stuId,String diaryDate,String diaryContent);
+	//分配积分
+	public Integer insertIntegrals(Integer stuId,Integer giverId,Integer integrals);
+	//计算积分
+	public Integer countIntegrals(Integer stuId);
+	/*//查询本周最新的提问数
+	public Integer  countQuestion();*/
 }

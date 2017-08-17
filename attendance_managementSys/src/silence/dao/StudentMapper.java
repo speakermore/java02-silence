@@ -1,13 +1,16 @@
 package silence.dao;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.servlet.ModelAndView;
 
 import silence.entity.AttendanceRecord;
 import silence.entity.Diary;
+import silence.entity.Question;
 import silence.entity.Students;
 
 /**
@@ -138,7 +141,43 @@ public interface StudentMapper {
 	 * @author 连慧
 	 * 通过日志时间查询学生工作日志
 	 * @param stuId学生编号，diaryDate日志提交时间（年月日）
-	 * @return 符合该时间段的学生所有工作日志
+	 * @return 符合该时间段的学生工作日志
 	 */
 	public Diary selectDiaryByDiaryDate(@Param("stuId")Integer stuId,@Param("diaryDate")String diaryDate);
+	/**
+	 * @author 连慧
+	 * 通过问题时间查询学生提问
+	 * @param stuId学生编号，questionDate提问提交时间（年月日）
+	 * @return 符合该时间段的学生提问
+	 */
+	public Question selectQuestionByDate(@Param("stuId")Integer stuId,@Param("questionDate")Timestamp questionDate);
+	/**
+	 * @author 连慧
+	 * 修改工作日志，只能修改日志内容
+	 * @param stuId学生编号，diaryDate日志提交时间（年月日），diaryContent日志内容
+	 * @return >0修改成功，否则修改失败
+	 */
+	public Integer updateDiary(@Param("stuId")Integer stuId,@Param("diaryDate")String diaryDate,@Param("diaryContent")String diaryContent);
+	/**
+	 * @author 连慧
+	 * 分配积分
+	 * @param stuId获得积分的学生编号，giverId分配积分者编号，integrals积分数
+	 * @return >0修改成功，否则修改失败
+	 */
+	public Integer insertIntegrals(@Param("stuId")Integer stuId,@Param("giverId")Integer giverId,@Param("integrals")Integer integrals);
+	/**
+	 * @author 连慧
+	 * 计算积分
+	 * @param stuId获得积分的学生编号
+	 * @return >0修改成功，否则修改失败
+	 */
+	public Integer countIntegrals(@Param("stuId")Integer stuId);
+	/**
+	 * @author 连慧
+	 * 查询本周最新的提问数
+	 * @param stuId获得积分的学生编号
+	 * @return >0修改成功，否则修改失败
+	 *//*
+	public Integer countQuestion();*/
+	
 }

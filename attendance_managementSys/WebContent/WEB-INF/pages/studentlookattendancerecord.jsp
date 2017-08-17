@@ -26,6 +26,7 @@
 			}
 			#attendance_foot{margin-top: 160px;}
 			#main-attend,#head-main{margin-top: 10px;}
+			#b{position: relative;top: -35px;left:1100px;font-size: 18px;text-decoration: none;color: black;font-weight: bold;}
 		</style>
 </head>
 <body>
@@ -33,8 +34,10 @@
 		<div id="man_atten" class="container-fluid">
 			<div class="row">
 				<!--头部信息开始-->
-				<h3><strong>${student.stuName}</strong>的考勤记录</h3></div>
+				<h3>${student.stuName}的考勤记录</h3>
+				<a href="stuAttendance/student" id="b">返回</a>
 				<!--头部信息结束-->
+			</div>
 
 				<!--显示内容开始-->
 				<!--显示内容头部开始-->

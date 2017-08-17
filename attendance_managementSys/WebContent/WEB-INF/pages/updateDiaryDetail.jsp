@@ -34,7 +34,7 @@
 		<!--查看具体的工作日志开始-->
 		<div id="man_atten" class="container-fluid">
 			<div class="row">
-					<div id="stu_info" class="col-sm-6"><h3>欢迎来到查看工作日志页面</h3></div>
+					<div id="stu_info" class="col-sm-6"><h3>欢迎来到修改工作日志页面</h3></div>
 			</div>
 			<!--显示主体日志信息开始-->
 			<div id="dairy_main1" class="row">
@@ -44,20 +44,14 @@
 				<div class="col-sm-6">提交时间：<span id="commitTime">${diary.diaryCommitTime}</span></div>
 			</div>
 			<div id="dairy_main2" class="row">
-				<c:if test="${infos==''}">
-					<div class="col-sm-6">日志内容：<textarea id="diary_content">${diary.diaryContent}</textarea></div>
-				</c:if>
-				<c:if test="${infos=='没有日志内容！'}">
-					<div class="col-sm-6">日志内容：<textarea id="diary_content">${infos}</textarea></div>
-				</c:if>
-				<c:if test="${info==''}">
-					<div class="col-sm-6">提问内容：<textarea id="diary_question">${question.questionContent }</textarea></div>
-				</c:if> 
-				<c:if test="${info=='没有填写提问！'}">
-					<div class="col-sm-6">提问内容：<textarea id="diary_question">${info}</textarea></div>
-				</c:if>
+				<div class="col-sm-6">日志内容：<textarea id="diary_content" name="diaryContent">${diary.diaryContent}</textarea></div>
 			</div>
-			<button onclick="javascript:history.go(-1)">返回</button>
+			<div class="row">
+				<button id="save" class="col-sm-1">保存</button>
+				<button onclick="javascript:history.go(-1)" class="col-sm-1">返回</button></div>
+				<input type="hidden" id="stusId" name="stuId" value="${diary.stuId}"/>
+				<input type="hidden" id="classId" name="classId" value="${student.classId}"/>
+			<h6 id="info"></h6>
 			<!--显示主体日志信息结束-->
 		</div>
 		<!--查看具体的工作日志结束-->
@@ -65,5 +59,52 @@
 		<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
 		<script src="js/bootstrap.min.js"></script>
+		<script type="text/javascript">
+		 $(function () {
+				$("#save").click(function () {
+				var s=$("#stusId").val();
+				var classId = $("#classId").val();
+				var d=$("#commitTime").html();
+				var di=$("#diary_content").val();
+					$.ajax({
+						url:"stuAttendance/updateDiaryDetail",
+						type:"post",
+						data:{"stuId":s,"diaryCommitTime":d,"diaryContent":di},
+						dataType:"json",
+						success:function (data){
+                            if(data.success){
+                            	$("#info").html(data.info);
+                            	 window.location.href = "stuAttendance/selectStuDiary?stuId="+s+"&classId="+classId+"&curPage=1";
+                            }else{
+                            	alert(data.info);
+                            }
+						}
+					});
+				});
+			}); 
+			
+			/* function update() {
+				var s=$("#stusId").val();
+				var classId = $("#classId").val();
+				var d=$("#commitTime").html();
+				var di=$("#diary_content").val();
+				$("#save").click(function () {
+					$.ajax({
+						url:"stuAttendance/updateDiaryDetail",
+						type:"post",
+						data:{"stuId":s,"diaryCommitTime":d,"diaryContent":di},
+						dataType:"json",
+						success:function (data){
+                            if(data.success){
+                            	$("#info").html(data.info);
+                            	 window.location.href = "stuAttendance/selectStuDiary?stuId="+s+"&classId="+classId+"&curPage=1";
+                            }else{
+                            	alert(data.info);
+                            }
+						}
+					});
+				});
+			} */
+		</script>
 </body>
 </html>

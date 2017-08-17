@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<!-- <base target="rightFrame"/> -->
 <!-- base获得在地址栏访问时项目的绝对路径（这里获得的路径是需要加上表单里action提交的地址的，目的是：这样就可以锁定到控制器相应的方法上，然后就可以做相应的处理） -->
 <base href="${pageContext.request.scheme }://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/" />   
 <!DOCTYPE html >
@@ -31,10 +32,6 @@
 			#lists {
 				margin-top: 20px;
 			}
-			
-			#listRight {
-				border: 1px solid darkgray;
-			}
 		</style>
 	</head>
 <body>
@@ -50,9 +47,14 @@
 						<li class="active"><a href="#"> <span
 								class="badge pull-right">+42</span> 点赞
 						</a></li>
-						<li><a href="#"> <span class="badge pull-right">+100</span>
+						<li><span id="integral" class="badge pull-right">${integral}</span>
 								积分
-						</a></li>
+						</li>
+						<c:if test="${weekQuestionNo!=null}">
+							<li><a href="stuAttendance/question" target="questions"> <span id="integral" class="badge pull-right">${weekQuestionNo}</span>
+									新提问个数：
+							</a></li>
+						</c:if>
 					</ul>
 				</div>
 			</div>
@@ -88,12 +90,13 @@
 		<div id="lists" class="row">
 			<div id="listLeft" class="col-sm-2">
 				<div class="list-group">
-					<a href="#" class="list-group-item active"> 提问 </a> 
+					<a href="stuAttendance/question" target="questions" class="list-group-item active"> 提问 </a> 
 					<a href="stuAttendance/selectStuDiary?stuId=${student.id}&classId=${student.classId}&curPage=1" class="list-group-item">工作日志</a>
 				</div>
 			</div>
-			<div id="listRight" class="col-sm-10"
-				style="height: 300px; width: 1000px;">提问答复页面</div>
+			<div id="listRight" class="col-sm-10" style="height: 450px; width: 1100px;">
+			<iframe name="questions" src="${tag}" width="1080px" height="450px"></iframe>
+			</div>
 		</div>
 		<!--列表内容结束-->
 	</div>
@@ -112,6 +115,7 @@
 					dataType:"json",    //返回的数据类型是map所以最好用JSON
 					success:function(data){
 						if(data.success==0){
+							$("#integral").html(data.integral);
 							$("#comeInfo").html(data.info);
 							$("#come").attr("disabled","true");
 						}else if(data.success==1){

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <!-- 获得在地址栏访问时的项目的绝对路径，具体的访问时要拼上提交的表单的action属性的值， -->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<!-- 获得在地址栏访问时的项目的绝对路径，具体的访问时要拼上提交的表单的action属性的值， -->
 <base href="${pageContext.request.scheme }://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/" />
 <!DOCTYPE html>
 <html >
@@ -54,7 +55,12 @@
 			<!--回答正文开始-->
 			<form action="tecAttendance/insertAnswer" method="post">
 				<textarea name="answerContent" class="ckeditor" placeholder="写回答..."></textarea>
-				<input type="hidden" name="answerId" value="${teacher.id }"/>
+				<%-- <c:if test="${teacher==null}"> --%>
+				  <input type="hidden" name="answerId" value="${teacher.id }"/>
+				<%-- </c:if>
+				<c:if test="${teacher==null}"> --%>
+				  <input type="hidden" name="answerId" value="${teacher.id }"/>
+				<%-- </c:if> --%>
 				<input type="hidden" name="stuId" value="${question.stuId }"/>
 				<input type="hidden" name="questionId" value="${question.id }"/>
 				给出的积分数：<input style="margin-top: 5px" type="text" id="giveIntegrals" name="giveIntegrals" value=""/><br>

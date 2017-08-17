@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import silence.dao.StudentMapper;
 import silence.entity.AttendanceRecord;
 import silence.entity.Diary;
+import silence.entity.Question;
 import silence.entity.Students;
 import silence.service.StudentService;
 
@@ -121,5 +122,30 @@ public class StudentServiceImpl implements StudentService {
 	public Diary selectDiaryByDiaryDate(Integer stuId, String diaryDate) {
 		return studentMapper.selectDiaryByDiaryDate(stuId, diaryDate);
 	}
+
+	@Override
+	public Question selectQuestionByDate(Integer stuId, Timestamp questionDate) {
+		return studentMapper.selectQuestionByDate(stuId, questionDate);
+	}
+
+	@Override
+	public Integer updateDiary(Integer stuId, String diaryDate, String diaryContent) {
+		return studentMapper.updateDiary(stuId, diaryDate, diaryContent);
+	}
+
+	@Override
+	public Integer insertIntegrals(Integer stuId, Integer giverId, Integer integrals) {
+		return studentMapper.insertIntegrals(stuId, giverId, integrals);
+	}
+
+	@Override
+	public Integer countIntegrals(Integer stuId) {
+		return studentMapper.countIntegrals(stuId);
+	}
+
+	/*@Override
+	public Integer countQuestion() {
+		return studentMapper.countQuestion();
+	}*/
 
 }

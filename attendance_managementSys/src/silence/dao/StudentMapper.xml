@@ -85,7 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where c.id=#{classId} and d.stuId=#{id} and s.id=#{id}
 	</select>
 	<select id="selectDiary" resultType="Diary">
-		select s.stuNo,s.stuName,c.className,d.diaryContent,d.diaryCommitTime 
+		select  s.stuNo,s.stuName,c.className,d.diaryContent,d.diaryCommitTime,d.stuId 
 		from students s,classes c,diary d 
 		where c.id=#{classId} and d.stuId=#{id} and s.id=#{id}
 		<if test="pageIndex!=null">
@@ -93,7 +93,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 	</select>
 	<select id="selectDiaryByTime" resultType="Diary">
-		select s.stuNo,s.stuName,c.className,d.diaryContent,d.diaryCommitTime 
+		select  s.stuNo,s.stuName,c.className,d.diaryContent,d.diaryCommitTime,d.stuId 
 		from students s,classes c,diary d 
 		where c.id=#{classId} and d.stuId=#{id} and s.id=#{id}
 		<if test="choice==1">
@@ -137,4 +137,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectDiaryByDiaryDate" resultType="Diary">
 		select * from diary where stuId=#{stuId} and diaryDate=#{diaryDate}
 	</select>
+	<select id="selectQuestionByDate" resultType="Question">
+		select * from question where stuId=#{stuId} and questionTime=#{questionDate}
+	</select>
+	<update id="updateDiary">
+		update diary set diaryContent=#{diaryContent} where stuId=#{stuId} and diaryDate=#{diaryDate}
+	</update>
+	<insert id="insertIntegrals">
+		insert into integrals (integralsGetStuId,integralsGiveId,Integrals) values (#{stuId},#{giverId},#{integrals})
+	</insert>
+	<select id="countIntegrals" resultType="Integer">
+		select sum(Integrals) from integrals where integralsGetStuId=#{stuId}
+	</select>
+	<!-- <select id="countQuestion" resultType="Integer">
+		select COUNT(*) from question where YEARWEEK(DATE_FORMAT(questionTime,'%Y-%m-%d')) = YEARWEEK(NOW()) 
+	</select> -->
 </mapper>

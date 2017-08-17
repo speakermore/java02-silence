@@ -40,7 +40,7 @@ body {
 		</div>
 		<div class="row">
 			<!--form-horizontal是调节该表单是行内元素还是块元素，有form-horizontal和form-inline-->
-			<form method="post" action="stuAttendance/studentLogin" role="form" class="form-horizontal">
+			<form method="post" action="stuAttendance/studentLogin" role="form" class="form-horizontal" target="questions">
 				<!--把标签和控件放在一个带有 class .form-group 的 <div> 中。这是获取最佳间距所必需的。-->
 				<div class="form-group">
 					<!--control-label是控制label标签内容的显示以及加粗，col-xs-xx是控制label占多少个单元，居右显示-->

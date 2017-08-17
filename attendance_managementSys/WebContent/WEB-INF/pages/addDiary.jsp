@@ -65,7 +65,7 @@
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-10">
 						<button type="submit" id="save" class="btn btn-default">保存</button>
-						<button type="submit" class="btn btn-default">重置</button>
+						<button type="button" id="reset" class="btn btn-default">重置</button>
 					</div>
 				</div>
 				<input type="hidden" name="stuId" value="${student.id}"/>
@@ -81,13 +81,17 @@
 	<script src="js/bootstrap.min.js"></script>
 	<script type="text/javascript">
 		$(function() {
-			$("#save").click(function() {
+			$("#save").mouseover(function() {
 			var message=$("#message").html();
-			if(message=="保存成功！"||message=="今天已经写过工作日志！"){
+			if(message=="保存成功！"||message=="今天已经写过工作日志,保存失败！"){
 				$("#save").attr("disabled","true");
 			}else{
 				$("#save").removeAttr("disabled");
 			}
+			});
+			$("#reset").click(function() {
+				$("#inputDairy").val("");
+				$("#inputQuestion").val("");
 			});
 		});
 	</script>

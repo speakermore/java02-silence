@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +14,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.jasper.tagplugins.jstl.core.Redirect;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,11 +24,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sun.glass.ui.SystemClipboard;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 
 import silence.entity.AttendanceRecord;
 import silence.entity.Diary;
+import silence.entity.Question;
 import silence.entity.Students;
 import silence.service.StudentService;
+import silence.service.TeachersService;
 import silence.util.PageSupport;
 
 /**
@@ -39,6 +45,8 @@ public class StudentController {
 	// @Resource为自动注入的注解，表明此类要通过Spring容器完成注入
 	@Resource
 	StudentService studentService;
+	@Resource
+	TeachersService teachersService;
 
 	/*
 	 * @author 连慧
@@ -57,6 +65,17 @@ public class StudentController {
 				// 创建一个模型和视图
 				mv.setViewName("student");
 				session.setAttribute("student", student);
+				//登录成功之后获得学生的总积分数
+				Integer integral = studentService.countIntegrals(student.getId());
+				session.setAttribute("integral", integral);
+				//登录成功之后收到最新提问推送(最近本周内的)
+				List<Question> questions=teachersService.findWeekQuestion();
+					if(questions.size()>0){
+					mv.addObject("weekQuestionNo", questions.size());
+					mv.addObject("tag", "stuAttendance/question");
+				}else {
+					info="最近没有新提问。";
+				}
 			} else {
 				info = "用户名或者密码不存在！";
 				mv.setViewName("studentLogin");
@@ -78,6 +97,18 @@ public class StudentController {
 	@RequestMapping(value = "/studentLogin", method = RequestMethod.GET)
 	public String login() {
 		return "studentLogin";
+	}
+
+	@RequestMapping(value = "/student", method = RequestMethod.GET)
+	public String student() {
+		return "student";
+	}
+	
+	@RequestMapping(value = "/question", method = RequestMethod.GET)
+	public String question(Model model) {
+		List<Question> tenQuestion=teachersService.findTenQuestion();
+		model.addAttribute("tenQuestion",tenQuestion);
+		return "question";
 	}
 
 	/*
@@ -146,16 +177,45 @@ public class StudentController {
 	@ResponseBody
 	public Map<String, Object> insertComeTime(Integer stuId) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		// 获得系统当前时间
 		Date d = new Date();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		String date = format.format(d);
+		Timestamp time = new Timestamp(System.currentTimeMillis());
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		String hours = sdf.format(time);
+		Date h = null;
+		Date rule = null;
+		Integer integrals = 0;
+		try {
+			h = sdf.parse(hours);
+			// 学校规定的考勤时间
+			rule = sdf.parse("08:30:00");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// 查询是否有点击签到按钮获得的当前系统时间对应的考勤记录，如果有说明今天已经签到过，不能再继续签到；如果没有，则可以进行签到
 		AttendanceRecord att = studentService.selectStuAttRecord(stuId, date);
 		if (att == null) {
-			int result = studentService.insertComeTime(stuId, d, new Timestamp(System.currentTimeMillis()), "N");
+			int result = studentService.insertComeTime(stuId, d, time, "N");
 			if (result > 0) {
 				map.put("success", 0);
 				map.put("info", "签到成功！");
+				// 签到成功之后系统给学生分配积分：8：30之前不算迟到可以获得+10积分；之后算迟到：迟到一分钟获得-1积分，-10积分封顶
+				if (h.getTime() < rule.getTime()) {
+					integrals = 10;
+				} else {
+					if ((h.getTime() - rule.getTime()) > 10) {
+						integrals = -10;
+					} else {
+						integrals = (int) (h.getTime() - rule.getTime()) * (-1);
+					}
+				}
+				Integer re = studentService.insertIntegrals(stuId, 0, integrals);
+				if (re > 0) {
+					map.put("integral", studentService.countIntegrals(stuId));
+				}
 			} else {
 				map.put("success", 1);
 				map.put("info", "签到失败！");
@@ -356,7 +416,6 @@ public class StudentController {
 				attRate = "没有全勤记录，故没有出勤率。";
 			}
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// 查询某个学生的考勤记录
@@ -396,6 +455,15 @@ public class StudentController {
 		}
 		int pageIndex = (curPage - 1) * 5;
 		List<Diary> diarys = studentService.selectDiary(stuId, classId, pageIndex);
+		// 获得系统当前时间
+		Date date = new Date();
+		// 判断是否是周末
+		Boolean flag = false;
+		Calendar cal = Calendar.getInstance(); // 实例化
+		cal.setTime(date);
+		if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+			flag = true;
+		}
 		// 创建一个模型和视图
 		ModelAndView mv = new ModelAndView();
 		// 设置跳转页面
@@ -406,6 +474,7 @@ public class StudentController {
 		mv.addObject("maxPage", maxPage);
 		mv.addObject("maxRecord", maxRecord);
 		mv.addObject("info", info);
+		mv.addObject("flag", flag);
 		return mv;
 	}
 
@@ -437,14 +506,13 @@ public class StudentController {
 			info = "此时间段没有日志信息。";
 		} else {
 			diarys = studentService.selectDiaryByTime(stuId, classId, choice, pageIndex);
-			session.setAttribute("diarys", diarys);
 		}
 		// 创建一个模型和视图
 		ModelAndView mv = new ModelAndView();
 		// 设置跳转页面
 		mv.setViewName("diary");
 		// 向页面返回数据
-		// mv.addObject("diarys", diarys);
+		mv.addObject("diarys", diarys);
 		mv.addObject("curPage", curPage);
 		mv.addObject("maxPage", maxPage);
 		mv.addObject("maxRecord", maxRecord);
@@ -458,22 +526,89 @@ public class StudentController {
 	/*
 	 * @author 连慧
 	 * 
-	 * @param 页面传过来的stuId学生编号，classId班级编号，curPage页码
+	 * @param
+	 * 页面传过来的stuId学生编号diaryCommitTime日志提交时间，stuNo学号，stuName学生姓名，className班级名称，
+	 * curPage页码
 	 * 
-	 * @return 学生编号对应的学生日志
+	 * @return 学生编号和日志日期对应的学生日志
 	 */
 	@RequestMapping(value = "/selectStuDiaryDetail", method = RequestMethod.GET)
-	public ModelAndView selectStuDiaryDetail(Integer stuId, String stuName, String className, Timestamp diaryCommitTime,
-			String diaryContent) {
+	public ModelAndView selectStuDiaryDetail(Integer stuId, Timestamp diaryCommitTime, String stuNo, String stuName,
+			String className) {
+		String info = "";
+		String infos = "";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String date = sdf.format(diaryCommitTime);
+		Diary diary = studentService.selectDiaryByDiaryDate(stuId, date);
+		Question question = null;
+		if (diary == null) {
+			infos = "没有日志内容！";
+		} else {
+			question = studentService.selectQuestionByDate(stuId, diary.getDiaryCommitTime());
+			if (question == null) {
+				info = "没有填写提问！";
+			}
+		}
 		// 创建一个模型和视图
 		ModelAndView mv = new ModelAndView("showDiaryDetail");
 		// 向页面返回数据
-		mv.addObject("stuId", stuId);
+		mv.addObject("diary", diary);
+		mv.addObject("question", question);
+		mv.addObject("infos", infos);
+		mv.addObject("info", info);
+		mv.addObject("stuNo", stuNo);
 		mv.addObject("stuName", stuName);
 		mv.addObject("className", className);
-		mv.addObject("diaryCommitTime", diaryCommitTime);
-		mv.addObject("diaryContent", diaryContent);
 		return mv;
+	}
+
+	/*
+	 * @author 连慧
+	 * 
+	 * @param 页面传过来的stuId学生编号，diaryDate日志时间，diaryContent日志内容
+	 * 
+	 * @return ModelAndView对象，用来设置跳转页面和向页面传递参数（把参数放到了request对象）
+	 */
+	@RequestMapping(value = "/updateDiary", method = RequestMethod.GET)
+	public ModelAndView updateDiary(Integer stuId, Timestamp diaryCommitTime, String stuNo, String stuName,
+			String className) {
+		String info = "";
+		// 创建一个模型和视图
+		ModelAndView mv = new ModelAndView("updateDiaryDetail");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String date = sdf.format(diaryCommitTime);
+		Diary diary = studentService.selectDiaryByDiaryDate(stuId, date);
+		// 向页面返回数据
+		mv.addObject("diary", diary);
+		mv.addObject("info", info);
+		mv.addObject("stuNo", stuNo);
+		mv.addObject("stuName", stuName);
+		mv.addObject("className", className);
+		return mv;
+	}
+
+	/*
+	 * @author 连慧
+	 * 
+	 * @param 页面传过来的stuId学生编号，diaryDate日志时间，diaryContent日志内容
+	 * 
+	 * @return ModelAndView对象，用来设置跳转页面和向页面传递参数（把参数放到了request对象）
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/updateDiaryDetail", method = RequestMethod.POST)
+	public Map<String, Object> updateDiaryDetail(Integer stuId, Timestamp diaryCommitTime, String diaryContent) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String date = sdf.format(diaryCommitTime);
+		Integer result = studentService.updateDiary(stuId, date, diaryContent);
+		if (result > 0) {
+			map.put("success", true);
+			map.put("info", "修改成功！");
+		} else {
+			map.put("success", false);
+			map.put("info", "修改失败！");
+		}
+		return map;
 	}
 
 	/*
@@ -497,39 +632,41 @@ public class StudentController {
 	 */
 	@RequestMapping(value = "/addDiary", method = RequestMethod.POST)
 	public ModelAndView addDiary(Integer stuId, String diaryContent, String questionContent) {
-		String message="";
+		String message = "";
 		// 获得系统当前时间
-		Date date=new Date();
+		Date date = new Date();
 		Timestamp time = new Timestamp(System.currentTimeMillis());
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 定义格式，不显示毫秒
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 定义格式
 		SimpleDateFormat sdfs = new SimpleDateFormat("yyyy-MM-dd");// 定义格式，不显示毫秒
 		ModelAndView mv = new ModelAndView("addDiary");
 		String commitTime = sdf.format(time);
-		String dates=sdfs.format(date);
-		Diary diary=studentService.selectDiaryByDiaryDate(stuId, dates);
-		if(diary==null){   //当天没有写过工作日志才能插入日志
-			if (diaryContent != "") {  //工作日志内容不为空才能保存插入工作日志
+		String dates = sdfs.format(date);
+		Diary diary = studentService.selectDiaryByDiaryDate(stuId, dates);
+		if (diary == null) { // 当天没有写过工作日志才能插入日志
+			if (diaryContent != "") { // 工作日志内容不为空才能保存插入工作日志
+				
 				// 插入日志
-				Integer result = studentService.insertDiary(stuId, diaryContent, commitTime,dates);
-				if(questionContent != ""){
-				// 插入问题
-				Integer results = studentService.insertQuestion(stuId, questionContent, commitTime);
-					
+				Integer result = studentService.insertDiary(stuId, diaryContent, commitTime, dates);
+				if (questionContent != "") {
+					// 插入问题
+					Integer results = studentService.insertQuestion(stuId, questionContent, commitTime);
 				}
-				if (result > 0 ) {
+				if (result > 0) {
 					mv.setViewName("addDiary");
-					message="保存成功！";
+					message = "保存成功！";
+					//提交一篇工作日志加5积分
+					studentService.insertIntegrals(stuId, 0, 5);
 				} else {
 					mv.setViewName("addDiary");
-					message="保存失败！";
+					message = "保存失败！";
 				}
 			} else {
 				mv.setViewName("addDiary");
-				message="尚未填写日志,请填写！";
+				message = "尚未填写日志,请填写！";
 			}
-		}else{
-			message="今天已经写过工作日志！";
-		}	
+		} else {
+			message = "今天已经写过工作日志,保存失败！";
+		}
 		mv.addObject("message", message);
 		return mv;
 	}
