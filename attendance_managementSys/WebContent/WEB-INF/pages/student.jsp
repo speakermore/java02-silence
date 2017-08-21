@@ -51,7 +51,7 @@
 								积分
 						</li>
 						<c:if test="${weekQuestionNo!=null}">
-							<li><a href="stuAttendance/question" target="questions"> <span id="integral" class="badge pull-right">${weekQuestionNo}</span>
+							<li><a href="#que" > <span id="integral" class="badge pull-right">${weekQuestionNo}</span>
 									新提问个数：
 							</a></li>
 						</c:if>
@@ -90,13 +90,15 @@
 		<div id="lists" class="row">
 			<div id="listLeft" class="col-sm-2">
 				<div class="list-group">
-					<a href="stuAttendance/question" target="questions" class="list-group-item active"> 提问 </a> 
+					<a href="#que" class="list-group-item active"> 提问 </a> 
 					<a href="stuAttendance/selectStuDiary?stuId=${student.id}&classId=${student.classId}&curPage=1" class="list-group-item">工作日志</a>
 				</div>
 			</div>
-			<div id="listRight" class="col-sm-10" style="height: 450px; width: 1100px;">
-			<iframe name="questions" src="${tag}" width="1080px" height="450px"></iframe>
-			</div>
+			<!-- <div id="listRight" class="col-sm-10" style="height: 450px; width: 1100px;"> -->
+			<a name="que" id="que" class="col-sm-10" style="height: 450px; width: 1100px;">
+			    <iframe name="questions" src="${tag}" width="1080px" height="450px"></iframe>
+			</a>
+			<!-- </div> -->
 		</div>
 		<!--列表内容结束-->
 	</div>

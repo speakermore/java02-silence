@@ -49,21 +49,6 @@
 	<div class="container">
   		<!--正文开始-->
   		<div id="bodyContent">
-  			<!--搜索表单开始-->
-  			<div id="search" class="row" style="margin-top: 50px;">
-  				<form action="" role ="form" class="container-fluid form-horizontal">
-					<div class="form-group col-sm-10">
-						<!--placeholder:默认值的聚焦隐藏，失焦显示-->
-						<!--class="form-control input-group-lg-->
-						<input placeholder="输入关键字，多个关键字之间用空格分隔" class="form-control input-lg" type="text" />
-					</div>
-					<div class="form-group col-sm-2">
-						<!--input-lg是让样式变大-->
-						<input class="form-control input-lg" type="submit" value="搜索" />
-					</div>
-				</form>
-  			</div>
-  			<!--搜索表单结束-->
   			<!--提问正文开始-->
   			<div id="questionContext" class="row">
   				<c:forEach items="${tenQuestion }" var="t">

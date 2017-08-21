@@ -27,6 +27,7 @@ body {
 	background: rgb(247, 248, 250);
 }
 </style>
+
 </head>
 <body>
 	<article class="container">
@@ -47,10 +48,17 @@ body {
 					<label for="uName" class="control-label col-xs-4">学号：</label>
 					<div class="col-xs-4">
 						<!--form-control是对控制文本框圆角、宽度和高度-->
+						<c:if test="${info!='验证码输入错误！'}">
 						<input type="text" id="stuNo" name="stuNo" class="form-control" value="" />
+						</c:if>
+						<c:if test="${info=='验证码输入错误！'}">
+						<input type="text" id="stuNo" name="stuNo" class="form-control" value="${student.stuNo }" />
+						</c:if>
 					</div>
 					<div class="col-xs-4">
+					<c:if test="${info!='验证码输入错误！'}">
 						${info}
+					</c:if>
 					</div>
 				</div>
 				<div class="form-group">
@@ -60,13 +68,16 @@ body {
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="captcha" class="control-label col-xs-4">验证码：</label>
+					<label for="kaptcha" class="control-label col-xs-4">验证码：</label>
 					<div class="col-xs-2" style="display: inline;">
-						<input type="text" id="captcha" name="captcha" class="form-control" />
+						<input type="text" id="kaptcha" name="kaptcha" class="form-control" placeholder="请输入 验证码" />
 					</div>
-					<div style="display: inline;">
-						<label class="left"></label> <img src="" title="看不清，换一张"
-							alt="看不清，换一张" />&nbsp;&nbsp;<a>换一张</a>
+					<div class="col-xs-5" style="display: inline;">
+						<label class="left"></label>
+						<a href="javascript:reloadCode();"><img src="kaptcha.jpg" id="kaptchaImage"/>换一张</a>
+						 <c:if test="${info=='验证码输入错误！'}">
+						  &nbsp;&nbsp;${info}
+					  </c:if>
 					</div>
 				</div>
 				<div class="form-group">
@@ -83,5 +94,12 @@ body {
 	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="js/bootstrap.min.js"></script>
+	<script type="text/javascript">  
+    function reloadCode(){  
+        var time = new Date().getTime();  
+        document.getElementById("kaptchaImage").src = "kaptcha.jpg?"+time;  
+              
+    }  
+</script> 
 </body>
 </html>

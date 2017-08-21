@@ -11,20 +11,15 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.ibatis.annotations.Param;
-import org.apache.jasper.tagplugins.jstl.core.Redirect;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.sun.glass.ui.SystemClipboard;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 
 import silence.entity.AttendanceRecord;
 import silence.entity.Diary;
@@ -32,7 +27,6 @@ import silence.entity.Question;
 import silence.entity.Students;
 import silence.service.StudentService;
 import silence.service.TeachersService;
-import silence.util.PageSupport;
 
 /**
  * @author 作者：连慧
@@ -56,25 +50,32 @@ public class StudentController {
 	 * @return ModelAndView对象，用来设置跳转页面和向页面传递参数（把参数放到了request对象）
 	 */
 	@RequestMapping(value = "/studentLogin", method = RequestMethod.POST)
-	public ModelAndView studentLogin(String stuNo, String stuPwd, HttpSession session) {
+	public ModelAndView studentLogin(String stuNo, String stuPwd, HttpSession session, String kaptcha) {
 		String info = "";
 		ModelAndView mv = new ModelAndView(); // 这里的路径是真实的JSP页面路径;
 		Students student = studentService.getStudentByStuNo(stuNo);
+		// 通过组件获得验证码
+		String kaptchaExpected = (String) session.getAttribute(com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY);
 		if (student != null) {
 			if (student.getStuPwd().equals(stuPwd)) {
-				// 创建一个模型和视图
-				mv.setViewName("student");
-				session.setAttribute("student", student);
-				//登录成功之后获得学生的总积分数
-				Integer integral = studentService.countIntegrals(student.getId());
-				session.setAttribute("integral", integral);
-				//登录成功之后收到最新提问推送(最近本周内的)
-				List<Question> questions=teachersService.findWeekQuestion();
-					if(questions.size()>0){
-					mv.addObject("weekQuestionNo", questions.size());
-					mv.addObject("tag", "stuAttendance/question");
-				}else {
-					info="最近没有新提问。";
+				if (kaptcha.equalsIgnoreCase(kaptchaExpected)) {
+					// 创建一个模型和视图
+					mv.setViewName("student");
+					session.setAttribute("student", student);
+					// 登录成功之后获得学生的总积分数
+					Integer integral = studentService.countIntegrals(student.getId());
+					session.setAttribute("integral", integral);
+					// 登录成功之后收到最新提问推送(最近本周内的)
+					List<Question> questions = teachersService.findWeekQuestion();
+					if (questions.size() > 0) {
+						mv.addObject("weekQuestionNo", questions.size());
+						mv.addObject("tag", "stuAttendance/question");
+					} else {
+						info = "最近没有新提问。";
+					}
+				} else {
+					info = "验证码输入错误！";
+					mv.setViewName("studentLogin");
 				}
 			} else {
 				info = "用户名或者密码不存在！";
@@ -103,11 +104,11 @@ public class StudentController {
 	public String student() {
 		return "student";
 	}
-	
+
 	@RequestMapping(value = "/question", method = RequestMethod.GET)
 	public String question(Model model) {
-		List<Question> tenQuestion=teachersService.findTenQuestion();
-		model.addAttribute("tenQuestion",tenQuestion);
+		List<Question> tenQuestion = teachersService.findTenQuestion();
+		model.addAttribute("tenQuestion", tenQuestion);
 		return "question";
 	}
 
@@ -644,7 +645,7 @@ public class StudentController {
 		Diary diary = studentService.selectDiaryByDiaryDate(stuId, dates);
 		if (diary == null) { // 当天没有写过工作日志才能插入日志
 			if (diaryContent != "") { // 工作日志内容不为空才能保存插入工作日志
-				
+
 				// 插入日志
 				Integer result = studentService.insertDiary(stuId, diaryContent, commitTime, dates);
 				if (questionContent != "") {
@@ -654,7 +655,7 @@ public class StudentController {
 				if (result > 0) {
 					mv.setViewName("addDiary");
 					message = "保存成功！";
-					//提交一篇工作日志加5积分
+					// 提交一篇工作日志加5积分
 					studentService.insertIntegrals(stuId, 0, 5);
 				} else {
 					mv.setViewName("addDiary");
