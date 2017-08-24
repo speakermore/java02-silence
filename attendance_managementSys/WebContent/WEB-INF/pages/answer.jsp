@@ -61,8 +61,8 @@
 				<c:if test="${student!=null}">
 				  <input type="hidden" id="answerId" name="answerId" value="${student.id }"/>
 				</c:if> 
-				<input type="hidden" name="stuId" value="${question.stuId }"/>
-				<input type="hidden" name="questionId" value="${question.id }"/>
+				<%-- <input type="hidden" name="stuId" value="${question.stuId }"/> --%>
+				<input type="hidden" name="questionId" value="${question.stuId }"/>
 				<c:if test="${teacher!=null}">
 					<div id="integrals">
 					给出的积分数：<input style="margin-top: 5px" type="text" id="giveIntegrals" name="giveIntegrals" value=""/>
