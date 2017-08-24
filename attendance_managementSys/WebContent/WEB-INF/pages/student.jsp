@@ -1,39 +1,40 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!-- <base target="rightFrame"/> -->
 <!-- base获得在地址栏访问时项目的绝对路径（这里获得的路径是需要加上表单里action提交的地址的，目的是：这样就可以锁定到控制器相应的方法上，然后就可以做相应的处理） -->
-<base href="${pageContext.request.scheme }://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/" />   
+<base
+	href="${pageContext.request.scheme }://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/" />
 <!DOCTYPE html >
 <html>
 <head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-		<title>学生首页</title>
-		<!-- Bootstrap -->
-		<link href="css/bootstrap.min.css" rel="stylesheet">
-		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-		<!--[if lt IE 9]>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<title>学生首页</title>
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
       <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-		<style>
-			#zhengwen {
-				margin-top: 10px;
-			}
-			
-			#btn2 {
-				margin-left: 500px;
-			}
-			
-			#lists {
-				margin-top: 20px;
-			}
-		</style>
-	</head>
+<style>
+#zhengwen {
+	margin-top: 10px;
+}
+
+#btn2 {
+	margin-left: 500px;
+}
+
+#lists {
+	margin-top: 20px;
+}
+</style>
+</head>
 <body>
 	<div id="top" class="container-fluid">
 		<!--头部导航开始-->
@@ -48,11 +49,10 @@
 								class="badge pull-right">+42</span> 点赞
 						</a></li>
 						<li><span id="integral" class="badge pull-right">${integral}</span>
-								积分
-						</li>
+							积分</li>
 						<c:if test="${weekQuestionNo!=null}">
-							<li><a href="#que" > <span id="integral" class="badge pull-right">${weekQuestionNo}</span>
-									新提问个数：
+							<li><a href="#"> <span id="integral"
+									class="badge pull-right">${weekQuestionNo}</span> 新提问个数：
 							</a></li>
 						</c:if>
 					</ul>
@@ -60,10 +60,12 @@
 			</div>
 			<!--头部左边导航结束-->
 			<!--头部右边导航开始-->
-			<div>${student.id}</div><span>${student.classId}</span>
+			<div>${student.id}</div>
+			<span>${student.classId}</span>
 			<div id="topRight" class="col-sm-5">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="stuAttendance/selectStuAttendanceRecord?stuId=${student.id}&classId=${student.classId}&curPage=1">查看考勤记录</a></li>
+					<li><a
+						href="stuAttendance/selectStuAttendanceRecord?stuId=${student.id}&classId=${student.classId}&curPage=1">查看考勤记录</a></li>
 					<li><a href="stuAttendance/updateStuPwd">修改密码</a></li>
 				</ul>
 			</div>
@@ -90,15 +92,15 @@
 		<div id="lists" class="row">
 			<div id="listLeft" class="col-sm-2">
 				<div class="list-group">
-					<a href="#que" class="list-group-item active"> 提问 </a> 
-					<a href="stuAttendance/selectStuDiary?stuId=${student.id}&classId=${student.classId}&curPage=1" class="list-group-item">工作日志</a>
+					<a href="#" class="list-group-item active"> 提问 </a> <a
+						href="stuAttendance/selectStuDiary?stuId=${student.id}&classId=${student.classId}&curPage=1"
+						class="list-group-item">工作日志</a>
 				</div>
 			</div>
-			<!-- <div id="listRight" class="col-sm-10" style="height: 450px; width: 1100px;"> -->
-			<a name="que" id="que" class="col-sm-10" style="height: 450px; width: 1100px;">
-			    <iframe name="questions" src="${tag}" width="1080px" height="450px"></iframe>
-			</a>
-			<!-- </div> -->
+			<div id="listRight" class="col-sm-10"
+				style="height: 450px; width: 1100px;">
+				<iframe name="questions" src="${tag}" width="1080px" height="450px"></iframe>
+			</div>
 		</div>
 		<!--列表内容结束-->
 	</div>
